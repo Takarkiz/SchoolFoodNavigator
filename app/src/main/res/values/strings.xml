@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SchoolFoodNavigator</string>
+    <string name="app_name">スクールご飯倶楽部</string>
     <string name="tab_item_title_latest">最新</string>
     <string name="tab_item_title_ranking">ランキング</string>
 </resources>
