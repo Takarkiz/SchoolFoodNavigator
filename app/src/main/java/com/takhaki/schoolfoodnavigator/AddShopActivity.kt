@@ -5,6 +5,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import com.takhaki.schoolfoodnavigator.databinding.ActivityAddShopBinding
 import kotlinx.android.synthetic.main.activity_add_shop.*
@@ -19,8 +20,9 @@ class AddShopActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_shop)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_shop)
+        viewModel = ViewModelProviders.of(this).get(AddShopViewModel::class.java)
 
-        //binding.lifecycleOwner =
+        //binding.lifecycleOwner = li
         binding.addShopViewModel = viewModel
 
         actionBar?.setDisplayHomeAsUpEnabled(true)

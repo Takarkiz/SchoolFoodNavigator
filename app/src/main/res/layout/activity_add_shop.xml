@@ -121,10 +121,12 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/finishShopInfoButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:text="@string/add_shop_fab_text"
+                android:onClick="@{() -> addShopViewModel.onSendShopInfo()}"
                 app:backgroundTint="@color/colorAccent"
                 app:icon="@drawable/ic_add_shop_fab_check" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>

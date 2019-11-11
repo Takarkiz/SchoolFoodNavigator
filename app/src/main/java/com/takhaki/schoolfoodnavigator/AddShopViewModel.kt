@@ -14,5 +14,8 @@ class AddShopViewModel : ViewModel() {
     val genreTitle: LiveData<String>
         get() = _genreTitle
 
+    fun onSendShopInfo() {
+
+    }
 
 }
