@@ -4,4 +4,9 @@
     <string name="tab_item_title_ranking">ランキング</string>
 
     <string name="actionbar_title_add_new_shop">新規登録</string>
+    <string name="add_shop_edit_hint_genre">ジャンル</string>
+    <string name="add_shop_fab_text">確定</string>
+    <string name="add_shop_edit_hint_name">店名</string>
+    <string name="add_shop_text_shopinfo">お店情報</string>
+    <string name="add_shop_text_regist_photo">写真の登録</string>
 </resources>
