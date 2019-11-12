@@ -7,5 +7,6 @@ data class ShopEntity(
     val genre: String,
     val authorId: String,
     val registerDate: Date,
-    val lastEditedAt: Date
+    val lastEditedAt: Date,
+    val images: List<String>
 )

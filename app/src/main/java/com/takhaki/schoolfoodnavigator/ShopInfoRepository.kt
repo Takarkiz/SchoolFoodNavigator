@@ -20,7 +20,8 @@ class ShopInfoRepository {
             "genre" to shop.genre,
             "userId" to shop.authorId,
             "createdAt" to shop.registerDate,
-            "editedAt" to shop.lastEditedAt
+            "editedAt" to shop.lastEditedAt,
+            "images" to shop.images
         )
 
         shopDB.add(data)
@@ -75,7 +76,8 @@ class ShopInfoRepository {
         val authorId = queryDoc["userId"] as String
         val createdAt = queryDoc["createdAt"] as Timestamp
         val editedAt = queryDoc["editedAt"] as Timestamp
+        val images = queryDoc["images"] as List<String>
 
-        return ShopEntity(shopName, genre, authorId, createdAt.toDate(), editedAt.toDate())
+        return ShopEntity(shopName, genre, authorId, createdAt.toDate(), editedAt.toDate(), images)
     }
 }

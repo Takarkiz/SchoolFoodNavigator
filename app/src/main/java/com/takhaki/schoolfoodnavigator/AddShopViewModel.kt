@@ -25,12 +25,14 @@ class AddShopViewModel : ViewModel() {
 
 
     fun onSendShopInfo() {
+
         val shop = ShopEntity(
-            shopName = "コンビニ",
-            genre = "販売店",
+            shopName = shopName.value!!,
+            genre = genreTitle.value!!,
             authorId = "111",
             registerDate = Date(),
-            lastEditedAt = Date()
+            lastEditedAt = Date(),
+            images = listOf()
         )
 
         val shopInfoRepository = ShopInfoRepository()
