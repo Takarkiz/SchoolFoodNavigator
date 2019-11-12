@@ -1,8 +1,11 @@
 package com.takhaki.schoolfoodnavigator
 
+import androidx.lifecycle.LiveData
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class ShopInfoRepository {
 
@@ -30,18 +33,30 @@ class ShopInfoRepository {
     }
 
     // 全てのショップ情報を取得する
-    fun loadAllShops() {
+    fun loadAllShops(handler: (Result<LiveData<List<ShopEntity>>>) -> Unit) = runBlocking<Unit> {
         val shoplist = mutableListOf<ShopEntity>()
-        shopDB.get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                task.getResult()?.let { result ->
-                    for (doc in result) {
-                        shoplist.add(mappingShop(doc))
+        val job = launch {
+            shopDB.get().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    task.getResult()?.let { result ->
+                        for (doc in result) {
+                            shoplist.add(mappingShop(doc))
+                        }
                     }
+
                 }
             }
         }
-        //val shopListLiveData: LiveData<List<ShopEntity>> =
+        job.join()
+
+        val shopList = object : LiveData<List<ShopEntity>>(){
+
+        }
+
+        shopList.apply {
+            shoplist
+        }
+        handler(Result.success(shopList))
     }
 
 //    // IDから一つのショップ情報を取得する
@@ -54,7 +69,7 @@ class ShopInfoRepository {
 
     }
 
-    private fun mappingShop(queryDoc: QueryDocumentSnapshot): ShopEntity {
+    fun mappingShop(queryDoc: QueryDocumentSnapshot): ShopEntity {
         val shopName = queryDoc["name"] as String
         val genre = queryDoc["genre"] as String
         val authorId = queryDoc["userId"] as String

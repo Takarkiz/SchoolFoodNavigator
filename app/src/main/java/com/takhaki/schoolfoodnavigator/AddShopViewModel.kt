@@ -1,20 +1,28 @@
 package com.takhaki.schoolfoodnavigator
 
 import android.util.Log
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import java.util.*
 
 class AddShopViewModel : ViewModel() {
 
-    private val _shopName = MutableLiveData<String>()
-    val shopName: LiveData<String>
-        get() = _shopName
+    val shopName = MutableLiveData<String>().apply { value = "" }
+    val genreTitle = MutableLiveData<String>().apply { value = "" }
+    var isVisibleFinishButton = MediatorLiveData<Boolean>().apply { value = false }
 
-    private val _genreTitle = MutableLiveData<String>()
-    val genreTitle: LiveData<String>
-        get() = _genreTitle
+    init {
+        val textObserver = Observer<String> {
+            val shopTitle = shopName.value ?: ""
+            val genre = genreTitle.value ?: ""
+            isVisibleFinishButton.value = !shopTitle.isBlank() && !genre.isBlank()
+        }
+        isVisibleFinishButton.addSource(shopName, textObserver)
+        isVisibleFinishButton.addSource(genreTitle, textObserver)
+    }
+
 
     fun onSendShopInfo() {
         val shop = ShopEntity(
@@ -29,8 +37,19 @@ class AddShopViewModel : ViewModel() {
         shopInfoRepository.registrateShop(shop) {
             Log.d("firebase", it.getOrNull().toString())
         }
-
-        shopInfoRepository.loadAllShops()
+//
+//        shopInfoRepository.loadAllShops { result ->
+//            if (result.isSuccess) {
+//                val values = result.getOrNull()?.value
+//                values?.let {
+//                    it.forEach { value ->
+//                        Log.d("firebaseFetch", value.toString())
+//                    }
+//                }
+//            }
+//        }
     }
+
+    private var isFinishInput: Boolean  = false
 
 }

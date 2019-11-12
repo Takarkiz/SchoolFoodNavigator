@@ -22,7 +22,7 @@ class AddShopActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_shop)
         viewModel = ViewModelProviders.of(this).get(AddShopViewModel::class.java)
 
-        //binding.lifecycleOwner = li
+        binding.lifecycleOwner = this
         binding.addShopViewModel = viewModel
 
         actionBar?.setDisplayHomeAsUpEnabled(true)

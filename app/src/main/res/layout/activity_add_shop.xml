@@ -80,6 +80,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="8dp"
                     android:layout_weight="4"
+                    android:text="@={addShopViewModel.shopName}"
                     android:hint="@string/add_shop_edit_hint_name" />
 
 
@@ -106,6 +107,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="8dp"
                     android:layout_weight="4"
+                    android:text="@={addShopViewModel.genreTitle}"
                     android:hint="@string/add_shop_edit_hint_genre" />
 
             </LinearLayout>
@@ -126,6 +128,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:text="@string/add_shop_fab_text"
+                android:visibility="@{addShopViewModel.isVisibleFinishButton() ? android.view.View.VISIBLE : android.view.View.GONE}"
                 android:onClick="@{() -> addShopViewModel.onSendShopInfo()}"
                 app:backgroundTint="@color/colorAccent"
                 app:icon="@drawable/ic_add_shop_fab_check" />
