@@ -6,7 +6,6 @@ import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.MediaScannerConnection
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -58,8 +57,9 @@ class AddShopActivity : AppCompatActivity() {
         setTitle(R.string.actionbar_title_add_new_shop)
 
         deleteButton.setOnClickListener {
-            viewModel.isVisibleDeleteButton.value = false
-            deleteButton.setImageURI(null)
+            viewModel.deletePhoto()
+            shopImageView.setImageURI(null)
+            shopImageView.setImageResource(R.drawable.add_photo)
         }
     }
 
@@ -74,8 +74,6 @@ class AddShopActivity : AppCompatActivity() {
         }
     }
 
-    private var m_uri: Uri? = null
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -85,7 +83,7 @@ class AddShopActivity : AppCompatActivity() {
 
         if (requestCode == REQUEST_EXTERNAL_STORAGE) {
 
-            val resultUri = if (data != null) data.data else m_uri
+            val resultUri = if (data != null) data.data else viewModel.shopImageUri.value
 
             resultUri?.let {
                 MediaScannerConnection.scanFile(
@@ -120,14 +118,15 @@ class AddShopActivity : AppCompatActivity() {
         val contentValues = ContentValues()
         contentValues.put(MediaStore.Images.Media.TITLE, photoName)
         contentValues.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-        m_uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+        viewModel.shopImageUri.value =
+            contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
 
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, m_uri)
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, viewModel.shopImageUri.value)
 
         val galleryIntent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         galleryIntent.addCategory(Intent.CATEGORY_OPENABLE)
-        galleryIntent.setType("image/jpeg")
+        galleryIntent.type = "image/jpeg"
 
         val intent = Intent.createChooser(cameraIntent, "画像の選択")
         intent.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(galleryIntent))

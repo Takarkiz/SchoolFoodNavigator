@@ -1,5 +1,6 @@
 package com.takhaki.schoolfoodnavigator
 
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,7 +13,8 @@ class AddShopViewModel : ViewModel() {
     val shopName = MutableLiveData<String>().apply { value = "" }
     val genreTitle = MutableLiveData<String>().apply { value = "" }
     var isVisibleFinishButton = MediatorLiveData<Boolean>().apply { value = false }
-    var isVisibleDeleteButton = MediatorLiveData<Boolean>().apply { value = false }
+    val isVisibleDeleteButton = MediatorLiveData<Boolean>().apply { value = false }
+    val shopImageUri = MediatorLiveData<Uri>().apply { value = null }
 
     init {
         val textObserver = Observer<String> {
@@ -51,6 +53,10 @@ class AddShopViewModel : ViewModel() {
 //                }
 //            }
 //        }
+    }
+
+    fun deletePhoto() {
+        isVisibleDeleteButton.value = false
     }
 
 }
