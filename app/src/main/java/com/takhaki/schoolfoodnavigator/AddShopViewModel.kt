@@ -1,14 +1,15 @@
 package com.takhaki.schoolfoodnavigator
 
+import android.app.Application
+import android.content.Context
 import android.net.Uri
-import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import java.util.*
 
-class AddShopViewModel : ViewModel() {
+class AddShopViewModel(application: Application) : AndroidViewModel(application) {
 
     val shopName = MutableLiveData<String>().apply { value = "" }
     val genreTitle = MutableLiveData<String>().apply { value = "" }
@@ -39,8 +40,10 @@ class AddShopViewModel : ViewModel() {
         )
 
         val shopInfoRepository = ShopInfoRepository()
-        shopInfoRepository.registrateShop(shop) {
-            Log.d("firebase", it.getOrNull().toString())
+        shopInfoRepository.registrateShop(shop, shopImageUri.value, appContext) { result ->
+            if (result.isSuccess) {
+                
+            }
         }
 //
 //        shopInfoRepository.loadAllShops { result ->
@@ -58,5 +61,7 @@ class AddShopViewModel : ViewModel() {
     fun deletePhoto() {
         isVisibleDeleteButton.value = false
     }
+
+    private val appContext: Context get() = getApplication()
 
 }
