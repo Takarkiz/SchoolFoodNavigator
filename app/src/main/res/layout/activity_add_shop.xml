@@ -28,28 +28,31 @@
                 android:text="@string/add_shop_text_regist_photo" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
                 android:layout_gravity="center_horizontal">
 
                 <ImageView
                     android:id="@+id/shopImageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:background="@drawable/add_photo"
+                    android:layout_margin="12dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                <ImageButton
+                    android:id="@+id/deleteButton"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_margin="8dp"
+                    android:padding="4dp"
+                    android:visibility="@{addShopViewModel.isVisibleDeleteButton() ? android.view.View.VISIBLE : android.view.View.GONE}"
                     android:src="@drawable/ic_add_shop_fab_delete_photo"
-                    app:backgroundTint="@android:color/white"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintEnd_toEndOf="@id/shopImageView"
+                    app:layout_constraintTop_toTopOf="@id/shopImageView" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

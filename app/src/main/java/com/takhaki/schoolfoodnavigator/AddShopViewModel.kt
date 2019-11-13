@@ -12,6 +12,7 @@ class AddShopViewModel : ViewModel() {
     val shopName = MutableLiveData<String>().apply { value = "" }
     val genreTitle = MutableLiveData<String>().apply { value = "" }
     var isVisibleFinishButton = MediatorLiveData<Boolean>().apply { value = false }
+    var isVisibleDeleteButton = MediatorLiveData<Boolean>().apply { value = false }
 
     init {
         val textObserver = Observer<String> {
@@ -51,7 +52,5 @@ class AddShopViewModel : ViewModel() {
 //            }
 //        }
     }
-
-    private var isFinishInput: Boolean  = false
 
 }
