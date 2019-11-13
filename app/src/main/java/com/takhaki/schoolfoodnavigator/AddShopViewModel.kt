@@ -3,6 +3,7 @@ package com.takhaki.schoolfoodnavigator
 import android.app.Application
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -42,7 +43,9 @@ class AddShopViewModel(application: Application) : AndroidViewModel(application)
         val shopInfoRepository = ShopInfoRepository()
         shopInfoRepository.registrateShop(shop, shopImageUri.value, appContext) { result ->
             if (result.isSuccess) {
-                
+                Log.d("Firebase", "成功")
+            } else {
+                Log.e("Firebase", "失敗", result.exceptionOrNull())
             }
         }
 //
@@ -60,6 +63,7 @@ class AddShopViewModel(application: Application) : AndroidViewModel(application)
 
     fun deletePhoto() {
         isVisibleDeleteButton.value = false
+        shopImageUri.value = null
     }
 
     private val appContext: Context get() = getApplication()

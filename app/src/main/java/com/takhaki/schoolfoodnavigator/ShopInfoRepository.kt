@@ -2,6 +2,8 @@ package com.takhaki.schoolfoodnavigator
 
 import android.content.Context
 import android.net.Uri
+import android.provider.MediaStore
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
@@ -9,6 +11,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.io.File
+import java.io.FileInputStream
 import java.util.*
 
 class ShopInfoRepository {
@@ -115,23 +119,20 @@ class ShopInfoRepository {
         val shopImageRef = storage.reference.child(filePath)
 
         try {
-            val inputStream = context.contentResolver.openInputStream(imageUri)
-                ?: throw Throwable("Failed to open input stream -> $imageUri")
-            val data = inputStream.buffered().use { it.readBytes() }
-            val uploadTask = shopImageRef.putBytes(data)
-            uploadTask.addOnFailureListener { error ->
-                handler(Result.failure(error))
+            fileStreamFromUri(imageUri, context)?.let { stream ->
+                val uploadTask = shopImageRef.putStream(stream)
+                uploadTask.addOnFailureListener { error ->
+                    handler(Result.failure(error))
 
-            }.addOnSuccessListener {
-                handler(Result.success(filePath))
+                }.addOnSuccessListener {
+                    handler(Result.success(filePath))
 
+                }
             }
 
         } catch (e: Throwable) {
             handler(Result.failure(e))
         }
-
-
     }
 
     private fun mappingShop(queryDoc: QueryDocumentSnapshot): ShopEntity {
@@ -160,6 +161,29 @@ class ShopInfoRepository {
             "editedAt" to shop.lastEditedAt,
             "images" to shopImages.toList()
         )
+    }
+
+    fun fileStreamFromUri(uri: Uri, context: Context): FileInputStream? {
+        val projection = arrayOf(MediaStore.MediaColumns.DATA)
+        val cursor = context.contentResolver.query(uri, projection, null, null, null)
+
+        if (cursor != null) {
+            var path: String? = null
+            if (cursor.moveToFirst()) {
+                path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA))
+                Log.d("filePath", path)
+            }
+
+            cursor.close()
+            path?.let {
+                val imguri = "file://" + it
+                Log.d("filePath", imguri)
+                val file = File(imguri)
+                return FileInputStream(file)
+            }
+        }
+
+        return null
     }
 
 }
