@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="addShopViewModel"
             type="com.takhaki.schoolfoodnavigator.AddShopViewModel" />
@@ -36,9 +37,9 @@
                     android:id="@+id/shopImageView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_margin="12dp"
                     android:background="@drawable/add_photo_frame"
                     android:src="@drawable/add_photo"
-                    android:layout_margin="12dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -50,8 +51,8 @@
                     android:layout_height="20dp"
                     android:layout_margin="8dp"
                     android:padding="4dp"
-                    android:visibility="@{addShopViewModel.isVisibleDeleteButton() ? android.view.View.VISIBLE : android.view.View.GONE}"
                     android:src="@drawable/ic_add_shop_fab_delete_photo"
+                    android:visibility="@{addShopViewModel.isVisibleDeleteButton() ? android.view.View.VISIBLE : android.view.View.GONE}"
                     app:layout_constraintEnd_toEndOf="@id/shopImageView"
                     app:layout_constraintTop_toTopOf="@id/shopImageView" />
 
@@ -84,8 +85,9 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="8dp"
                     android:layout_weight="4"
-                    android:text="@={addShopViewModel.shopName}"
-                    android:hint="@string/add_shop_edit_hint_name" />
+                    android:hint="@string/add_shop_edit_hint_name"
+                    android:inputType="text"
+                    android:text="@={addShopViewModel.shopName}" />
 
 
             </LinearLayout>
@@ -111,8 +113,9 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="8dp"
                     android:layout_weight="4"
-                    android:text="@={addShopViewModel.genreTitle}"
-                    android:hint="@string/add_shop_edit_hint_genre" />
+                    android:hint="@string/add_shop_edit_hint_genre"
+                    android:inputType="text"
+                    android:text="@={addShopViewModel.genreTitle}" />
 
             </LinearLayout>
 
@@ -131,9 +134,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
+                android:onClick="@{() -> addShopViewModel.onSendShopInfo()}"
                 android:text="@string/add_shop_fab_text"
                 android:visibility="@{addShopViewModel.isVisibleFinishButton() ? android.view.View.VISIBLE : android.view.View.GONE}"
-                android:onClick="@{() -> addShopViewModel.onSendShopInfo()}"
                 app:backgroundTint="@color/colorAccent"
                 app:icon="@drawable/ic_add_shop_fab_check" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
