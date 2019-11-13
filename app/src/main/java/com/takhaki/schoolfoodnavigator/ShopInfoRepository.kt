@@ -2,7 +2,6 @@ package com.takhaki.schoolfoodnavigator
 
 import android.content.Context
 import android.net.Uri
-import android.provider.MediaStore
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.google.firebase.Timestamp
@@ -115,24 +114,19 @@ class ShopInfoRepository {
         handler: (Result<String>) -> Unit
     ) {
         val fileName = imageUri.getFileName(context) ?: ""
-        val filePath = "${shopID}/${fileName}.jpg"
+        val filePath = "${shopID}/${fileName}"
+        Log.d("imageUrl", imageUri.toString())
         val shopImageRef = storage.reference.child(filePath)
 
-        try {
-            fileStreamFromUri(imageUri, context)?.let { stream ->
-                val uploadTask = shopImageRef.putStream(stream)
-                uploadTask.addOnFailureListener { error ->
-                    handler(Result.failure(error))
+        val stream = FileInputStream(File(imageUri.path!!))
+        val uploadTask = shopImageRef.putStream(stream)
+        uploadTask.addOnFailureListener { error ->
+            handler(Result.failure(error))
 
-                }.addOnSuccessListener {
-                    handler(Result.success(filePath))
-
-                }
-            }
-
-        } catch (e: Throwable) {
-            handler(Result.failure(e))
+        }.addOnSuccessListener {
+            handler(Result.success(filePath))
         }
+
     }
 
     private fun mappingShop(queryDoc: QueryDocumentSnapshot): ShopEntity {
@@ -161,29 +155,6 @@ class ShopInfoRepository {
             "editedAt" to shop.lastEditedAt,
             "images" to shopImages.toList()
         )
-    }
-
-    fun fileStreamFromUri(uri: Uri, context: Context): FileInputStream? {
-        val projection = arrayOf(MediaStore.MediaColumns.DATA)
-        val cursor = context.contentResolver.query(uri, projection, null, null, null)
-
-        if (cursor != null) {
-            var path: String? = null
-            if (cursor.moveToFirst()) {
-                path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA))
-                Log.d("filePath", path)
-            }
-
-            cursor.close()
-            path?.let {
-                val imguri = "file://" + it
-                Log.d("filePath", imguri)
-                val file = File(imguri)
-                return FileInputStream(file)
-            }
-        }
-
-        return null
     }
 
 }

@@ -57,4 +57,7 @@ dependencies {
     // coroutine
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.2"
+
+    // Android image Cropper
+    implementation 'com.github.yalantis:ucrop:2.2.4'
 }

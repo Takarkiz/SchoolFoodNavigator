@@ -6,6 +6,7 @@ import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.MediaScannerConnection
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -16,7 +17,9 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.takhaki.schoolfoodnavigator.databinding.ActivityAddShopBinding
+import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.activity_add_shop.*
+import java.io.File
 
 
 class AddShopActivity : AppCompatActivity() {
@@ -81,20 +84,19 @@ class AddShopActivity : AppCompatActivity() {
             return
         }
 
-        if (requestCode == REQUEST_EXTERNAL_STORAGE) {
+        when (requestCode) {
+            REQUEST_EXTERNAL_STORAGE -> {
 
-            val resultUri = if (data != null) data.data else viewModel.shopImageUri.value
 
-            resultUri?.let {
-                MediaScannerConnection.scanFile(
-                    this,
-                    arrayOf(it.path),
-                    arrayOf("image/jpeg"),
-                    null
-                )
+                val resultUri = if (data != null) data.data else viewModel.shopImageUri.value
 
-                shopImageView.setImageURI(resultUri)
-                viewModel.isVisibleDeleteButton.value = true
+                resultUri?.let {
+                    viewModel.shopImageUri.value = startCrop(it)
+                }
+            }
+
+            UCrop.REQUEST_CROP -> {
+                shopImageView.setImageURI(viewModel.shopImageUri.value)
             }
 
         }
@@ -131,5 +133,15 @@ class AddShopActivity : AppCompatActivity() {
         val intent = Intent.createChooser(cameraIntent, "画像の選択")
         intent.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(galleryIntent))
         startActivityForResult(intent, REQUEST_EXTERNAL_STORAGE)
+    }
+
+    private fun startCrop(uri: Uri) : Uri{
+        val fileName = uri.getFileName(this)
+        val resultUri = Uri.fromFile(File(cacheDir, fileName))
+        UCrop.of(uri, resultUri)
+            .withAspectRatio(9f, 9f)
+            .start(this)
+
+        return resultUri
     }
 }
