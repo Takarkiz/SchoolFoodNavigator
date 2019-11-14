@@ -6,7 +6,6 @@ import android.content.ContentValues
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -142,7 +141,7 @@ class AddShopActivity : AppCompatActivity() {
         startActivityForResult(intent, REQUEST_EXTERNAL_STORAGE)
     }
 
-    private fun startCrop(uri: Uri) : Uri{
+    private fun startCrop(uri: Uri): Uri {
         val fileName = uri.getFileName(this)
         val resultUri = Uri.fromFile(File(cacheDir, fileName))
         UCrop.of(uri, resultUri)
@@ -155,6 +154,12 @@ class AddShopActivity : AppCompatActivity() {
 
     private val okListener = DialogInterface.OnClickListener { dialog, which ->
         viewModel.toIntentAssesment(shoudGoAssesment = false)
+
+        // 評価画面に遷移する(ここでの遷移時はバックで戻るとお店一覧に進む)
+        val intent = Intent(this, AssesmentActivity::class.java)
+        intent.putExtra("shopName", viewModel.shopName.value)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
     }
     private val cancelListener = DialogInterface.OnClickListener { dialog, which ->
         viewModel.toIntentAssesment(shoudGoAssesment = false)
