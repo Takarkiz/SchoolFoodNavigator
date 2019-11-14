@@ -2,12 +2,15 @@ package com.takhaki.schoolfoodnavigator
 
 import android.app.Application
 import android.content.Context
+import android.content.DialogInterface
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.util.*
 
 class AddShopViewModel(application: Application) : AndroidViewModel(application) {
@@ -17,6 +20,10 @@ class AddShopViewModel(application: Application) : AndroidViewModel(application)
     var isVisibleFinishButton = MediatorLiveData<Boolean>().apply { value = false }
     val isVisibleDeleteButton = MediatorLiveData<Boolean>().apply { value = false }
     val shopImageUri = MediatorLiveData<Uri>().apply { value = null }
+
+    private var _willIntentAssesment = MutableLiveData<Boolean>().apply { value = false }
+    val willIntentAssesment: LiveData<Boolean>
+        get() = _willIntentAssesment
 
     init {
         val textObserver = Observer<String> {
@@ -43,7 +50,7 @@ class AddShopViewModel(application: Application) : AndroidViewModel(application)
         val shopInfoRepository = ShopInfoRepository()
         shopInfoRepository.registrateShop(shop, shopImageUri.value, appContext) { result ->
             if (result.isSuccess) {
-                Log.d("Firebase", "成功")
+                _willIntentAssesment.value = true
             } else {
                 Log.e("Firebase", "失敗", result.exceptionOrNull())
             }
@@ -59,6 +66,10 @@ class AddShopViewModel(application: Application) : AndroidViewModel(application)
 //                }
 //            }
 //        }
+    }
+
+    fun toIntentAssesment(shoudGoAssesment: Boolean) {
+        _willIntentAssesment.value = shoudGoAssesment
     }
 
     fun deletePhoto() {

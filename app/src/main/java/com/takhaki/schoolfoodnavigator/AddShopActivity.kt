@@ -3,6 +3,7 @@ package com.takhaki.schoolfoodnavigator
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.app.Activity
 import android.content.ContentValues
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.MediaScannerConnection
@@ -15,7 +16,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.takhaki.schoolfoodnavigator.databinding.ActivityAddShopBinding
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.activity_add_shop.*
@@ -64,6 +67,10 @@ class AddShopActivity : AppCompatActivity() {
             shopImageView.setImageURI(null)
             shopImageView.setImageResource(R.drawable.add_photo)
         }
+
+        viewModel.willIntentAssesment.observe(this, Observer { shouldShowDialog ->
+            if (shouldShowDialog) showDialog()
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -143,5 +150,22 @@ class AddShopActivity : AppCompatActivity() {
             .start(this)
 
         return resultUri
+    }
+
+
+    private val okListener = DialogInterface.OnClickListener { dialog, which ->
+        viewModel.toIntentAssesment(shoudGoAssesment = false)
+    }
+    private val cancelListener = DialogInterface.OnClickListener { dialog, which ->
+        viewModel.toIntentAssesment(shoudGoAssesment = false)
+        finish()
+    }
+
+    private fun showDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("登録が完了しました")
+            .setMessage("今回登録したお店の評価を続けますか？")
+            .setPositiveButton("はい", okListener)
+            .setNegativeButton("いいえ", cancelListener).show()
     }
 }

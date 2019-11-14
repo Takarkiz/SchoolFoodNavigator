@@ -60,4 +60,10 @@ dependencies {
 
     // Android image Cropper
     implementation 'com.github.yalantis:ucrop:2.2.4'
+
+    // Dialog
+    implementation 'com.shreyaspatil:MaterialDialog:1.0.0'
+
+    // Lottie Animation Library
+    implementation 'com.airbnb.android:lottie:3.0.6'
 }
