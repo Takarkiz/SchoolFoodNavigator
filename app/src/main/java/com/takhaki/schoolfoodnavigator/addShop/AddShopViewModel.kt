@@ -1,8 +1,7 @@
-package com.takhaki.schoolfoodnavigator
+package com.takhaki.schoolfoodnavigator.addShop
 
 import android.app.Application
 import android.content.Context
-import android.content.DialogInterface
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
@@ -10,7 +9,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.takhaki.schoolfoodnavigator.Model.ShopEntity
+import com.takhaki.schoolfoodnavigator.Repository.ShopInfoRepository
 import java.util.*
 
 class AddShopViewModel(application: Application) : AndroidViewModel(application) {

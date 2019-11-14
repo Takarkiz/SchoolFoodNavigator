@@ -1,4 +1,4 @@
-package com.takhaki.schoolfoodnavigator
+package com.takhaki.schoolfoodnavigator.Utility
 
 import android.content.ContentResolver
 import android.content.Context

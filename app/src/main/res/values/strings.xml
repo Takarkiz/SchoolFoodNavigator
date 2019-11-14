@@ -9,4 +9,10 @@
     <string name="add_shop_edit_hint_name">店名</string>
     <string name="add_shop_text_shopinfo">お店情報</string>
     <string name="add_shop_text_regist_photo">写真の登録</string>
+    <string name="assesment_text_assesment">お店の評価</string>
+    <string name="assesment_category_good">おいしさ</string>
+    <string name="assesment_category_near">近さ</string>
+    <string name="assesment_category_cheep">安さ</string>
+    <string name="assesment_text_comment">コメント</string>
+    <string name="assesment_edittext_hint">ここに記入</string>
 </resources>

@@ -1,9 +1,10 @@
-package com.takhaki.schoolfoodnavigator
+package com.takhaki.schoolfoodnavigator.assesment
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.core.app.NavUtils
+import com.takhaki.schoolfoodnavigator.R
 
 class AssesmentActivity : AppCompatActivity() {
 

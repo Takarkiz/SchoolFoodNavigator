@@ -1,4 +1,4 @@
-package com.takhaki.schoolfoodnavigator
+package com.takhaki.schoolfoodnavigator.Repository
 
 import android.content.Context
 import android.net.Uri
@@ -8,6 +8,8 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.storage.FirebaseStorage
+import com.takhaki.schoolfoodnavigator.Model.ShopEntity
+import com.takhaki.schoolfoodnavigator.Utility.getFileName
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.File
@@ -137,7 +139,14 @@ class ShopInfoRepository {
         val editedAt = queryDoc["editedAt"] as Timestamp
         val images = queryDoc["images"] as List<String>
 
-        return ShopEntity(shopName, genre, authorId, createdAt.toDate(), editedAt.toDate(), images)
+        return ShopEntity(
+            shopName,
+            genre,
+            authorId,
+            createdAt.toDate(),
+            editedAt.toDate(),
+            images
+        )
     }
 
     private fun inverseMapping(shop: ShopEntity, shopImagePath: String?): Map<String, Any> {

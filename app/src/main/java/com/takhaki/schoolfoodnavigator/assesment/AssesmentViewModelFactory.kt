@@ -1,4 +1,4 @@
-package com.takhaki.schoolfoodnavigator
+package com.takhaki.schoolfoodnavigator.assesment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

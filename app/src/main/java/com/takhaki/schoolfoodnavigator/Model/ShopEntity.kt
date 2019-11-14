@@ -1,4 +1,4 @@
-package com.takhaki.schoolfoodnavigator
+package com.takhaki.schoolfoodnavigator.Model
 
 import java.util.*
 
