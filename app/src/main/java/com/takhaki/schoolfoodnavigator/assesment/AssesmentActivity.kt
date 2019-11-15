@@ -7,10 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
-import com.github.mikephil.charting.charts.RadarChart
-import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.data.*
-import com.github.mikephil.charting.formatter.PercentFormatter
+import com.github.mikephil.charting.data.RadarData
+import com.github.mikephil.charting.data.RadarDataSet
+import com.github.mikephil.charting.data.RadarEntry
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.databinding.ActivityAssesmentBinding
 import kotlinx.android.synthetic.main.activity_assesment.*
@@ -23,9 +23,9 @@ class AssesmentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_assesment)
-        val shopName: String = intent.getCharSequenceExtra("shopName").toString()
+        //val shopName: String = intent.getCharSequenceExtra("shopName").toString()
         actionBar?.setDisplayShowHomeEnabled(true)
-        setTitle(shopName)
+        //setTitle(shopName)
 
         binding = DataBindingUtil.setContentView(
             this,
@@ -53,33 +53,70 @@ class AssesmentActivity : AppCompatActivity() {
 
     private fun setUpRadarChart() {
 
-        val legend: Legend? = radarChart.legend
-        legend?.horizontalAlignment = Legend.LegendHorizontalAlignment.LEFT
-
         // データセット
         val value = listOf(
             viewModel.goodValue.value?.let { it } ?: 0f,
             viewModel.distanceValue.value?.let { it } ?: 0f,
             viewModel.cheepValue.value?.let { it } ?: 0f
         )
-        val label = listOf("おいしさ", "近さ", "安さ")
+
         val entry = ArrayList<RadarEntry>()
         for (i in value.indices) {
-            entry.add(RadarEntry(value[i], label[i]))
+            entry.add(RadarEntry(value[i]))
         }
 
         /**
          * ラベル
          */
-        val dataSet = RadarDataSet(entry, "")
-        dataSet.setDrawValues(false)
+        val dataSet = RadarDataSet(entry, "お店バロメータ")
+        dataSet.apply {
+            fillAlpha = 200
+            setDrawFilled(true)
+            setDrawValues(false)
+
+            // 色の指定
+
+        }
+
         val radarData = RadarData(dataSet)
-        radarData.setValueFormatter(PercentFormatter())
-        radarData.setValueTextSize(20f)
-        radarData.setValueTextColor(Color.BLACK)
-        radarChart.data = radarData
-        radarChart.data.notifyDataChanged()
-        radarChart.notifyDataSetChanged()
-        radarChart.invalidate()
+        radarData.apply {
+            setValueTextSize(9f)
+            setValueTextColor(Color.BLACK)
+            setDrawValues(true)
+        }
+
+
+        radarChart.apply {
+            data = radarData
+            legend.isEnabled = false
+            description.isEnabled = false
+            isRotationEnabled = false
+            data.notifyDataChanged()
+            notifyDataSetChanged()
+            invalidate()
+
+            xAxis.apply {
+                xOffset = 0f
+                yOffset = 0f
+                textSize = 10f
+                valueFormatter = object : ValueFormatter() {
+
+                    val labels = listOf("おいしさ", "近さ", "安さ")
+
+                    override fun getFormattedValue(value: Float): String {
+                        return labels[value.toInt() % labels.size]
+                    }
+                }
+            }
+
+            yAxis.apply {
+                axisMinimum = 0f
+                axisMaximum = 4f
+                labelCount = 3
+                gridColor = R.color.gray
+                textColor = R.color.gray
+            }
+        }
+
     }
 }
