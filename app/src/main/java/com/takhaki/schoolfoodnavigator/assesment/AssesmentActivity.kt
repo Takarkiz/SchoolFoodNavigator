@@ -2,7 +2,6 @@ package com.takhaki.schoolfoodnavigator.assesment
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -26,9 +25,10 @@ class AssesmentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_assesment)
-        //val shopName: String = intent.getCharSequenceExtra("shopName").toString()
+        val shopName: String = intent.getCharSequenceExtra("shopName").toString()
+        val shopId: String = intent.getCharSequenceExtra("shopId").toString()
         actionBar?.setDisplayShowHomeEnabled(true)
-        //setTitle(shopName)
+        setTitle(shopName)
 
         binding = DataBindingUtil.setContentView(
             this,
@@ -41,6 +41,8 @@ class AssesmentActivity : AppCompatActivity() {
 
         setUpRadarChart()
         updateRadarChart()
+
+        viewModel.putShopId(shopId)
 
         foodGoodRating.setOnRatingChangeListener { ratingBar, rating ->
             viewModel.onUpdateGood(rating)
@@ -58,6 +60,10 @@ class AssesmentActivity : AppCompatActivity() {
             viewModel.onUpdateCheep(rating)
             radarChart.clearValues()
             updateRadarChart()
+        }
+
+        finishAssesment.setOnClickListener {
+            viewModel.uploadAssessment()
         }
 
     }

@@ -3,6 +3,8 @@ package com.takhaki.schoolfoodnavigator.assesment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
+import com.takhaki.schoolfoodnavigator.Repository.AssesmentRepository
 
 class AssesmentViewModel : ViewModel() {
 
@@ -22,9 +24,7 @@ class AssesmentViewModel : ViewModel() {
     val cheepValue: LiveData<Float>
         get() = _cheepValue
 
-    private val _isVisibleFinishButton = MutableLiveData<Boolean>()
-    val isVisibleFinishButton: LiveData<Boolean>
-        get() = _isVisibleFinishButton
+    val commentText = MutableLiveData<String>().apply { value = "" }
 
 
     fun putShopId(shopId: String) {
@@ -41,6 +41,22 @@ class AssesmentViewModel : ViewModel() {
 
     fun onUpdateCheep(rating: Float) {
         _cheepValue.value = rating
+    }
+
+    fun uploadAssessment() {
+        shopId.value?.let { id ->
+            val repository = AssesmentRepository(id)
+            val assesment = AssessmentEntity(
+                good = goodValue.value?.let { it } ?: 3f,
+                distance = distanceValue.value?.let { it } ?: 3f,
+                cheep = cheepValue.value?.let { it } ?: 3f,
+                 comment = commentText.value?.let { it } ?: ""
+                )
+            
+            repository.addAssessment(assesment) { result ->  
+
+            }
+        }
     }
 
 }
