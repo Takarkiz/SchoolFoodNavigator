@@ -16,4 +16,7 @@
     <string name="assesment_text_comment">コメント</string>
     <string name="assesment_edittext_hint">ここに記入</string>
     <string name="assesment_radar_graph">レーダーグラフ</string>
+    <string name="nav_item_home">ホーム</string>
+    <string name="nav_item_mypage">マイページ</string>
+    <string name="tab_title_favorite">お気に入り</string>
 </resources>

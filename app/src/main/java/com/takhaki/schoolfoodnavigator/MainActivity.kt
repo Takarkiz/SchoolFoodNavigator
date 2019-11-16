@@ -1,11 +1,16 @@
-package com.takhaki.schoolfoodnavigator.mainList
+package com.takhaki.schoolfoodnavigator
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.takhaki.schoolfoodnavigator.R
+import com.google.android.material.bottomnavigation.BottomNavigationItemView
+import com.google.android.material.internal.NavigationMenuItemView
 import com.takhaki.schoolfoodnavigator.addShop.AddShopActivity
+import com.takhaki.schoolfoodnavigator.mainList.ShopListAdapter
+import com.takhaki.schoolfoodnavigator.mainList.ShopListItemModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -22,12 +27,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         val adapter = ShopListAdapter()
-        adapter.data = listOf(ShopListItemModel(
-            id = "",
-            name = "うま屋",
-            shopGenre = "ラーメン屋",
-            imageUrl = "https://1.bp.blogspot.com/-Sg-K3HPG64E/XQjudNG_m3I/AAAAAAABTSQ/sD_GacxU0Es9s-qQSxjWSqcvrAuMdRpYwCLcBGAs/s800/ramen_top_tonkotsu.png",
-            score = 4.3f),
+        adapter.data = listOf(
+            ShopListItemModel(
+                id = "",
+                name = "うま屋",
+                shopGenre = "ラーメン屋",
+                imageUrl = "https://1.bp.blogspot.com/-Sg-K3HPG64E/XQjudNG_m3I/AAAAAAABTSQ/sD_GacxU0Es9s-qQSxjWSqcvrAuMdRpYwCLcBGAs/s800/ramen_top_tonkotsu.png",
+                score = 4.3f
+            ),
             ShopListItemModel(
                 id = "",
                 name = "帯広豚丼王国",
@@ -76,11 +83,12 @@ class MainActivity : AppCompatActivity() {
                 shopGenre = "中華料理",
                 imageUrl = "https://1.bp.blogspot.com/-XHNyzCDPEbc/XXRbE5q7V_I/AAAAAAABUrg/FOtz7Xxl2qoBnCeIN5j5IPc8NPlIWYuBQCLcBGAs/s1600/ramen_taiwan.png",
                 score = 3.5f
-            ))
+            )
+        )
 
-        shopList.adapter = adapter
-        val itemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-        shopList.addItemDecoration(itemDecoration)
+//        shopList.adapter = adapter
+//        val itemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+//        shopList.addItemDecoration(itemDecoration)
     }
 
 }

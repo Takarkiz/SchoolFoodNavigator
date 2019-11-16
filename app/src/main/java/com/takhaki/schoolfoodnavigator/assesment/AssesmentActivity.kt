@@ -13,7 +13,7 @@ import com.github.mikephil.charting.data.RadarData
 import com.github.mikephil.charting.data.RadarDataSet
 import com.github.mikephil.charting.data.RadarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.takhaki.schoolfoodnavigator.mainList.MainActivity
+import com.takhaki.schoolfoodnavigator.MainActivity
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.databinding.ActivityAssesmentBinding
 import kotlinx.android.synthetic.main.activity_assesment.*
