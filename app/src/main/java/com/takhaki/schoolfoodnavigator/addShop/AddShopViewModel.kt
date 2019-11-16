@@ -17,6 +17,10 @@ class AddShopViewModel(application: Application) : AndroidViewModel(application)
 
     val shopName = MutableLiveData<String>().apply { value = "" }
     val genreTitle = MutableLiveData<String>().apply { value = "" }
+    private val _shopId = MutableLiveData<String>()
+    val shopId: LiveData<String>
+        get() = _shopId
+
     var isVisibleFinishButton = MediatorLiveData<Boolean>().apply { value = false }
     val isVisibleDeleteButton = MediatorLiveData<Boolean>().apply { value = false }
     val shopImageUri = MediatorLiveData<Uri>().apply { value = null }
@@ -50,7 +54,11 @@ class AddShopViewModel(application: Application) : AndroidViewModel(application)
         val shopInfoRepository = ShopInfoRepository()
         shopInfoRepository.registrateShop(shop, shopImageUri.value, appContext) { result ->
             if (result.isSuccess) {
-                _willIntentAssesment.value = true
+                result.getOrNull()?.let { id ->
+                    _shopId.value = id
+                    _willIntentAssesment.value = true
+                }
+
             } else {
                 Log.e("Firebase", "失敗", result.exceptionOrNull())
             }

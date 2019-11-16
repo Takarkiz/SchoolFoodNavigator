@@ -163,6 +163,7 @@ class AddShopActivity : AppCompatActivity() {
         // 評価画面に遷移する(ここでの遷移時はバックで戻るとお店一覧に進む)
         val intent = Intent(this, AssesmentActivity::class.java)
         intent.putExtra("shopName", viewModel.shopName.value)
+        intent.putExtra("shopId", viewModel.shopId.value)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
     }

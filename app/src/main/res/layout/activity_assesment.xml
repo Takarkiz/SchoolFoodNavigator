@@ -70,11 +70,13 @@
                         android:textSize="14sp" />
 
                     <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                        android:id="@+id/foodGoodRating"
                         style="@style/Widget.MaterialRatingBar.RatingBar"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="7"
-                        android:numStars="5" />
+                        android:layout_weight="6"
+                        android:numStars="5"
+                        android:rating="3" />
 
                 </LinearLayout>
 
@@ -98,11 +100,13 @@
                         android:textSize="14sp" />
 
                     <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                        android:id="@+id/distanceRating"
                         style="@style/Widget.MaterialRatingBar.RatingBar"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="7"
-                        android:numStars="5" />
+                        android:layout_weight="6"
+                        android:numStars="5"
+                        android:rating="3" />
 
                 </LinearLayout>
 
@@ -126,11 +130,13 @@
                         android:textSize="14sp" />
 
                     <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                        android:id="@+id/cheepRating"
                         style="@style/Widget.MaterialRatingBar.RatingBar"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="7"
-                        android:numStars="5" />
+                        android:layout_weight="6"
+                        android:numStars="5"
+                        android:rating="3" />
 
                 </LinearLayout>
 

@@ -2,11 +2,14 @@ package com.takhaki.schoolfoodnavigator.assesment
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
+import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.data.RadarData
 import com.github.mikephil.charting.data.RadarDataSet
 import com.github.mikephil.charting.data.RadarEntry
@@ -37,6 +40,25 @@ class AssesmentActivity : AppCompatActivity() {
         binding.assesmentViewModel = viewModel
 
         setUpRadarChart()
+        updateRadarChart()
+
+        foodGoodRating.setOnRatingChangeListener { ratingBar, rating ->
+            viewModel.onUpdateGood(rating)
+            radarChart.clearValues()
+            updateRadarChart()
+        }
+
+        distanceRating.setOnRatingChangeListener { ratingBar, rating ->
+            viewModel.onUpdateDistance(rating)
+            radarChart.clearValues()
+            updateRadarChart()
+        }
+
+        cheepRating.setOnRatingChangeListener { ratingBar, rating ->
+            viewModel.onUpdateCheep(rating)
+            radarChart.clearValues()
+            updateRadarChart()
+        }
 
     }
 
@@ -53,6 +75,42 @@ class AssesmentActivity : AppCompatActivity() {
 
     private fun setUpRadarChart() {
 
+        radarChart.apply {
+
+            legend.isEnabled = false
+            description.isEnabled = false
+            isRotationEnabled = false
+            animateXY(1400, 1400, Easing.EaseInOutElastic, Easing.EaseInOutElastic)
+
+            xAxis.apply {
+                xOffset = 0f
+                yOffset = 0f
+                textSize = 10f
+                axisMinimum = 0f
+                axisMaximum = 4f
+                valueFormatter = object : ValueFormatter() {
+
+                    val labels = listOf("おいしさ", "近さ", "安さ")
+
+                    override fun getFormattedValue(value: Float): String {
+                        return labels[value.toInt() % labels.size]
+                    }
+                }
+            }
+
+            yAxis.apply {
+                axisMinimum = 0f
+                axisMaximum = 5f
+                labelCount = 3
+                gridColor = R.color.gray
+                textColor = R.color.gray
+            }
+        }
+
+    }
+
+    private fun updateRadarChart() {
+
         // データセット
         val value = listOf(
             viewModel.goodValue.value?.let { it } ?: 0f,
@@ -68,13 +126,11 @@ class AssesmentActivity : AppCompatActivity() {
         /**
          * ラベル
          */
-        val dataSet = RadarDataSet(entry, "お店バロメータ")
+        val dataSet = RadarDataSet(entry, "")
         dataSet.apply {
             fillAlpha = 200
             setDrawFilled(true)
             setDrawValues(false)
-
-            // 色の指定
 
         }
 
@@ -85,38 +141,14 @@ class AssesmentActivity : AppCompatActivity() {
             setDrawValues(true)
         }
 
-
         radarChart.apply {
+            animateY(500, Easing.EaseInOutElastic)
             data = radarData
-            legend.isEnabled = false
-            description.isEnabled = false
-            isRotationEnabled = false
             data.notifyDataChanged()
             notifyDataSetChanged()
             invalidate()
-
-            xAxis.apply {
-                xOffset = 0f
-                yOffset = 0f
-                textSize = 10f
-                valueFormatter = object : ValueFormatter() {
-
-                    val labels = listOf("おいしさ", "近さ", "安さ")
-
-                    override fun getFormattedValue(value: Float): String {
-                        return labels[value.toInt() % labels.size]
-                    }
-                }
-            }
-
-            yAxis.apply {
-                axisMinimum = 0f
-                axisMaximum = 4f
-                labelCount = 3
-                gridColor = R.color.gray
-                textColor = R.color.gray
-            }
         }
 
+        Toast.makeText(this, radarChart.xRange.toString(), Toast.LENGTH_SHORT).show()
     }
 }

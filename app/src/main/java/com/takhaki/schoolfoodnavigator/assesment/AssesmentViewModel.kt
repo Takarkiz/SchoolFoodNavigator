@@ -10,15 +10,15 @@ class AssesmentViewModel : ViewModel() {
     val shopId: LiveData<String>
         get() = _shopId
 
-    private val _goodValue = MutableLiveData<Float>().apply { value = 0f }
+    private val _goodValue = MutableLiveData<Float>().apply { value = 3f }
     val goodValue: LiveData<Float>
         get() = _goodValue
 
-    private val _distanceValue = MutableLiveData<Float>().apply { value = 0f }
+    private val _distanceValue = MutableLiveData<Float>().apply { value = 3f }
     val distanceValue: LiveData<Float>
         get() = _distanceValue
 
-    private val _cheepValue = MutableLiveData<Float>().apply { value = 0f }
+    private val _cheepValue = MutableLiveData<Float>().apply { value = 3f }
     val cheepValue: LiveData<Float>
         get() = _cheepValue
 
@@ -32,15 +32,15 @@ class AssesmentViewModel : ViewModel() {
     }
 
     fun onUpdateGood(rating: Float) {
-
+        _goodValue.value = rating
     }
 
     fun onUpdateDistance(rating: Float) {
-
+        _distanceValue.value = rating
     }
 
     fun onUpdateCheep(rating: Float) {
-
+        _cheepValue.value = rating
     }
 
 }
