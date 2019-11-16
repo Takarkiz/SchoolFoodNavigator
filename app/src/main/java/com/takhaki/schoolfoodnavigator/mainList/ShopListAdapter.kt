@@ -35,6 +35,7 @@ class ShopListAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
         holder.shopTitleTextView.text = item.name
         holder.shopGenreTextView.text = item.shopGenre
         holder.scoreRatingBar.rating = item.score
+        holder.scoreRatingBar.isEnabled = false
         holder.scoreTextView.text = item.score.toString()
         Glide.with(holder.itemView).load(item.imageUrl).into(holder.shopImageView)
 

@@ -10,8 +10,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.storage.FirebaseStorage
 import com.takhaki.schoolfoodnavigator.Model.ShopEntity
 import com.takhaki.schoolfoodnavigator.Utility.getFileName
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileInputStream
 import java.util.*
@@ -69,30 +69,26 @@ class ShopInfoRepository {
 
 
     // 全てのショップ情報を取得する
-    fun loadAllShops(handler: (Result<LiveData<List<ShopEntity>>>) -> Unit) = runBlocking<Unit> {
-        val shoplist = mutableListOf<ShopEntity>()
-        val job = launch {
-            shopDB.get().addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    task.getResult()?.let { result ->
-                        for (doc in result) {
-                            shoplist.add(mappingShop(doc))
-                        }
-                    }
+    suspend fun getAllShops(): List<ShopEntity> = withContext(Dispatchers.IO) {
 
+        fetchAllShops()
+
+    }
+
+    private fun fetchAllShops(): List<ShopEntity> {
+        val shoplist = mutableListOf<ShopEntity>()
+
+        shopDB.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                task.getResult()?.let { result ->
+                    for (doc in result) {
+                        shoplist.add(mappingShop(doc))
+                    }
                 }
             }
         }
-        job.join()
 
-        val shopList = object : LiveData<List<ShopEntity>>() {
-
-        }
-
-        shopList.apply {
-            shoplist
-        }
-        handler(Result.success(shopList))
+        return shoplist
     }
 
     // IDから一つのショップ情報を取得する
