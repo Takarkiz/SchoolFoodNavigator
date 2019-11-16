@@ -19,4 +19,7 @@
     <string name="nav_item_home">ホーム</string>
     <string name="nav_item_mypage">マイページ</string>
     <string name="tab_title_favorite">お気に入り</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
