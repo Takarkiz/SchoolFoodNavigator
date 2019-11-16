@@ -116,7 +116,7 @@ class ShopInfoRepository {
         handler: (Result<String>) -> Unit
     ) {
         val fileName = imageUri.getFileName(context) ?: ""
-        val filePath = "${shopID}/${fileName}"
+        val filePath = "Shops/${shopID}/${fileName}"
         Log.d("imageUrl", imageUri.toString())
         val shopImageRef = storage.reference.child(filePath)
 

@@ -17,7 +17,7 @@
         <activity android:name=".assesment.AssesmentActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".mainList.MainActivity" />
         </activity>
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
@@ -26,9 +26,9 @@
         <activity android:name=".addShop.AddShopActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".mainList.MainActivity" />
         </activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".mainList.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

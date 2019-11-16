@@ -1,5 +1,6 @@
 package com.takhaki.schoolfoodnavigator.assesment
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
@@ -12,6 +13,7 @@ import com.github.mikephil.charting.data.RadarData
 import com.github.mikephil.charting.data.RadarDataSet
 import com.github.mikephil.charting.data.RadarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.takhaki.schoolfoodnavigator.mainList.MainActivity
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.databinding.ActivityAssesmentBinding
 import kotlinx.android.synthetic.main.activity_assesment.*
@@ -62,7 +64,19 @@ class AssesmentActivity : AppCompatActivity() {
         }
 
         finishAssesment.setOnClickListener {
-            viewModel.uploadAssessment()
+            viewModel.uploadAssessment { result ->
+                if (result.isFailure) {
+                    // TODO: - エラー時の処理を加える
+
+                    return@uploadAssessment
+                }
+
+                // それ以外はメイン画面に戻る
+                val intent = Intent(this, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+
+            }
         }
 
     }

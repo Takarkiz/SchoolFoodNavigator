@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="assesmentViewModel"
             type="com.takhaki.schoolfoodnavigator.assesment.AssesmentViewModel" />
@@ -152,7 +153,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/assesment_edittext_hint"
-                    android:text="@={assesmentViewModel.commentText}"/>
+                    android:text="@={assesmentViewModel.commentText}" />
 
 
             </LinearLayout>

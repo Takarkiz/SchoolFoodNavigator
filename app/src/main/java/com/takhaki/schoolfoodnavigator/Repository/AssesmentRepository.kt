@@ -15,6 +15,7 @@ class AssesmentRepository(shopId: String) {
 
     fun addAssessment(assessment: AssessmentEntity, handler: (Result<String>) -> Unit) {
 
+        // TODO: - アップロードする時にShopの最終更新日時を更新するようにする
         collectionRef
             .add(assesmentToMap(assessment))
             .addOnSuccessListener { doc ->

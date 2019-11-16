@@ -43,7 +43,7 @@ class AssesmentViewModel : ViewModel() {
         _cheepValue.value = rating
     }
 
-    fun uploadAssessment() {
+    fun uploadAssessment(finishUploadHander:(Result<String>) -> Unit) {
         shopId.value?.let { id ->
             val repository = AssesmentRepository(id)
             val assesment = AssessmentEntity(
@@ -54,7 +54,17 @@ class AssesmentViewModel : ViewModel() {
                 )
             
             repository.addAssessment(assesment) { result ->  
-
+                if (result.isSuccess) {
+                    try {
+                        finishUploadHander(Result.success(result.getOrThrow()))
+                    } catch (e: Error) {
+                        finishUploadHander(Result.failure(e))
+                    }
+                } else {
+                    result.exceptionOrNull()?.let { e ->
+                        finishUploadHander(Result.failure(e))
+                    }
+                }
             }
         }
     }
