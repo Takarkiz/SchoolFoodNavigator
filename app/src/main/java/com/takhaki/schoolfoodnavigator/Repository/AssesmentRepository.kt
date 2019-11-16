@@ -1,22 +1,24 @@
 package com.takhaki.schoolfoodnavigator.Repository
 
-import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
 
 class AssesmentRepository(shopId: String) {
 
-    private val assesmentDBRef: DocumentReference
+    private val collectionRef: CollectionReference
 
     init {
-        assesmentDBRef = FirebaseFirestore.getInstance().collection("Shops").document(shopId)
+        collectionRef = FirebaseFirestore.getInstance().collection("Shops").document(shopId)
+            .collection("comment")
     }
 
     fun addAssessment(assessment: AssessmentEntity, handler: (Result<String>) -> Unit) {
 
-        assesmentDBRef.set(assesmentToMap(assessment))
-            .addOnSuccessListener {
-                handler(Result.success("成功"))
+        collectionRef
+            .add(assesmentToMap(assessment))
+            .addOnSuccessListener { doc ->
+                handler(Result.success(doc.id))
             }.addOnFailureListener { e ->
                 handler(Result.failure(e))
             }

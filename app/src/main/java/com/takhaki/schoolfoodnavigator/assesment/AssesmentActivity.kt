@@ -3,7 +3,6 @@ package com.takhaki.schoolfoodnavigator.assesment
 import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import androidx.databinding.DataBindingUtil
@@ -154,7 +153,5 @@ class AssesmentActivity : AppCompatActivity() {
             notifyDataSetChanged()
             invalidate()
         }
-
-        Toast.makeText(this, radarChart.xRange.toString(), Toast.LENGTH_SHORT).show()
     }
 }
