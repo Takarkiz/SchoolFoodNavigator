@@ -33,6 +33,11 @@
     <fragment
         android:id="@+id/userIconRegisterFragment"
         android:name="com.takhaki.schoolfoodnavigator.register.IconRegisterFragment"
-        android:label="ThirdFragment"/>
+        android:label="ThirdFragment">
+
+        <argument
+            android:name="name"
+            app:argType="string"/>
+    </fragment>
 
 </navigation>

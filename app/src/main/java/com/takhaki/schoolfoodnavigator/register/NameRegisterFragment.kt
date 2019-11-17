@@ -5,9 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.takhaki.schoolfoodnavigator.R
+import com.takhaki.schoolfoodnavigator.databinding.FragmentNameRegisterBinding
 import kotlinx.android.synthetic.main.fragment_name_register.*
 
 /**
@@ -15,18 +18,32 @@ import kotlinx.android.synthetic.main.fragment_name_register.*
  */
 class NameRegisterFragment : Fragment() {
 
+    lateinit var viewModel: NameRegisterViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_name_register, container, false)
+
+
+        val binding: FragmentNameRegisterBinding = DataBindingUtil.inflate(
+            inflater, R.layout.fragment_name_register, container, false
+        )
+
+        viewModel = ViewModelProviders.of(this).get(NameRegisterViewModel::class.java)
+        binding.nameRegisterViewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+
+        return binding.root
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
         finishEditUserName.setOnClickListener {
-            findNavController().navigate(R.id.action_userNameResigterFragment_to_userIconRegisterFragment)
+            val content = viewModel.nameTextView.value.toString()
+            val action = NameRegisterFragmentDirections.actionUserNameResigterFragmentToUserIconRegisterFragment(content)
+            findNavController().navigate(action)
         }
     }
 
