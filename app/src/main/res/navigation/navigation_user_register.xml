@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/navigation_user_register"
+    app:startDestination="@id/start_fragment">
+
+    <fragment
+        android:id="@+id/start_fragment"
+        android:name="com.takhaki.schoolfoodnavigator.register.StartFragment"
+        android:label="FirstFragment">
+
+        <action
+            android:id="@+id/action_start_fragment_to_userNameResigterFragment"
+            app:destination="@id/userNameResigterFragment"
+            app:enterAnim="@anim/side_from_right"
+            app:exitAnim="@anim/side_to_left"
+            app:popEnterAnim="@anim/side_from_left"
+            app:popExitAnim="@anim/side_to_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/userNameResigterFragment"
+        android:name="com.takhaki.schoolfoodnavigator.register.NameRegisterFragment"
+        android:label="SecondFragment">
+        <action
+            android:id="@+id/action_userNameResigterFragment_to_userIconRegisterFragment"
+            app:destination="@id/userIconRegisterFragment"
+            app:enterAnim="@anim/side_from_right"
+            app:exitAnim="@anim/side_to_left"
+            app:popEnterAnim="@anim/side_from_left"
+            app:popExitAnim="@anim/side_to_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/userIconRegisterFragment"
+        android:name="com.takhaki.schoolfoodnavigator.register.IconRegisterFragment"
+        android:label="ThirdFragment"/>
+
+</navigation>
