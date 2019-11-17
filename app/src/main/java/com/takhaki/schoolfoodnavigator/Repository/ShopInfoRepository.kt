@@ -8,9 +8,12 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.storage.FirebaseStorage
+import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
 import com.takhaki.schoolfoodnavigator.Model.ShopEntity
 import com.takhaki.schoolfoodnavigator.Utility.getFileName
+import com.takhaki.schoolfoodnavigator.mainList.ShopListItemModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileInputStream
@@ -69,27 +72,18 @@ class ShopInfoRepository {
 
 
     // 全てのショップ情報を取得する
-    suspend fun getAllShops(): List<ShopEntity> = withContext(Dispatchers.IO) {
-
-        fetchAllShops()
-
-    }
-
-    private fun fetchAllShops(): List<ShopEntity> {
-        val shoplist = mutableListOf<ShopEntity>()
-
-        shopDB.get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                task.getResult()?.let { result ->
-                    for (doc in result) {
-                        shoplist.add(mappingShop(doc))
-                    }
+    suspend fun getAllshoListModel(): List<ShopEntity> = withContext(Dispatchers.IO) {
+        var shops: List<ShopEntity> = listOf()
+        fetchAllShops{
+            if (it.isSuccess) {
+                it.getOrNull()?.let { result ->
+                    shops = result
                 }
             }
         }
-
-        return shoplist
+        shops
     }
+
 
     // IDから一つのショップ情報を取得する
     fun loadShop(shopID: String, result: (Result<LiveData<ShopEntity>>) -> Unit) {
@@ -161,5 +155,40 @@ class ShopInfoRepository {
             "images" to shopImages.toList()
         )
     }
+
+    private fun fetchAllShops(handler: (Result<List<ShopEntity>>) -> Unit) {
+        val shoplist = mutableListOf<ShopEntity>()
+
+        shopDB.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                task.result?.let { result ->
+                    for (doc in result) {
+                        shoplist.add(mappingShop(doc))
+                    }
+                    handler(Result.success(shoplist))
+                }
+            } else {
+                task.addOnFailureListener { e ->
+                    handler(Result.failure(e))
+                }
+            }
+        }
+    }
+//
+//    private fun fetchAllScore(idList: List<String>): List<ShopListItemModel> {
+//        val listModel = mutableListOf<ShopListItemModel>()
+//
+//        idList.forEach { id ->
+//            shopDB.document(id).collection("comment").get().addOnCompleteListener { task ->
+//                if (task.isSuccessful) {
+//                    task.result?.let { result ->
+//
+//                    }
+//                }
+//            }
+//        }
+//
+//    }
+
 
 }

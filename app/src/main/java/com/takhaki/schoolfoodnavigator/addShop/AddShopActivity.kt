@@ -18,10 +18,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.takhaki.schoolfoodnavigator.assesment.AssesmentActivity
 import com.takhaki.schoolfoodnavigator.R
-import com.takhaki.schoolfoodnavigator.databinding.ActivityAddShopBinding
 import com.takhaki.schoolfoodnavigator.Utility.getFileName
+import com.takhaki.schoolfoodnavigator.assesment.AssesmentActivity
+import com.takhaki.schoolfoodnavigator.databinding.ActivityAddShopBinding
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.activity_add_shop.*
 import java.io.File
@@ -51,7 +51,8 @@ class AddShopActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_shop)
 
-        binding = DataBindingUtil.setContentView(this,
+        binding = DataBindingUtil.setContentView(
+            this,
             R.layout.activity_add_shop
         )
         viewModel = ViewModelProviders.of(this).get(AddShopViewModel::class.java)
