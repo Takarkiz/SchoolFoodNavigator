@@ -18,6 +18,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.navArgs
+import com.takhaki.schoolfoodnavigator.MainActivity
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.Utility.getFileName
 import com.takhaki.schoolfoodnavigator.databinding.FragmentIconRegisterBinding
@@ -55,7 +56,15 @@ class IconRegisterFragment : Fragment() {
         iconView.setOnClickListener {
             didTapSelectUserPhoto()
         }
+
+        finishRegisterButton.setOnClickListener {
+            val intent = Intent(context, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            context?.startActivity(intent)
+        }
     }
+
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

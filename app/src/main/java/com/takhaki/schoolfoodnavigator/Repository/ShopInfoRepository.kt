@@ -8,12 +8,9 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.storage.FirebaseStorage
-import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
 import com.takhaki.schoolfoodnavigator.Model.ShopEntity
 import com.takhaki.schoolfoodnavigator.Utility.getFileName
-import com.takhaki.schoolfoodnavigator.mainList.ShopListItemModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileInputStream
@@ -74,7 +71,7 @@ class ShopInfoRepository {
     // 全てのショップ情報を取得する
     suspend fun getAllshoListModel(): List<ShopEntity> = withContext(Dispatchers.IO) {
         var shops: List<ShopEntity> = listOf()
-        fetchAllShops{
+        fetchAllShops {
             if (it.isSuccess) {
                 it.getOrNull()?.let { result ->
                     shops = result

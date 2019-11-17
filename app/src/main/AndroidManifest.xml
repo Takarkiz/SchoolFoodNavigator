@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".register.RegisterUserActivity"
+            android:name="com.takhaki.schoolfoodnavigator.register.RegisterUserActivity"
             android:theme="@style/NoActionBarTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,8 +23,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".profile.ProfileActivity" />
-        <activity android:name=".assesment.AssesmentActivity">
+        <activity android:name="com.takhaki.schoolfoodnavigator.profile.ProfileActivity" />
+        <activity android:name="com.takhaki.schoolfoodnavigator.assesment.AssesmentActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
@@ -33,7 +33,7 @@
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".addShop.AddShopActivity">
+        <activity android:name="com.takhaki.schoolfoodnavigator.addShop.AddShopActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />

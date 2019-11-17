@@ -1,6 +1,5 @@
 package com.takhaki.schoolfoodnavigator.mainList
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.takhaki.schoolfoodnavigator.Repository.ShopInfoRepository

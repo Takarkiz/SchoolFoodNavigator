@@ -50,23 +50,22 @@ class MainListFragment : Fragment() {
 
         val adapter = ShopListAdapter()
         viewModel.loadListShopItem()
-//        viewModel.shopItemList.value?.let { items ->
+        adapter.data = listOf(
+            ShopListItemModel(
+                id = "",
+                name = "帯広豚丼王国",
+                shopGenre = "豚丼ハウス",
+                imageUrl = "https://1.bp.blogspot.com/-ZwMp9KerB-0/XRHQ2s89EFI/AAAAAAABTaY/i1QNxsIg2D8wHRN3M-vDyDTbefi3mLi_wCLcBGAs/s800/food_butadon_obihiro.png",
+                score = 3.5f
+            )
+        )
+        shopList.adapter = adapter
+
+
+//        viewModel.shopItemList.observe(this, Observer { items ->
 //            adapter.data = items
 //            shopList.adapter = adapter
-//        } ?: listOf(
-//            ShopListItemModel(
-//                id = "",
-//                name = "帯広豚丼王国",
-//                shopGenre = "豚丼ハウス",
-//                imageUrl = "https://1.bp.blogspot.com/-ZwMp9KerB-0/XRHQ2s89EFI/AAAAAAABTaY/i1QNxsIg2D8wHRN3M-vDyDTbefi3mLi_wCLcBGAs/s800/food_butadon_obihiro.png",
-//                score = 3.5f
-//            )
-//            )
-
-        viewModel.shopItemList.observe(this, Observer { items ->
-            adapter.data = items
-            shopList.adapter = adapter
-        })
+//        })
 
         val itemDecoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
         shopList.addItemDecoration(itemDecoration)
