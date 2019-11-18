@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.navArgs
 import com.takhaki.schoolfoodnavigator.MainActivity
@@ -58,13 +59,21 @@ class IconRegisterFragment : Fragment() {
         }
 
         finishRegisterButton.setOnClickListener {
-            val intent = Intent(context, MainActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-            context?.startActivity(intent)
+            loadingAnimationView.visibility = View.VISIBLE
+            loadingAnimationView.playAnimation()
+            viewModel.createUser()
         }
+
+        viewModel.isCompletedUserData.observe(this, Observer { complete ->
+            if (complete) {
+                loadingAnimationView.visibility = View.GONE
+                loadingAnimationView.pauseAnimation()
+                val intent = Intent(context, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                context?.startActivity(intent)
+            }
+        })
     }
-
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -142,7 +151,7 @@ class IconRegisterFragment : Fragment() {
 
         val galleryIntent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         galleryIntent.addCategory(Intent.CATEGORY_OPENABLE)
-        galleryIntent.type = "image/jpeg"
+        galleryIntent.type = "image/*"
 
         val intent = Intent.createChooser(cameraIntent, "画像の選択")
         intent.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(galleryIntent))

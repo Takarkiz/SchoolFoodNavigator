@@ -1,8 +1,8 @@
 package com.takhaki.schoolfoodnavigator
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayout
@@ -17,7 +17,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val tabLayoutTitle: List<String> = listOf(this.getString(R.string.tab_item_title_latest), this.getString(R.string.tab_item_title_ranking), this.getString(R.string.tab_title_favorite))
+        val tabLayoutTitle: List<String> = listOf(
+            this.getString(R.string.tab_item_title_latest),
+            this.getString(R.string.tab_item_title_ranking),
+            this.getString(R.string.tab_title_favorite)
+        )
 
         viewPager.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount(): Int = tabLayoutTitle.size
@@ -27,12 +31,15 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        TabLayoutMediator(tabLayout, viewPager, object : TabLayoutMediator.TabConfigurationStrategy {
-            override fun onConfigureTab(tab: TabLayout.Tab, position: Int) {
-                tab.setText(tabLayoutTitle[position])
-            }
+        TabLayoutMediator(
+            tabLayout,
+            viewPager,
+            object : TabLayoutMediator.TabConfigurationStrategy {
+                override fun onConfigureTab(tab: TabLayout.Tab, position: Int) {
+                    tab.setText(tabLayoutTitle[position])
+                }
 
-        }).attach()
+            }).attach()
 
         fab.setOnClickListener {
             val intent = Intent(this, AddShopActivity::class.java)

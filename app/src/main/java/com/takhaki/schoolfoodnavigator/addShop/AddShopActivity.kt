@@ -140,7 +140,7 @@ class AddShopActivity : AppCompatActivity() {
 
         val galleryIntent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         galleryIntent.addCategory(Intent.CATEGORY_OPENABLE)
-        galleryIntent.type = "image/jpeg"
+        galleryIntent.type = "image/*"
 
         val intent = Intent.createChooser(cameraIntent, "画像の選択")
         intent.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(galleryIntent))

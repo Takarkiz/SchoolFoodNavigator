@@ -2,7 +2,6 @@ package com.takhaki.schoolfoodnavigator.Repository
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.LiveData
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
@@ -104,7 +103,6 @@ class ShopInfoRepository {
     ) {
         val fileName = imageUri.getFileName(context) ?: ""
         val filePath = "Shops/${shopID}/${fileName}"
-        Log.d("imageUrl", imageUri.toString())
         val shopImageRef = storage.reference.child(filePath)
 
         val stream = FileInputStream(File(imageUri.path!!))
