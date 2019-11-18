@@ -5,11 +5,13 @@ import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.StorageReference
 import com.takhaki.schoolfoodnavigator.Model.UserEntity
 
 class UserAuth {
 
     private val auth: FirebaseAuth
+    private val userDB = FirebaseFirestore.getInstance().collection("User")
 
 
     val currentUser: FirebaseUser?
@@ -42,6 +44,23 @@ class UserAuth {
                     }
                 }
             }
+        }
+    }
+
+    fun currentUserIconUrl(handler: (Result<StorageReference>) -> Unit) {
+
+        val uid = currentUser?.uid ?: return
+
+        userDB.document(uid).get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                task.result?.let {
+                    val path = it["iconUrl"].toString()
+                    val storage = FirestorageRepository("User")
+                    handler(Result.success(storage.getGSReference(path)))
+                }
+            }
+        }.addOnFailureListener { e ->
+            handler(Result.failure(e))
         }
     }
 
@@ -106,7 +125,7 @@ class UserAuth {
     }
 
     private fun uploadUserData(user: UserEntity, handler: (Result<String>) -> Unit) {
-        val userDB = FirebaseFirestore.getInstance().collection("User")
+
         userDB.document(user.id).set(
             mapOf(
                 "id" to user.id,

@@ -5,8 +5,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.takhaki.schoolfoodnavigator.Repository.UserAuth
 import com.takhaki.schoolfoodnavigator.addShop.AddShopActivity
 import com.takhaki.schoolfoodnavigator.mainList.MainListFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -44,6 +46,18 @@ class MainActivity : AppCompatActivity() {
         fab.setOnClickListener {
             val intent = Intent(this, AddShopActivity::class.java)
             startActivity(intent)
+        }
+
+        val auth = UserAuth()
+        auth.currentUserIconUrl { result ->
+            if (result.isSuccess) {
+                result.getOrNull()?.let { url ->
+                    Glide.with(this)
+                        .load(url)
+                        .placeholder(R.drawable.ic_nav_icon_mypage)
+                        .into(iconImage)
+                }
+            }
         }
 
 

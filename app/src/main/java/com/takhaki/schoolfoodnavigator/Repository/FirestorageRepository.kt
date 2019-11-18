@@ -3,13 +3,15 @@ package com.takhaki.schoolfoodnavigator.Repository
 import android.content.Context
 import android.net.Uri
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.takhaki.schoolfoodnavigator.Utility.getFileName
 import java.io.File
 import java.io.FileInputStream
 
 class FirestorageRepository(private val filePathScheme: String) {
 
-    val storage = FirebaseStorage.getInstance("gs://schoolfoodnavigator.appspot.com")
+    val storageUrl = "gs://schoolfoodnavigator.appspot.com"
+    val storage = FirebaseStorage.getInstance(storageUrl)
 
     /**
      * ユーザーアイコンをFirestorageにアップロードする
@@ -36,5 +38,9 @@ class FirestorageRepository(private val filePathScheme: String) {
         }.addOnSuccessListener {
             handler(Result.success(filePath))
         }
+    }
+
+    fun getGSReference(urlPath: String): StorageReference {
+            return storage.getReferenceFromUrl("gs://schoolfoodnavigator.appspot.com/${urlPath}")
     }
 }
