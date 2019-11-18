@@ -11,6 +11,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.takhaki.schoolfoodnavigator.Model.ShopEntity
 import com.takhaki.schoolfoodnavigator.Repository.ShopInfoRepository
+import com.takhaki.schoolfoodnavigator.Repository.UserAuth
 import java.util.*
 
 class AddShopViewModel(application: Application) : AndroidViewModel(application) {
@@ -42,10 +43,13 @@ class AddShopViewModel(application: Application) : AndroidViewModel(application)
 
     fun onSendShopInfo() {
 
+        val auth = UserAuth()
+        val userID = auth.currentUser?.uid?: return
+
         val shop = ShopEntity(
             shopName = shopName.value!!,
             genre = genreTitle.value!!,
-            authorId = "111",
+            authorId = userID,
             registerDate = Date(),
             lastEditedAt = Date(),
             images = listOf()
