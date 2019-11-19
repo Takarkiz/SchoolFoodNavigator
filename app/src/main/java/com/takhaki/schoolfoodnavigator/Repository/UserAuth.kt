@@ -98,6 +98,7 @@ class UserAuth {
                             id = uid,
                             name = name,
                             profImageUrl = url,
+                            navScore = 0,
                             favoriteShopList = listOf()
                         )
                         uploadUserData(user) { result ->
@@ -113,7 +114,7 @@ class UserAuth {
         } ?: run {
             // アイコン画像を設定しなかった場合
             val user =
-                UserEntity(id = uid, name = name, profImageUrl = null, favoriteShopList = listOf())
+                UserEntity(id = uid, name = name, profImageUrl = null, navScore = 0, favoriteShopList = listOf())
             uploadUserData(user) { result ->
                 if (result.isSuccess) {
                     result.getOrNull()?.let {
@@ -131,6 +132,7 @@ class UserAuth {
                 "id" to user.id,
                 "name" to user.name,
                 "iconUrl" to user.profImageUrl,
+                "score" to user.navScore,
                 "favList" to user.favoriteShopList
             )
         ).addOnSuccessListener {
