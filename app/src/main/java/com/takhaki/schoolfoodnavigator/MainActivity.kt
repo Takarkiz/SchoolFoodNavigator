@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         val auth = UserAuth()
+        val uid = auth.currentUser?.uid
         auth.currentUserIconUrl { result ->
             if (result.isSuccess) {
                 result.getOrNull()?.let { url ->
@@ -63,6 +64,7 @@ class MainActivity : AppCompatActivity() {
 
         iconImage.setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
+            intent.putExtra("UserId", uid)
             startActivity(intent)
         }
 

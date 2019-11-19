@@ -55,18 +55,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!--        <TextView-->
-        <!--            android:id="@+id/shouldSettingIcon"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginTop="20dp"-->
-        <!--            android:text="アイコンを設定する"-->
-        <!--            android:textColor="@android:color/white"-->
-        <!--            android:textSize="16sp"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toBottomOf="@id/iconView" />-->
-
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/loadingAnimationView"
             android:layout_width="90dp"

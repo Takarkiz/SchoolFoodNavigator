@@ -47,6 +47,27 @@ class UserAuth {
         }
     }
 
+    fun fetchUser(uid: String, handler: (Result<UserEntity>) -> Unit) {
+
+        userDB.document(uid).get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                task.result?.let { result ->
+                    val user = UserEntity(
+                        id = result["id"].toString(),
+                        name = result["name"].toString(),
+                        profImageUrl = result["iconUrl"].toString(),
+                        navScore = result["score"].toString().toLong().toInt(),
+                        favoriteShopList = result["favList"] as List<String>
+                    )
+
+                    handler(Result.success(user))
+                }
+            }
+        }.addOnFailureListener { e ->
+            handler(Result.failure(e))
+        }
+    }
+
     fun currentUserIconUrl(handler: (Result<StorageReference>) -> Unit) {
 
         val uid = currentUser?.uid ?: return
@@ -114,7 +135,13 @@ class UserAuth {
         } ?: run {
             // アイコン画像を設定しなかった場合
             val user =
-                UserEntity(id = uid, name = name, profImageUrl = null, navScore = 0, favoriteShopList = listOf())
+                UserEntity(
+                    id = uid,
+                    name = name,
+                    profImageUrl = null,
+                    navScore = 0,
+                    favoriteShopList = listOf()
+                )
             uploadUserData(user) { result ->
                 if (result.isSuccess) {
                     result.getOrNull()?.let {

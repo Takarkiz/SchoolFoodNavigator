@@ -1,64 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".profile.ProfileActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/iconImageView"
-        android:layout_width="180dp"
-        android:layout_height="180dp"
-        android:layout_marginTop="60dp"
-        android:background="@drawable/shape_rounded_select_icon"
-        android:src="@drawable/ic_default_user"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <data>
 
-    <TextView
-        android:id="@+id/userNameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="ユーザー名"
-        android:textColor="@android:color/black"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iconImageView" />
+        <variable
+            name="profileViewModel"
+            type="com.takhaki.schoolfoodnavigator.profile.ProfileViewModel" />
+    </data>
 
-    <TextView
-        android:text="ナビゲーターポイント"
-        app:layout_constraintBottom_toTopOf="@id/pointText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        style="@style/profile_title" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".profile.ProfileActivity">
 
-    <TextView
-        android:id="@+id/pointText"
-        android:text="0pt"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/userNameTextView"
-        style="@style/profile_big_content" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iconImageView"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_marginTop="60dp"
+            android:background="@drawable/shape_rounded_select_icon"
+            android:src="@drawable/ic_default_user"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:text="現在の称号"
-        app:layout_constraintBottom_toTopOf="@id/shogoTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        style="@style/profile_title" />
+        <TextView
+            android:id="@+id/userNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@{profileViewModel.userName}"
+            android:textColor="@android:color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iconImageView" />
 
-    <TextView
-        android:id="@+id/shogoTextView"
-        android:text="一般人"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/pointText"
-        style="@style/profile_big_content" />
+        <TextView
+            style="@style/profile_title"
+            android:text="ナビゲーターポイント"
+            app:layout_constraintBottom_toTopOf="@id/pointText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/pointText"
+            app:layout_constraintEnd_toStartOf="@id/pointText"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="false"
+            app:lottie_rawRes="@raw/coin_animation"
+            app:lottie_speed="2" />
+
+        <TextView
+            android:id="@+id/pointText"
+            style="@style/profile_big_content"
+            android:text="@{profileViewModel.userPoint.toString()}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/userNameTextView" />
+
+        <TextView
+            style="@style/profile_title"
+            android:text="現在の称号"
+            app:layout_constraintBottom_toTopOf="@id/shogoTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/shogoTextView"
+            style="@style/profile_big_content"
+            android:text="一般人"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pointText" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
