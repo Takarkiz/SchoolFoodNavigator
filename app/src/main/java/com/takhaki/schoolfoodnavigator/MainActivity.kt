@@ -11,6 +11,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.takhaki.schoolfoodnavigator.Repository.UserAuth
 import com.takhaki.schoolfoodnavigator.addShop.AddShopActivity
 import com.takhaki.schoolfoodnavigator.mainList.MainListFragment
+import com.takhaki.schoolfoodnavigator.profile.ProfileActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -60,6 +61,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        iconImage.setOnClickListener {
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+        }
 
     }
 

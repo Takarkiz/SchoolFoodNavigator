@@ -6,8 +6,59 @@
     android:layout_height="match_parent"
     tools:context=".profile.ProfileActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iconImageView"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/shape_rounded_select_icon"
+        android:src="@drawable/ic_default_user"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/userNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="ユーザー名"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iconImageView" />
+
+    <TextView
+        android:text="ナビゲーターポイント"
+        app:layout_constraintBottom_toTopOf="@id/pointText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/profile_title" />
+
+    <TextView
+        android:id="@+id/pointText"
+        android:text="0pt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/userNameTextView"
+        style="@style/profile_big_content" />
+
+    <TextView
+        android:text="現在の称号"
+        app:layout_constraintBottom_toTopOf="@id/shogoTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/profile_title" />
+
+    <TextView
+        android:id="@+id/shogoTextView"
+        android:text="一般人"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pointText"
+        style="@style/profile_big_content" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
