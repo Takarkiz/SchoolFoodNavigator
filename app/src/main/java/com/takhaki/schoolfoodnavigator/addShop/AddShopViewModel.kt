@@ -30,6 +30,8 @@ class AddShopViewModel(application: Application) : AndroidViewModel(application)
     val willIntentAssesment: LiveData<Boolean>
         get() = _willIntentAssesment
 
+    val isVisibleLoading = MutableLiveData<Boolean>().apply { value = false }
+
     init {
         val textObserver = Observer<String> {
             val shopTitle = shopName.value ?: ""
@@ -45,6 +47,7 @@ class AddShopViewModel(application: Application) : AndroidViewModel(application)
 
         val auth = UserAuth()
         val userID = auth.currentUser?.uid?: return
+        isVisibleLoading.value = true
 
         val shop = ShopEntity(
             shopName = shopName.value!!,
@@ -66,18 +69,8 @@ class AddShopViewModel(application: Application) : AndroidViewModel(application)
             } else {
                 Log.e("Firebase", "失敗", result.exceptionOrNull())
             }
+            isVisibleLoading.value = false
         }
-//
-//        shopInfoRepository.loadAllShops { result ->
-//            if (result.isSuccess) {
-//                val values = result.getOrNull()?.value
-//                values?.let {
-//                    it.forEach { value ->
-//                        Log.d("firebaseFetch", value.toString())
-//                    }
-//                }
-//            }
-//        }
     }
 
     fun toIntentAssesment(shoudGoAssesment: Boolean) {

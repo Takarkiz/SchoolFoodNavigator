@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import androidx.core.content.ContextCompat
@@ -76,6 +77,18 @@ class AddShopActivity : AppCompatActivity() {
         viewModel.willIntentAssesment.observe(this, Observer { shouldShowDialog ->
             if (shouldShowDialog) showDialog()
         })
+
+        viewModel.isVisibleLoading.observe(this, Observer {
+            if (it) {
+                loadingAnimation.playAnimation()
+                loadingAnimation.visibility = View.VISIBLE
+            } else {
+                loadingAnimation.pauseAnimation()
+                loadingAnimation.visibility = View.GONE
+            }
+        })
+
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
