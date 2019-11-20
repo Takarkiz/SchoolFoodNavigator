@@ -8,9 +8,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.takhaki.schoolfoodnavigator.R
+import com.takhaki.schoolfoodnavigator.Repository.FirestorageRepository
 import me.zhanghai.android.materialratingbar.MaterialRatingBar
 
 class ShopListAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
+
+    val repository = FirestorageRepository("User")
 
     var data = listOf<ShopListItemModel>()
         set(value) {
@@ -37,7 +40,13 @@ class ShopListAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
         holder.scoreRatingBar.rating = item.score
         holder.scoreRatingBar.isEnabled = false
         holder.scoreTextView.text = item.score.toString()
-        Glide.with(holder.itemView).load(item.imageUrl).into(holder.shopImageView)
+        item.imageUrl?.let { url ->
+            Glide.with(holder.itemView)
+                .load(repository.getGSReference(url))
+                .placeholder(R.drawable.ic_add_shop_mall)
+                .into(holder.shopImageView)
+        }
+
 
     }
 

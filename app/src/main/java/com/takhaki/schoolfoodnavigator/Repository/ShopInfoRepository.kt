@@ -3,14 +3,12 @@ package com.takhaki.schoolfoodnavigator.Repository
 import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.LiveData
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QueryDocumentSnapshot
+import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.takhaki.schoolfoodnavigator.Model.ShopEntity
 import com.takhaki.schoolfoodnavigator.Utility.getFileName
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import io.reactivex.Single
 import java.io.File
 import java.io.FileInputStream
 import java.util.*
@@ -67,20 +65,6 @@ class ShopInfoRepository {
     }
 
 
-    // 全てのショップ情報を取得する
-    suspend fun getAllshoListModel(): List<ShopEntity> = withContext(Dispatchers.IO) {
-        var shops: List<ShopEntity> = listOf()
-        fetchAllShops {
-            if (it.isSuccess) {
-                it.getOrNull()?.let { result ->
-                    shops = result
-                }
-            }
-        }
-        shops
-    }
-
-
     // IDから一つのショップ情報を取得する
     fun loadShop(shopID: String, result: (Result<LiveData<ShopEntity>>) -> Unit) {
 
@@ -116,33 +100,33 @@ class ShopInfoRepository {
 
     }
 
-    private fun mappingShop(queryDoc: QueryDocumentSnapshot): ShopEntity {
-        val shopName = queryDoc["name"] as String
-        val genre = queryDoc["genre"] as String
-        val authorId = queryDoc["userId"] as String
-        val createdAt = queryDoc["createdAt"] as Timestamp
-        val editedAt = queryDoc["editedAt"] as Timestamp
-        val images = queryDoc["images"] as List<String>
+    fun fetchAllShops(): Single<List<ShopEntity>> {
 
-        return ShopEntity(
-            shopName,
-            genre,
-            authorId,
-            createdAt.toDate(),
-            editedAt.toDate(),
-            images
-        )
+        return Single.create<List<ShopEntity>> { emitter ->
+            val query = shopDB.orderBy("editedAt", Query.Direction.DESCENDING)
+            query.get()
+                .addOnSuccessListener { snapshot ->
+                    val shops = snapshot.documents.mapNotNull {
+                        val shop = it.toObject(ShopEntity::class.java)
+                        shop?.toEntity()
+                    }
+                    emitter.onSuccess(shops)
+                }
+                .addOnFailureListener { e ->
+                    emitter.tryOnError(e)
+                }
+        }
     }
 
     private fun inverseMapping(shop: ShopEntity, shopImagePath: String?): Map<String, Any> {
 
-        val shopImages = shop.images.toMutableList()
+        val shopImages = shop.images?.toMutableList()?: mutableListOf()
         shopImagePath?.let {
             shopImages.add(it)
         }
 
         return mapOf(
-            "name" to shop.shopName,
+            "name" to shop.name,
             "genre" to shop.genre,
             "userId" to shop.authorId,
             "createdAt" to shop.registerDate,
@@ -150,40 +134,6 @@ class ShopInfoRepository {
             "images" to shopImages.toList()
         )
     }
-
-    private fun fetchAllShops(handler: (Result<List<ShopEntity>>) -> Unit) {
-        val shoplist = mutableListOf<ShopEntity>()
-
-        shopDB.get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                task.result?.let { result ->
-                    for (doc in result) {
-                        shoplist.add(mappingShop(doc))
-                    }
-                    handler(Result.success(shoplist))
-                }
-            } else {
-                task.addOnFailureListener { e ->
-                    handler(Result.failure(e))
-                }
-            }
-        }
-    }
-//
-//    private fun fetchAllScore(idList: List<String>): List<ShopListItemModel> {
-//        val listModel = mutableListOf<ShopListItemModel>()
-//
-//        idList.forEach { id ->
-//            shopDB.document(id).collection("comment").get().addOnCompleteListener { task ->
-//                if (task.isSuccessful) {
-//                    task.result?.let { result ->
-//
-//                    }
-//                }
-//            }
-//        }
-//
-//    }
 
 
 }

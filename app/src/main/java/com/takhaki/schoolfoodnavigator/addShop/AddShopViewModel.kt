@@ -50,7 +50,7 @@ class AddShopViewModel(application: Application) : AndroidViewModel(application)
         isVisibleLoading.value = true
 
         val shop = ShopEntity(
-            shopName = shopName.value!!,
+            name = shopName.value!!,
             genre = genreTitle.value!!,
             authorId = userID,
             registerDate = Date(),
