@@ -149,9 +149,11 @@
                 android:layout_marginBottom="16dp"
                 android:onClick="@{() -> addShopViewModel.onSendShopInfo()}"
                 android:text="@string/add_shop_fab_text"
+                android:textColor="@android:color/white"
                 android:visibility="@{addShopViewModel.isVisibleFinishButton() ? android.view.View.VISIBLE : android.view.View.GONE}"
                 app:backgroundTint="@color/colorAccent"
-                app:icon="@drawable/ic_add_shop_fab_check" />
+                app:icon="@drawable/ic_add_shop_fab_check"
+                app:iconTint="@android:color/white" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

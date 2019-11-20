@@ -74,8 +74,10 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="40dp"
             android:text="登録を完了する"
+            android:textColor="@android:color/white"
             app:backgroundTint="@color/colorAccent"
             app:icon="@drawable/ic_add_shop_fab_check"
+            app:iconTint="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
