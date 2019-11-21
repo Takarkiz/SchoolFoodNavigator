@@ -48,11 +48,13 @@ class AddShopViewModel(application: Application) : AndroidViewModel(application)
         val auth = UserAuth()
         val userID = auth.currentUser?.uid?: return
         isVisibleLoading.value = true
+        val shopId = UUID.randomUUID().toString()
 
         val shop = ShopEntity(
+            id = shopId,
             name = shopName.value!!,
             genre = genreTitle.value!!,
-            authorId = userID,
+            userID = userID,
             registerDate = Date(),
             lastEditedAt = Date(),
             images = listOf()

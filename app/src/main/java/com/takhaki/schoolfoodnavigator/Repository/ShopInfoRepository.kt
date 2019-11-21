@@ -26,30 +26,28 @@ class ShopInfoRepository {
         handler: (Result<String>) -> Unit
     ) {
 
-        val shopId = UUID.randomUUID().toString()
-
         if (imageUri == null) {
 
             val data = inverseMapping(shop, null)
 
-            shopDB.document(shopId).set(data)
+            shopDB.document(shop.id).set(data)
                 .addOnSuccessListener {
-                    handler(Result.success(shopId))
+                    handler(Result.success(shop.id))
                 }
                 .addOnFailureListener { error ->
                     handler(Result.failure(error))
                 }
         } else {
 
-            photoUpload(shopId, imageUri, context) { photoResult ->
+            photoUpload(shop.id, imageUri, context) { photoResult ->
                 if (photoResult.isSuccess) {
 
                     photoResult.getOrNull()?.let { filePath ->
                         val data = inverseMapping(shop, filePath)
 
-                        shopDB.document(shopId).set(data)
+                        shopDB.document(shop.id).set(data)
                             .addOnSuccessListener {
-                                handler(Result.success(shopId))
+                                handler(Result.success(shop.id))
                             }
                             .addOnFailureListener { error ->
                                 handler(Result.failure(error))
@@ -120,15 +118,16 @@ class ShopInfoRepository {
 
     private fun inverseMapping(shop: ShopEntity, shopImagePath: String?): Map<String, Any> {
 
-        val shopImages = shop.images?.toMutableList()?: mutableListOf()
+        val shopImages = shop.images.toMutableList()
         shopImagePath?.let {
             shopImages.add(it)
         }
 
         return mapOf(
+            "id" to shop.id,
             "name" to shop.name,
             "genre" to shop.genre,
-            "userId" to shop.authorId,
+            "userId" to shop.userID,
             "createdAt" to shop.registerDate,
             "editedAt" to shop.lastEditedAt,
             "images" to shopImages.toList()

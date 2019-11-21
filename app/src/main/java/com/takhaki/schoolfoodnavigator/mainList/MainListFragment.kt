@@ -56,7 +56,7 @@ class MainListFragment : Fragment() {
             items.forEach {
                 shopItems.add(
                     ShopListItemModel(
-                        id = "",
+                        id = it.id,
                         name = it.name,
                         shopGenre = it.genre,
                         imageUrl = if (it.images.isNotEmpty()) it.images[0] else null,
