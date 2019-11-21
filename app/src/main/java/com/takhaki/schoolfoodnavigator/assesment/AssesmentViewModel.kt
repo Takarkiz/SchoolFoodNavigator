@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
 import com.takhaki.schoolfoodnavigator.Repository.AssesmentRepository
+import com.takhaki.schoolfoodnavigator.Repository.UserAuth
 
 class AssesmentViewModel : ViewModel() {
 
@@ -44,6 +45,8 @@ class AssesmentViewModel : ViewModel() {
     }
 
     fun uploadAssessment(finishUploadHander: (Result<String>) -> Unit) {
+        val userId = UserAuth().currentUser?.uid?.let { it } ?: return
+
         shopId.value?.let { id ->
             val good = goodValue.value?.let { it } ?: 3f
             val distance = distanceValue.value?.let { it } ?: 3f
@@ -51,6 +54,7 @@ class AssesmentViewModel : ViewModel() {
 
             val repository = AssesmentRepository(id)
             val assesment = AssessmentEntity(
+                userId = userId,
                 good = good,
                 distance = distance,
                 cheep = cheep,
