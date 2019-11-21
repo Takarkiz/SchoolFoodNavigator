@@ -43,17 +43,22 @@ class AssesmentViewModel : ViewModel() {
         _cheepValue.value = rating
     }
 
-    fun uploadAssessment(finishUploadHander:(Result<String>) -> Unit) {
+    fun uploadAssessment(finishUploadHander: (Result<String>) -> Unit) {
         shopId.value?.let { id ->
+            val good = goodValue.value?.let { it } ?: 3f
+            val distance = distanceValue.value?.let { it } ?: 3f
+            val cheep = cheepValue.value?.let { it } ?: 3f
+
             val repository = AssesmentRepository(id)
             val assesment = AssessmentEntity(
-                good = goodValue.value?.let { it } ?: 3f,
-                distance = distanceValue.value?.let { it } ?: 3f,
-                cheep = cheepValue.value?.let { it } ?: 3f,
-                 comment = commentText.value?.let { it } ?: ""
-                )
-            
-            repository.addAssessment(assesment) { result ->  
+                good = good,
+                distance = distance,
+                cheep = cheep,
+                totalScore = (good+distance+cheep)/3,
+                comment = commentText.value?.let { it } ?: ""
+            )
+
+            repository.addAssessment(assesment) { result ->
                 if (result.isSuccess) {
                     try {
                         finishUploadHander(Result.success(result.getOrThrow()))
