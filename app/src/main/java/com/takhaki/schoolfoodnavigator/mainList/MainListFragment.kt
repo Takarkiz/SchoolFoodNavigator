@@ -51,20 +51,8 @@ class MainListFragment : Fragment() {
         val adapter = ShopListAdapter()
         viewModel.loadListShopItem()
 
-        viewModel.shops.observe(this, Observer { items ->
-            val shopItems = mutableListOf<ShopListItemModel>()
-            items.forEach {
-                shopItems.add(
-                    ShopListItemModel(
-                        id = it.id,
-                        name = it.name,
-                        shopGenre = it.genre,
-                        imageUrl = if (it.images.isNotEmpty()) it.images[0] else null,
-                        score = 2.3f
-                    )
-                )
-            }
-            adapter.data = shopItems
+        viewModel.shopItemList.observe(this, Observer { items ->
+            adapter.data = items
             shopList.adapter = adapter
         })
 

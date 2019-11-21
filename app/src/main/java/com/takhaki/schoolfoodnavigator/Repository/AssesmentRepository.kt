@@ -49,7 +49,6 @@ class AssesmentRepository(shopId: String) {
             "good" to assessment.good,
             "distance" to assessment.distance,
             "cheep" to assessment.cheep,
-            "total" to assessment.totalScore,
             "comment" to assessment.comment
         )
     }

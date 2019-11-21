@@ -21,7 +21,6 @@ fun AssessmentEntity.toEntity(): AssessmentEntity {
         good = good,
         distance = distance,
         cheep = cheep,
-        totalScore = totalScore,
         comment = comment
     )
 }

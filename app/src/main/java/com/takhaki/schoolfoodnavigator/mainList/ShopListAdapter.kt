@@ -39,7 +39,7 @@ class ShopListAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
         holder.shopGenreTextView.text = item.shopGenre
         holder.scoreRatingBar.rating = item.score
         holder.scoreRatingBar.isEnabled = false
-        holder.scoreTextView.text = item.score.toString()
+        holder.scoreTextView.text = String.format("%1$.1f", item.score)
         item.imageUrl?.let { url ->
             Glide.with(holder.itemView)
                 .load(repository.getGSReference(url))

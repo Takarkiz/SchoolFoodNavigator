@@ -58,7 +58,6 @@ class AssesmentViewModel : ViewModel() {
                 good = good,
                 distance = distance,
                 cheep = cheep,
-                totalScore = (good+distance+cheep)/3,
                 comment = commentText.value?.let { it } ?: ""
             )
 
