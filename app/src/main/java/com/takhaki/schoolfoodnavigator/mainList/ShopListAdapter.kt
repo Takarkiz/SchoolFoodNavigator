@@ -9,11 +9,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.Repository.FirestorageRepository
+import com.takhaki.schoolfoodnavigator.generated.callback.OnClickListener
 import me.zhanghai.android.materialratingbar.MaterialRatingBar
 
 class ShopListAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
 
     val repository = FirestorageRepository("User")
+    private lateinit var listener: OnItemClickListener
 
     var data = listOf<ShopListItemModel>()
         set(value) {
@@ -47,7 +49,17 @@ class ShopListAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
                 .into(holder.shopImageView)
         }
 
+        holder.itemView.setOnClickListener {
+            listener.onClick(it, item.id)
+        }
+    }
 
+    interface OnItemClickListener {
+        fun onClick(view: View, shopId: String)
+    }
+
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        this.listener = listener
     }
 
 }

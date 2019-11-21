@@ -1,6 +1,7 @@
 package com.takhaki.schoolfoodnavigator.mainList
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.databinding.FragmentMainListBinding
+import com.takhaki.schoolfoodnavigator.detail.DetailActivity
+import com.takhaki.schoolfoodnavigator.generated.callback.OnClickListener
 import kotlinx.android.synthetic.main.fragment_main_list.*
 
 
@@ -54,6 +57,14 @@ class MainListFragment : Fragment() {
         viewModel.shopItemList.observe(this, Observer { items ->
             adapter.data = items
             shopList.adapter = adapter
+        })
+
+        adapter.setOnItemClickListener(object : ShopListAdapter.OnItemClickListener{
+            override fun onClick(view: View, shopId: String) {
+                val intent = Intent(context, DetailActivity::class.java)
+                intent.putExtra("shopId", shopId)
+                startActivity(intent)
+            }
         })
 
         val itemDecoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
