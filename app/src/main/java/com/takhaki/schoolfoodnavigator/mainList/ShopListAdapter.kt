@@ -14,7 +14,7 @@ import me.zhanghai.android.materialratingbar.MaterialRatingBar
 
 class ShopListAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
 
-    val repository = FirestorageRepository("User")
+    private val repository = FirestorageRepository("Shops")
     private lateinit var listener: OnItemClickListener
 
     var data = listOf<ShopListItemModel>()
@@ -50,12 +50,12 @@ class ShopListAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
         }
 
         holder.itemView.setOnClickListener {
-            listener.onClick(it, item.id)
+            listener.onClick(it, item.id, item.name)
         }
     }
 
     interface OnItemClickListener {
-        fun onClick(view: View, shopId: String)
+        fun onClick(view: View, shopId: String, name: String)
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener) {

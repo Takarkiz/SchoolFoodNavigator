@@ -60,9 +60,10 @@ class MainListFragment : Fragment() {
         })
 
         adapter.setOnItemClickListener(object : ShopListAdapter.OnItemClickListener{
-            override fun onClick(view: View, shopId: String) {
+            override fun onClick(view: View, shopId: String, name: String) {
                 val intent = Intent(context, DetailActivity::class.java)
                 intent.putExtra("shopId", shopId)
+                intent.putExtra("shopName", name)
                 startActivity(intent)
             }
         })

@@ -2,7 +2,6 @@ package com.takhaki.schoolfoodnavigator.Repository
 
 import android.content.Context
 import android.net.Uri
-import androidx.lifecycle.LiveData
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
@@ -11,7 +10,6 @@ import com.takhaki.schoolfoodnavigator.Utility.getFileName
 import io.reactivex.Single
 import java.io.File
 import java.io.FileInputStream
-import java.util.*
 
 class ShopInfoRepository {
 
@@ -64,8 +62,19 @@ class ShopInfoRepository {
 
 
     // IDから一つのショップ情報を取得する
-    fun loadShop(shopID: String, result: (Result<LiveData<ShopEntity>>) -> Unit) {
-
+    fun loadShop(shopID: String): Single<ShopEntity> {
+        return Single.create { emitter ->
+            shopDB.document(shopID).get()
+                .addOnSuccessListener { snapshot ->
+                    val shop = snapshot.toObject(ShopEntity::class.java)
+                    shop?.toEntity()?.let {
+                        emitter.onSuccess(it)
+                    }
+                }
+                .addOnFailureListener { e ->
+                    emitter.tryOnError(e)
+                }
+        }
     }
 
     // お店情報の削除
