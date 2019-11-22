@@ -63,8 +63,8 @@ class DetailActivity : AppCompatActivity() {
         )
 
         scoreListView.adapter = adapter
-//        val itemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-//        shopList.addItemDecoration(itemDecoration)
+        val itemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        scoreListView.addItemDecoration(itemDecoration)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

@@ -90,14 +90,14 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:gravity="center_horizontal"
                 android:text="おいしさ"
                 android:textSize="20sp" />
 
             <me.zhanghai.android.materialratingbar.MaterialRatingBar
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
                 android:layout_weight="3"
                 android:rating="3.0" />
 
@@ -112,14 +112,14 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:gravity="center_horizontal"
                 android:text="近さ"
                 android:textSize="20sp" />
 
             <me.zhanghai.android.materialratingbar.MaterialRatingBar
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
                 android:layout_weight="3"
                 android:rating="3.0" />
 
@@ -135,14 +135,14 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:gravity="center_horizontal"
                 android:text="安さ"
                 android:textSize="20sp" />
 
             <me.zhanghai.android.materialratingbar.MaterialRatingBar
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
                 android:layout_weight="3"
                 android:rating="3.0" />
 

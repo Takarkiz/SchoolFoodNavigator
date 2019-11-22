@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.databinding.FragmentMainListBinding
 import com.takhaki.schoolfoodnavigator.detail.DetailActivity
-import com.takhaki.schoolfoodnavigator.generated.callback.OnClickListener
 import kotlinx.android.synthetic.main.fragment_main_list.*
 
 
@@ -59,7 +58,7 @@ class MainListFragment : Fragment() {
             shopList.adapter = adapter
         })
 
-        adapter.setOnItemClickListener(object : ShopListAdapter.OnItemClickListener{
+        adapter.setOnItemClickListener(object : ShopListAdapter.OnItemClickListener {
             override fun onClick(view: View, shopId: String, name: String) {
                 val intent = Intent(context, DetailActivity::class.java)
                 intent.putExtra("shopId", shopId)
