@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.Repository.FirestorageRepository
-import com.takhaki.schoolfoodnavigator.generated.callback.OnClickListener
 import me.zhanghai.android.materialratingbar.MaterialRatingBar
 
 class ShopListAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
@@ -52,6 +51,14 @@ class ShopListAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
         holder.itemView.setOnClickListener {
             listener.onClick(it, item.id, item.name)
         }
+
+        // お気に入りアイコンの設定
+        holder.loveIconImageView.apply {
+            visibility = when (item.isFavorite) {
+                true -> View.VISIBLE
+                false -> View.GONE
+            }
+        }
     }
 
     interface OnItemClickListener {
@@ -71,4 +78,5 @@ class ShopItemViewHolder(shopItemView: View) : RecyclerView.ViewHolder(shopItemV
     val shopImageView: ImageView = shopItemView.findViewById(R.id.shopImageView)
     val scoreTextView: TextView = shopItemView.findViewById(R.id.scoreText)
     val scoreRatingBar: MaterialRatingBar = shopItemView.findViewById(R.id.ratingStar)
+    val loveIconImageView: ImageView = shopItemView.findViewById(R.id.loveIcon)
 }

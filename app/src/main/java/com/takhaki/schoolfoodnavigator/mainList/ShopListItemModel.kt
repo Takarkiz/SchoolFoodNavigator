@@ -8,5 +8,6 @@ data class ShopListItemModel(
     val shopGenre: String,
     val imageUrl: String?,
     val editedAt: Date,
+    val isFavorite: Boolean,
     val score: Float
 )

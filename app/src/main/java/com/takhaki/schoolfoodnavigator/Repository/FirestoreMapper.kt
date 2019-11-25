@@ -2,6 +2,7 @@ package com.takhaki.schoolfoodnavigator.Repository
 
 import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
 import com.takhaki.schoolfoodnavigator.Model.ShopEntity
+import com.takhaki.schoolfoodnavigator.Model.UserEntity
 
 fun ShopEntity.toEntity(): ShopEntity {
     return ShopEntity(
@@ -22,5 +23,15 @@ fun AssessmentEntity.toEntity(): AssessmentEntity {
         distance = distance,
         cheep = cheep,
         comment = comment
+    )
+}
+
+fun UserEntity.toEntity():  UserEntity {
+    return UserEntity(
+        id = id,
+        name = name,
+        profImageUrl = profImageUrl,
+        navScore = navScore,
+        favList = favList
     )
 }

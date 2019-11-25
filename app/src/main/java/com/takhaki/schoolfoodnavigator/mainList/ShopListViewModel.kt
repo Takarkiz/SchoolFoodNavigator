@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.takhaki.schoolfoodnavigator.Model.ShopEntity
 import com.takhaki.schoolfoodnavigator.Repository.AssesmentRepository
 import com.takhaki.schoolfoodnavigator.Repository.ShopInfoRepository
+import com.takhaki.schoolfoodnavigator.Repository.UserAuth
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
@@ -66,30 +67,36 @@ class ShopListViewModel : ViewModel(), CoroutineScope {
                     val totalScore = assesments.map { assessment ->
                         (assessment.good + assessment.cheep + assessment.distance) / 3
                     }.average()
-
-                    val shopItem = ShopListItemModel(
-                        id = shop.id,
-                        name = shop.name,
-                        shopGenre = shop.genre,
-                        editedAt = shop.lastEditedAt,
-                        imageUrl = if (shop.images.isNotEmpty()) shop.images[0] else "",
-                        score = totalScore.toFloat()
-                    )
-                    shopItems.add(shopItem)
-                    when (number) {
-                         0 -> {
-                             shopItems.sortBy {
-                                 it.editedAt
-                             }
-                         }
-                        1 -> {
-                            shopItems.sortByDescending {
-                                it.score
+                    val auth = UserAuth()
+                    auth.checkFavoriteShop(shop.id) { isFavorite ->
+                        val shopItem = ShopListItemModel(
+                            id = shop.id,
+                            name = shop.name,
+                            shopGenre = shop.genre,
+                            editedAt = shop.lastEditedAt,
+                            isFavorite = isFavorite,
+                            imageUrl = if (shop.images.isNotEmpty()) shop.images[0] else "",
+                            score = totalScore.toFloat()
+                        )
+                        shopItems.add(shopItem)
+                        when (number) {
+                            0 -> {
+                                shopItems.sortBy {
+                                    it.editedAt
+                                }
+                            }
+                            1 -> {
+                                shopItems.sortByDescending {
+                                    it.score
+                                }
+                            }
+                            2 -> {
+                                // お気に入りのみを表示
                             }
                         }
-                    }
 
-                    _shopItems.value = shopItems
+                        _shopItems.value = shopItems
+                    }
                 },
                 onError = {
 

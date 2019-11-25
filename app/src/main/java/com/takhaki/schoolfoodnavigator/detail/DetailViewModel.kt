@@ -1,11 +1,13 @@
 package com.takhaki.schoolfoodnavigator.detail
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
 import com.takhaki.schoolfoodnavigator.Repository.AssesmentRepository
 import com.takhaki.schoolfoodnavigator.Repository.ShopInfoRepository
+import com.takhaki.schoolfoodnavigator.Repository.UserAuth
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
@@ -24,8 +26,26 @@ class DetailViewModel : ViewModel() {
         get() = _scoreList
     private val _scoreList = MutableLiveData<List<AssessmentEntity>>()
 
+    val isFavorite: LiveData<Boolean>
+        get() = _isFavorite
+    private val _isFavorite = MutableLiveData<Boolean>()
+
     fun putShopId(id: String) {
         shopId = id
+    }
+
+    fun didTapFavorite() {
+        val auth = UserAuth()
+        auth.addFavoriteShop(shopId) {
+            Log.d("TAG", "成功")
+        }
+    }
+
+    fun isFavorite() {
+        val auth = UserAuth()
+        auth.checkFavoriteShop(shopId) { fav ->
+            _isFavorite.value = fav
+        }
     }
 
     fun loadShopDetail() {
@@ -46,7 +66,7 @@ class DetailViewModel : ViewModel() {
     private fun createComment(gAve: Float, dAve: Float, cAve: Float) {
         shopRepository.loadShop(shopId)
             .subscribeBy(
-                onSuccess = { shop->
+                onSuccess = { shop ->
                     val shopDetailModel = AboutShopDetailModel(
                         id = shop.id,
                         name = shop.name,
@@ -54,8 +74,8 @@ class DetailViewModel : ViewModel() {
                         goodScore = gAve,
                         distance = dAve,
                         cheep = cAve,
-                        score = (gAve+dAve+cAve)/3,
-                        imageUrl = if(shop.images.isNotEmpty()) shop.images[0] else null
+                        score = (gAve + dAve + cAve) / 3,
+                        imageUrl = if (shop.images.isNotEmpty()) shop.images[0] else null
                     )
                     _shopDetail.value = shopDetailModel
                 }

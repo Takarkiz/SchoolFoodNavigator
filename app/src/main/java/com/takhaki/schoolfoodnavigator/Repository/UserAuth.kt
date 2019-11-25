@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 import com.takhaki.schoolfoodnavigator.Model.UserEntity
@@ -57,7 +58,7 @@ class UserAuth {
                         name = result["name"].toString(),
                         profImageUrl = result["iconUrl"].toString(),
                         navScore = result["score"].toString().toLong().toInt(),
-                        favoriteShopList = result["favList"] as List<String>
+                        favList = result["favList"] as List<String>
                     )
 
                     handler(Result.success(user))
@@ -83,6 +84,48 @@ class UserAuth {
         }.addOnFailureListener { e ->
             handler(Result.failure(e))
         }
+    }
+
+    // お気に入りに追加する
+    fun addFavoriteShop(shopID: String, handler: (Boolean) -> Unit) {
+        val uid = currentUser?.uid ?: return
+        userDB.document(uid).update("favList", FieldValue.arrayUnion(shopID))
+            .addOnCompleteListener {
+                handler(true)
+            }
+            .addOnFailureListener {
+                handler(false)
+            }
+    }
+
+    // お気に入りから削除する
+    fun deleteFavoriteShop(shopID: String, handler: (Boolean) -> Unit) {
+        val uid = currentUser?.uid ?: return
+        userDB.document(uid).update("FavList", FieldValue.arrayRemove(shopID))
+            .addOnCompleteListener {
+                handler(true)
+            }
+            .addOnFailureListener {
+                handler(false)
+            }
+    }
+
+    // ショップIDからそれがユーザーのお気に入りに登録されているかを判断する
+    fun checkFavoriteShop(shopID: String, handler: (Boolean) -> Unit) {
+        val uid = currentUser?.uid ?: return
+        userDB.document(uid).get()
+            .addOnSuccessListener {
+                it.toObject(UserEntity::class.java)?.let { user ->
+                    user.toEntity()
+                    if (user.favList.contains(shopID)) {
+                        handler(true)
+                    } else {
+                        handler(false)
+                    }
+                }
+            }.addOnFailureListener {
+                handler(false)
+            }
     }
 
     private fun signInAnonymousUser(handler: (Result<String>) -> Unit) {
@@ -120,7 +163,7 @@ class UserAuth {
                             name = name,
                             profImageUrl = url,
                             navScore = 0,
-                            favoriteShopList = listOf()
+                            favList = listOf()
                         )
                         uploadUserData(user) { result ->
                             if (result.isSuccess) {
@@ -140,7 +183,7 @@ class UserAuth {
                     name = name,
                     profImageUrl = null,
                     navScore = 0,
-                    favoriteShopList = listOf()
+                    favList = listOf()
                 )
             uploadUserData(user) { result ->
                 if (result.isSuccess) {
@@ -160,7 +203,7 @@ class UserAuth {
                 "name" to user.name,
                 "iconUrl" to user.profImageUrl,
                 "score" to user.navScore,
-                "favList" to user.favoriteShopList
+                "favList" to user.favList
             )
         ).addOnSuccessListener {
             handler(Result.success(user.id))

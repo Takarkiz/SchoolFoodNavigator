@@ -2,19 +2,18 @@ package com.takhaki.schoolfoodnavigator.detail
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
-import com.takhaki.schoolfoodnavigator.Model.ShopEntity
+import com.google.android.material.snackbar.Snackbar
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.assesment.AssesmentActivity
 import com.takhaki.schoolfoodnavigator.databinding.ActivityDetailBinding
 import kotlinx.android.synthetic.main.activity_detail.*
-import java.util.*
 
 class DetailActivity : AppCompatActivity() {
 
@@ -63,11 +62,22 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_detail_love, menu)
+        return true
+    }
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
 
         return when (item?.itemId) {
             android.R.id.home -> {
                 NavUtils.navigateUpFromSameTask(this)
+                true
+            }
+
+            R.id.nav_love -> {
+                item.icon = getDrawable(R.drawable.ic_nav_fill_favorite)
+                viewModel.didTapFavorite()
                 true
             }
             else -> super.onOptionsItemSelected(item)
