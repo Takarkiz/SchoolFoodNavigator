@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
 import com.takhaki.schoolfoodnavigator.Repository.AssesmentRepository
+import com.takhaki.schoolfoodnavigator.Repository.ShopInfoRepository
 import com.takhaki.schoolfoodnavigator.Repository.UserAuth
 
 class AssesmentViewModel : ViewModel() {
@@ -61,9 +62,12 @@ class AssesmentViewModel : ViewModel() {
                 comment = commentText.value?.let { it } ?: ""
             )
 
+            val shopRepository = ShopInfoRepository()
+
             repository.addAssessment(assesment) { result ->
                 if (result.isSuccess) {
                     try {
+                        shopRepository.updateEdiedDate(id)
                         finishUploadHander(Result.success(result.getOrThrow()))
                     } catch (e: Error) {
                         finishUploadHander(Result.failure(e))

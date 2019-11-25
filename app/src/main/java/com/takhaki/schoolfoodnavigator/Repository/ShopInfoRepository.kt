@@ -2,6 +2,7 @@ package com.takhaki.schoolfoodnavigator.Repository
 
 import android.content.Context
 import android.net.Uri
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
@@ -84,6 +85,10 @@ class ShopInfoRepository {
 
     fun updateShop() {
 
+    }
+
+    fun updateEdiedDate(shopId: String) {
+        shopDB.document(shopId).update("editedAt", FieldValue.serverTimestamp())
     }
 
     private fun photoUpload(
