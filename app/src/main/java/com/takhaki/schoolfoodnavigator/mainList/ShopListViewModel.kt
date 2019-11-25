@@ -34,6 +34,7 @@ class ShopListViewModel : ViewModel(), CoroutineScope {
 
     private val _shops = MutableLiveData<List<ShopEntity>>()
     private val _shopItems = MutableLiveData<List<ShopListItemModel>>()
+    private val shopItems = mutableListOf<ShopListItemModel>()
 
     private val disposable: CompositeDisposable = CompositeDisposable()
 
@@ -53,7 +54,7 @@ class ShopListViewModel : ViewModel(), CoroutineScope {
     }
 
     private fun getShopItems(shop: ShopEntity) {
-        val shopItems = mutableListOf<ShopListItemModel>()
+
         val repository = AssesmentRepository(shop.id)
         repository.fetchAllAssesment()
             .subscribeBy(

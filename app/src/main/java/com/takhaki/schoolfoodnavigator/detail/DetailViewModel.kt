@@ -10,5 +10,9 @@ class DetailViewModel : ViewModel() {
         shopId = id
     }
 
+    fun loadShopUrl() {
+        //val repository = ShopInfoR
+    }
+
 
 }

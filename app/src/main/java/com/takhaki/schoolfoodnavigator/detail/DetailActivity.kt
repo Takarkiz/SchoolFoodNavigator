@@ -1,5 +1,6 @@
 package com.takhaki.schoolfoodnavigator.detail
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
 import com.takhaki.schoolfoodnavigator.Model.ShopEntity
 import com.takhaki.schoolfoodnavigator.R
+import com.takhaki.schoolfoodnavigator.assesment.AssesmentActivity
 import com.takhaki.schoolfoodnavigator.databinding.ActivityDetailBinding
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.fragment_main_list.*
@@ -27,7 +29,7 @@ class DetailActivity : AppCompatActivity() {
         intent.getStringExtra("shopName")?.let { name ->
             setTitle(name)
         }
-        //val shopId: String = intent.getStringExtra("shopId")
+        val shopId: String = intent.getStringExtra("shopId")
         actionBar?.setDisplayShowHomeEnabled(true)
 
         binding = DataBindingUtil.setContentView(
@@ -42,6 +44,7 @@ class DetailActivity : AppCompatActivity() {
         //viewModel.putShopId(id = shopId)
 
         val adapter = DetailAdapter()
+        //viewModel.
         adapter.dataAboutShop = ShopEntity(
             id = "",
             name = "COCO壱番亭",
@@ -65,6 +68,12 @@ class DetailActivity : AppCompatActivity() {
         scoreListView.adapter = adapter
         val itemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         scoreListView.addItemDecoration(itemDecoration)
+
+        addAssessmentFab.setOnClickListener {
+            val intent = Intent(this, AssesmentActivity::class.java)
+            intent.putExtra("shopId", shopId)
+            startActivity(intent)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
