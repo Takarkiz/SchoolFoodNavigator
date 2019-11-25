@@ -20,11 +20,12 @@ import kotlinx.android.synthetic.main.fragment_main_list.*
 class MainListFragment : Fragment() {
 
     private lateinit var viewModel: ShopListViewModel
+    private var tabIndex = 0
 
     companion object {
         fun newInstance(tabNumber: Int): MainListFragment = MainListFragment().apply {
             arguments = Bundle().apply {
-                putString("text", tabNumber.toString())
+                tabIndex = tabNumber
             }
         }
     }
@@ -41,6 +42,7 @@ class MainListFragment : Fragment() {
         viewModel = ViewModelProviders.of(
             this
         ).get(ShopListViewModel::class.java)
+        viewModel.putTabNumber(tabIndex)
         binding.lifecycleOwner = this
         binding.listViewModel = viewModel
         // Inflate the layout for this fragment

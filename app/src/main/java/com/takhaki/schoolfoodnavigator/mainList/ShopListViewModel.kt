@@ -26,6 +26,8 @@ class ShopListViewModel : ViewModel(), CoroutineScope {
     val shops: LiveData<List<ShopEntity>>
         get() = _shops
 
+    private var number: Int = 0
+
 
     override fun onCleared() {
         super.onCleared()
@@ -69,15 +71,33 @@ class ShopListViewModel : ViewModel(), CoroutineScope {
                         id = shop.id,
                         name = shop.name,
                         shopGenre = shop.genre,
+                        editedAt = shop.lastEditedAt,
                         imageUrl = if (shop.images.isNotEmpty()) shop.images[0] else "",
                         score = totalScore.toFloat()
                     )
                     shopItems.add(shopItem)
+                    when (number) {
+                         0 -> {
+                             shopItems.sortBy {
+                                 it.editedAt
+                             }
+                         }
+                        1 -> {
+                            shopItems.sortByDescending {
+                                it.score
+                            }
+                        }
+                    }
+
                     _shopItems.value = shopItems
                 },
                 onError = {
 
                 }
             ).addTo(disposable)
+    }
+
+    fun putTabNumber(num: Int) {
+        number = num
     }
 }

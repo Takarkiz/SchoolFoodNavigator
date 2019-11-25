@@ -26,10 +26,13 @@ class AssesmentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_assesment)
-        val shopName: String = intent.getCharSequenceExtra("shopName").toString()
         val shopId: String = intent.getCharSequenceExtra("shopId").toString()
         actionBar?.setDisplayShowHomeEnabled(true)
-        setTitle(shopName)
+        intent.getCharSequenceExtra("shopName")?.let { name ->
+            setTitle(name)
+        }.run {
+            setTitle("評価")
+        }
 
         binding = DataBindingUtil.setContentView(
             this,
