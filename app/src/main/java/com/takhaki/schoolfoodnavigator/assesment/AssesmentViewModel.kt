@@ -47,6 +47,7 @@ class AssesmentViewModel : ViewModel() {
 
     fun uploadAssessment(finishUploadHander: (Result<String>) -> Unit) {
         val userId = UserAuth().currentUser?.uid?.let { it } ?: return
+        val auth = UserAuth()
 
         shopId.value?.let { id ->
             val good = goodValue.value?.let { it } ?: 3f
@@ -68,6 +69,7 @@ class AssesmentViewModel : ViewModel() {
                 if (result.isSuccess) {
                     try {
                         shopRepository.updateEdiedDate(id)
+                        auth.addPointAssessment()
                         finishUploadHander(Result.success(result.getOrThrow()))
                     } catch (e: Error) {
                         finishUploadHander(Result.failure(e))

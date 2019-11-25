@@ -39,7 +39,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/main_view_title_home"
                     style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
                     app:layout_constraintStart_toEndOf="@id/iconImage"
                     app:layout_constraintTop_toTopOf="parent"

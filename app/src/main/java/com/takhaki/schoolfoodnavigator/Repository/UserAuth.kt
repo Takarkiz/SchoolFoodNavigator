@@ -101,13 +101,23 @@ class UserAuth {
     // お気に入りから削除する
     fun deleteFavoriteShop(shopID: String, handler: (Boolean) -> Unit) {
         val uid = currentUser?.uid ?: return
-        userDB.document(uid).update("FavList", FieldValue.arrayRemove(shopID))
+        userDB.document(uid).update("favList", FieldValue.arrayRemove(shopID))
             .addOnCompleteListener {
                 handler(true)
             }
             .addOnFailureListener {
                 handler(false)
             }
+    }
+
+    fun addPointShop() {
+        val uid = currentUser?.uid ?: return
+        userDB.document(uid).update("score", FieldValue.increment(5))
+    }
+
+    fun addPointAssessment() {
+        val uid = currentUser?.uid ?: return
+        userDB.document(uid).update("score", FieldValue.increment(3))
     }
 
     // ショップIDからそれがユーザーのお気に入りに登録されているかを判断する

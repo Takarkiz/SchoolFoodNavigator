@@ -66,6 +66,7 @@ class AddShopViewModel(application: Application) : AndroidViewModel(application)
                 result.getOrNull()?.let { id ->
                     _shopId.value = id
                     _willIntentAssesment.value = true
+                    auth.addPointShop()
                 }
 
             } else {

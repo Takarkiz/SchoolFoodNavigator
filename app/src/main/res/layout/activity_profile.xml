@@ -61,7 +61,7 @@
         <TextView
             android:id="@+id/pointText"
             style="@style/profile_big_content"
-            android:text="@{profileViewModel.userPoint.toString()}"
+            android:text="@{@string/nav_point_format(profileViewModel.userPoint.toString())}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/userNameTextView" />
