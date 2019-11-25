@@ -78,20 +78,23 @@ class ShopListViewModel : ViewModel(), CoroutineScope {
                             imageUrl = if (shop.images.isNotEmpty()) shop.images[0] else "",
                             score = totalScore.toFloat()
                         )
-                        shopItems.add(shopItem)
+
                         when (number) {
                             0 -> {
+                                shopItems.add(shopItem)
                                 shopItems.sortBy {
                                     it.editedAt
                                 }
                             }
                             1 -> {
+                                shopItems.add(shopItem)
                                 shopItems.sortByDescending {
                                     it.score
                                 }
                             }
                             2 -> {
                                 // お気に入りのみを表示
+                                if (shopItem.isFavorite) shopItems.add(shopItem)
                             }
                         }
 
