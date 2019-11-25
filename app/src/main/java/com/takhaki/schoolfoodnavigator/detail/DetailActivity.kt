@@ -14,7 +14,6 @@ import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.assesment.AssesmentActivity
 import com.takhaki.schoolfoodnavigator.databinding.ActivityDetailBinding
 import kotlinx.android.synthetic.main.activity_detail.*
-import kotlinx.android.synthetic.main.fragment_main_list.*
 import java.util.*
 
 class DetailActivity : AppCompatActivity() {
@@ -41,29 +40,17 @@ class DetailActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.detailViewModel = viewModel
 
-        //viewModel.putShopId(id = shopId)
-
+        viewModel.putShopId(shopId)
         val adapter = DetailAdapter()
-        //viewModel.
-        adapter.dataAboutShop = ShopEntity(
-            id = "",
-            name = "COCO壱番亭",
-            genre = "カレー",
-            images = listOf(),
-            registerDate = Date(),
-            lastEditedAt = Date(),
-            userID = ""
-        )
+        viewModel.loadShopDetail()
 
-        adapter.dataComment = listOf(
-            AssessmentEntity(
-                userId = "",
-                good = 3.0f,
-                distance = 3.0f,
-                cheep = 5.0f,
-                comment = "ご飯"
-            )
-        )
+        viewModel.scoreList.observe(this, androidx.lifecycle.Observer {
+            adapter.dataComment = it
+        })
+
+        viewModel.shopDetail.observe(this, androidx.lifecycle.Observer {
+            adapter.dataAboutShop = it
+        })
 
         scoreListView.adapter = adapter
         val itemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)

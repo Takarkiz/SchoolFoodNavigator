@@ -19,6 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/userName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -50,6 +51,7 @@
         app:layout_constraintTop_toBottomOf="@id/totalRateTextView" />
 
     <TextView
+        android:id="@+id/totalScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="1.0"
@@ -80,6 +82,7 @@
 
 
     <me.zhanghai.android.materialratingbar.MaterialRatingBar
+        android:id="@+id/grate"
         android:layout_width="0dp"
         android:layout_height="20dp"
         android:nestedScrollingEnabled="false"
@@ -97,6 +100,7 @@
 
 
     <me.zhanghai.android.materialratingbar.MaterialRatingBar
+        android:id="@+id/drate"
         android:layout_width="0dp"
         android:layout_height="20dp"
         android:nestedScrollingEnabled="false"
@@ -114,6 +118,7 @@
 
 
     <me.zhanghai.android.materialratingbar.MaterialRatingBar
+        android:id="@+id/crate"
         android:layout_width="0dp"
         android:layout_height="20dp"
         android:nestedScrollingEnabled="false"

@@ -34,6 +34,8 @@ class ShopListViewModel : ViewModel(), CoroutineScope {
 
     private val _shops = MutableLiveData<List<ShopEntity>>()
     private val _shopItems = MutableLiveData<List<ShopListItemModel>>()
+
+    // 内部のみで保持しているshopItems
     private val shopItems = mutableListOf<ShopListItemModel>()
 
     private val disposable: CompositeDisposable = CompositeDisposable()
