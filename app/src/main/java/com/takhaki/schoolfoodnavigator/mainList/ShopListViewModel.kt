@@ -10,6 +10,7 @@ import com.takhaki.schoolfoodnavigator.Repository.UserAuth
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -62,6 +63,7 @@ class ShopListViewModel : ViewModel(), CoroutineScope {
 
         val repository = AssesmentRepository(shop.id)
         repository.fetchAllAssesment()
+            .observeOn(Schedulers.computation())
             .subscribeBy(
                 onSuccess = { assesments ->
                     val totalScore = assesments.map { assessment ->
@@ -81,20 +83,20 @@ class ShopListViewModel : ViewModel(), CoroutineScope {
 
                         when (number) {
                             0 -> {
-                                shopItems.add(shopItem)
+                                addShopItem(shopItem)
                                 shopItems.sortBy {
                                     it.editedAt
                                 }
                             }
                             1 -> {
-                                shopItems.add(shopItem)
+                                addShopItem(shopItem)
                                 shopItems.sortByDescending {
                                     it.score
                                 }
                             }
                             2 -> {
                                 // お気に入りのみを表示
-                                if (shopItem.isFavorite) shopItems.add(shopItem)
+                                if (shopItem.isFavorite) addShopItem(shopItem)
                             }
                         }
 
@@ -109,5 +111,14 @@ class ShopListViewModel : ViewModel(), CoroutineScope {
 
     fun putTabNumber(num: Int) {
         number = num
+    }
+
+    private fun addShopItem(shopItem: ShopListItemModel) {
+        shopItems.forEach{ item ->
+            if (item.id == shopItem.id) {
+                return
+            }
+        }
+        shopItems.add(shopItem)
     }
 }
