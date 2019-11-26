@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.Utility.getFileName
@@ -75,7 +76,7 @@ class AddShopActivity : AppCompatActivity() {
         }
 
         viewModel.willIntentAssesment.observe(this, Observer { shouldShowDialog ->
-            if (shouldShowDialog) showDialog()
+            if (shouldShowDialog) showMaterialDialog()
         })
 
         viewModel.isVisibleLoading.observe(this, Observer {
@@ -186,11 +187,20 @@ class AddShopActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun showDialog() {
-        MaterialAlertDialogBuilder(this)
-            .setTitle("登録が完了しました")
+
+    private fun showMaterialDialog() {
+        val animationView = LottieAnimationView(this)
+        animationView.setAnimation(R.raw.coin_animation)
+        animationView.speed = 1.5f
+        animationView.playAnimation()
+        MaterialAlertDialogBuilder(this, R.style.reward_alert_dialog)
+            .setTitle("お店の登録で5ポイント獲得！")
             .setMessage("今回登録したお店の評価を続けますか？")
             .setPositiveButton("はい", okListener)
-            .setNegativeButton("いいえ", cancelListener).show()
+            .setNegativeButton("いいえ", cancelListener)
+            .setCancelable(false)
+            .setView(animationView)
+            .show()
+
     }
 }

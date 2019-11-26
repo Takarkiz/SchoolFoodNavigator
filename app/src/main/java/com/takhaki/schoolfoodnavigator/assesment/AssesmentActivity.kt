@@ -1,5 +1,6 @@
 package com.takhaki.schoolfoodnavigator.assesment
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -8,11 +9,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
+import com.airbnb.lottie.LottieAnimationView
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.data.RadarData
 import com.github.mikephil.charting.data.RadarDataSet
 import com.github.mikephil.charting.data.RadarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.takhaki.schoolfoodnavigator.MainActivity
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.databinding.ActivityAssesmentBinding
@@ -74,11 +77,7 @@ class AssesmentActivity : AppCompatActivity() {
                     return@uploadAssessment
                 }
 
-                // それ以外はメイン画面に戻る
-                val intent = Intent(this, MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-
+                showMaterialDialog()
             }
         }
 
@@ -170,5 +169,28 @@ class AssesmentActivity : AppCompatActivity() {
             notifyDataSetChanged()
             invalidate()
         }
+    }
+
+    private fun showMaterialDialog() {
+        val animationView = LottieAnimationView(this)
+        animationView.setAnimation(R.raw.coin_animation)
+        animationView.speed = 1.5f
+        animationView.playAnimation()
+        MaterialAlertDialogBuilder(this, R.style.reward_alert_dialog)
+            .setTitle("お店の評価で3ポイント獲得！")
+            .setPositiveButton("はい",  { dialog, which ->
+                backToHome()
+            })
+            .setCancelable(false)
+            .setView(animationView)
+            .show()
+
+    }
+
+    private fun backToHome() {
+        // それ以外はメイン画面に戻る
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
     }
 }
