@@ -18,7 +18,7 @@ fun ShopEntity.toEntity(): ShopEntity {
 
 fun AssessmentEntity.toEntity(): AssessmentEntity {
     return AssessmentEntity(
-        userId = userId,
+        user = user,
         good = good,
         distance = distance,
         cheep = cheep,

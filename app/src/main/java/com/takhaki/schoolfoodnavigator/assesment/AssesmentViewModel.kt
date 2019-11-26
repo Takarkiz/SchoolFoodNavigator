@@ -56,7 +56,7 @@ class AssesmentViewModel : ViewModel() {
 
             val repository = AssesmentRepository(id)
             val assesment = AssessmentEntity(
-                userId = userId,
+                user = userId,
                 good = good,
                 distance = distance,
                 cheep = cheep,

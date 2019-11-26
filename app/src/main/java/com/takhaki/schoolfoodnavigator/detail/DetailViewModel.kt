@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
 import com.takhaki.schoolfoodnavigator.Repository.AssesmentRepository
 import com.takhaki.schoolfoodnavigator.Repository.ShopInfoRepository
 import com.takhaki.schoolfoodnavigator.Repository.UserAuth
@@ -22,13 +21,14 @@ class DetailViewModel : ViewModel() {
         get() = _shopDetail
     private val _shopDetail = MutableLiveData<AboutShopDetailModel>()
 
-    val scoreList: LiveData<List<AssessmentEntity>>
+    val scoreList: LiveData<List<CommentDetailModel>>
         get() = _scoreList
-    private val _scoreList = MutableLiveData<List<AssessmentEntity>>()
+    private val _scoreList = MutableLiveData<List<CommentDetailModel>>()
 
     val isFavorite: LiveData<Boolean>
         get() = _isFavorite
     private val _isFavorite = MutableLiveData<Boolean>()
+    private val scores = mutableListOf<CommentDetailModel>()
 
     fun putShopId(id: String) {
         shopId = id
@@ -49,10 +49,29 @@ class DetailViewModel : ViewModel() {
     }
 
     fun loadShopDetail() {
+        val auth = UserAuth()
         val repository = AssesmentRepository(shopId)
         repository.fetchAllAssesment()
             .subscribeBy(onSuccess = { results ->
-                _scoreList.value = results
+                results.forEach { result ->
+                    auth.userNameAndIconPath(result.user) {
+                        it.getOrNull()?.let { pair ->
+                            val comment = CommentDetailModel(
+                                name = pair.first,
+                                userIcon = pair.second,
+                                gScore = result.good,
+                                dScore = result.distance,
+                                cScore = result.cheep,
+                                comment = result.comment
+                            )
+
+                            scores.add(comment)
+                        }
+                    }
+
+                }
+
+                _scoreList.value = scores
                 val goodAverage = results.map { it.good }.average().toFloat()
                 val distanceAverage = results.map { it.distance }.average().toFloat()
                 val cheepAverage = results.map { it.cheep }.average().toFloat()

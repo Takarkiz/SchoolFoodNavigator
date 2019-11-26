@@ -18,7 +18,7 @@ class DetailAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val DETAIL_VIEW_TYPE = 0
     private val USER_VIEW_TYPE = 1
 
-    var dataComment = listOf<AssessmentEntity>()
+    var dataComment = listOf<CommentDetailModel>()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -87,16 +87,24 @@ class DetailAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             USER_VIEW_TYPE -> {
                 val commentHolder = ShopResultViewHolder(holder.itemView)
                 val item = dataComment[position-1]
-                commentHolder.userNameTextView.text = item.userId
-                commentHolder.totalRating.text = String.format("%1$.1f", (item.good+item.distance+item.cheep)/3)
-                commentHolder.gRatingBar.rating = item.good
+                commentHolder.userNameTextView.text = item.name
+                commentHolder.totalRating.text = String.format("%1$.1f", (item.gScore+item.dScore+item.cScore)/3)
+                commentHolder.gRatingBar.rating = item.gScore
                 commentHolder.gRatingBar.isEnabled = false
-                commentHolder.dRatingBar.rating = item.distance
+                commentHolder.dRatingBar.rating = item.dScore
                 commentHolder.dRatingBar.isEnabled = false
-                commentHolder.cRatingBar.rating = item.cheep
+                commentHolder.cRatingBar.rating = item.cScore
                 commentHolder.cRatingBar.isEnabled = false
                 commentHolder.commentTextView.text = item.comment
                 commentHolder.totalRatingSampleBar.isEnabled = false
+
+                item.userIcon?.let { url ->
+                    val storage = FirestorageRepository("User")
+                    Glide.with(holder.itemView)
+                        .load(storage.getGSReference(url))
+                        .placeholder(R.drawable.ic_default_user)
+                        .into(commentHolder.iconImageView)
+                }
             }
         }
     }

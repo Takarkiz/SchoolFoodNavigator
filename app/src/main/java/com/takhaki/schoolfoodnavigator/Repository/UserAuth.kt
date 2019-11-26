@@ -69,6 +69,21 @@ class UserAuth {
         }
     }
 
+    fun userNameAndIconPath(userID: String, handler: (Result<Pair<String, String?>>) -> Unit) {
+        userDB
+            .document(userID)
+            .get()
+            .addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                task.result?.let {
+                    val path = it["iconUrl"].toString()
+                    val name = it["name"].toString()
+                    handler(Result.success(Pair(name, path)))
+                }
+            }
+        }
+    }
+
     fun currentUserIconUrl(handler: (Result<StorageReference>) -> Unit) {
 
         val uid = currentUser?.uid ?: return

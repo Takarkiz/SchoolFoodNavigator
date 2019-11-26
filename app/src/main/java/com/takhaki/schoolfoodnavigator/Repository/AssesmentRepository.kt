@@ -45,7 +45,7 @@ class AssesmentRepository(shopId: String) {
     private fun assesmentToMap(assessment: AssessmentEntity): Map<String, Any> {
 
         return mapOf(
-            "user" to assessment.userId,
+            "user" to assessment.user,
             "good" to assessment.good,
             "distance" to assessment.distance,
             "cheep" to assessment.cheep,

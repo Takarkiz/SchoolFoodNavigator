@@ -10,3 +10,12 @@ data class AboutShopDetailModel(
     val cheep: Float = 0.0f,
     val imageUrl: String? = null
 )
+
+data class CommentDetailModel(
+    val name: String = "",
+    val userIcon: String? = null,
+    val gScore: Float = 0f,
+    val dScore: Float = 0f,
+    val cScore: Float = 0f,
+    val comment: String = ""
+)
