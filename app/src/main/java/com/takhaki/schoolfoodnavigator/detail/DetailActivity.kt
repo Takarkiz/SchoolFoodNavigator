@@ -41,6 +41,7 @@ class DetailActivity : AppCompatActivity() {
 
         viewModel.putShopId(shopId)
         val adapter = DetailAdapter()
+        adapter.shopId = shopId
         viewModel.loadShopDetail()
 
         viewModel.scoreList.observe(this, androidx.lifecycle.Observer {
@@ -62,10 +63,10 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_detail_love, menu)
-        return true
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.menu_detail_love, menu)
+//        return true
+//    }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
 
@@ -75,11 +76,6 @@ class DetailActivity : AppCompatActivity() {
                 true
             }
 
-            R.id.nav_love -> {
-                item.icon = getDrawable(R.drawable.ic_nav_fill_favorite)
-                viewModel.didTapFavorite()
-                true
-            }
             else -> super.onOptionsItemSelected(item)
         }
     }

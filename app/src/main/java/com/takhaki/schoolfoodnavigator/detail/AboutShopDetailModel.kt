@@ -8,7 +8,8 @@ data class AboutShopDetailModel(
     val goodScore: Float = 0.0f,
     val distance: Float = 0.0f,
     val cheep: Float = 0.0f,
-    val imageUrl: String? = null
+    val imageUrl: String? = null,
+    val isFavorite: Boolean = false
 )
 
 data class CommentDetailModel(

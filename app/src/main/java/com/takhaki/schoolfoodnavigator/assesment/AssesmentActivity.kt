@@ -53,19 +53,19 @@ class AssesmentActivity : AppCompatActivity() {
 
         foodGoodRating.setOnRatingChangeListener { ratingBar, rating ->
             viewModel.onUpdateGood(rating)
-            radarChart.clearValues()
+            setUpRadarChart()
             updateRadarChart()
         }
 
         distanceRating.setOnRatingChangeListener { ratingBar, rating ->
             viewModel.onUpdateDistance(rating)
-            radarChart.clearValues()
+            setUpRadarChart()
             updateRadarChart()
         }
 
         cheepRating.setOnRatingChangeListener { ratingBar, rating ->
             viewModel.onUpdateCheep(rating)
-            radarChart.clearValues()
+            setUpRadarChart()
             updateRadarChart()
         }
 
@@ -101,14 +101,13 @@ class AssesmentActivity : AppCompatActivity() {
             legend.isEnabled = false
             description.isEnabled = false
             isRotationEnabled = false
-            animateXY(1400, 1400, Easing.EaseInOutElastic, Easing.EaseInOutElastic)
 
             xAxis.apply {
                 xOffset = 0f
                 yOffset = 0f
                 textSize = 10f
                 axisMinimum = 0f
-                axisMaximum = 4f
+                axisMaximum = 3.5f
                 valueFormatter = object : ValueFormatter() {
 
                     val labels = listOf("おいしさ", "近さ", "安さ")
@@ -121,7 +120,7 @@ class AssesmentActivity : AppCompatActivity() {
 
             yAxis.apply {
                 axisMinimum = 0f
-                axisMaximum = 5f
+                axisMaximum = 3.5f
                 labelCount = 3
                 gridColor = R.color.gray
                 textColor = R.color.gray

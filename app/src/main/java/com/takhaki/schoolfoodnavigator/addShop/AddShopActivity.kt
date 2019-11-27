@@ -113,9 +113,7 @@ class AddShopActivity : AppCompatActivity() {
         when (requestCode) {
             REQUEST_EXTERNAL_STORAGE -> {
 
-
-                val resultUri = if (data != null) data.data else viewModel.shopImageUri.value
-
+                val resultUri = data?.data?: viewModel.shopImageUri.value
                 resultUri?.let {
                     viewModel.shopImageUri.value = startCrop(it)
                 }
@@ -164,8 +162,16 @@ class AddShopActivity : AppCompatActivity() {
     private fun startCrop(uri: Uri): Uri {
         val fileName = uri.getFileName(this)
         val resultUri = Uri.fromFile(File(cacheDir, fileName))
+        val options = UCrop.Options()
+        options.apply {
+            setToolbarColor(resources.getColor(R.color.colorPrimary))
+            setStatusBarColor(resources.getColor(R.color.colorPrimaryDark))
+            setToolbarTitle("写真の編集")
+            setToolbarWidgetColor(resources.getColor(R.color.white))
+        }
         UCrop.of(uri, resultUri)
             .withAspectRatio(9f, 9f)
+            .withOptions(options)
             .start(this)
 
         return resultUri
@@ -175,7 +181,7 @@ class AddShopActivity : AppCompatActivity() {
     private val okListener = DialogInterface.OnClickListener { dialog, which ->
         viewModel.toIntentAssesment(shoudGoAssesment = false)
 
-        // 評価画面に遷移する(ここでの遷移時はバックで戻るとお店一覧に進む)
+        // 評価画面に遷移する(ここでの遷移時はバックで戻るとお店一覧に戻る)
         val intent = Intent(this, AssesmentActivity::class.java)
         intent.putExtra("shopName", viewModel.shopName.value)
         intent.putExtra("shopId", viewModel.shopId.value)

@@ -25,27 +25,11 @@ class DetailViewModel : ViewModel() {
         get() = _scoreList
     private val _scoreList = MutableLiveData<List<CommentDetailModel>>()
 
-    val isFavorite: LiveData<Boolean>
-        get() = _isFavorite
-    private val _isFavorite = MutableLiveData<Boolean>()
+
     private val scores = mutableListOf<CommentDetailModel>()
 
     fun putShopId(id: String) {
         shopId = id
-    }
-
-    fun didTapFavorite() {
-        val auth = UserAuth()
-        auth.addFavoriteShop(shopId) {
-            Log.d("TAG", "成功")
-        }
-    }
-
-    fun isFavorite() {
-        val auth = UserAuth()
-        auth.checkFavoriteShop(shopId) { fav ->
-            _isFavorite.value = fav
-        }
     }
 
     fun loadShopDetail() {

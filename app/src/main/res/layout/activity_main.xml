@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorPrimary"
-            app:layout_scrollFlags="enterAlways"
+            app:layout_scrollFlags="enterAlways|scroll"
             app:titleTextColor="@android:color/white">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,23 +28,23 @@
                     android:id="@+id/iconImage"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/ic_default_user"
                     android:background="@drawable/shape_rounded_corners_for_icon"
-                    app:civ_border_width="2dp"
+                    android:src="@drawable/ic_default_user"
                     app:civ_border_color="@android:color/white"
+                    app:civ_border_width="2dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
                     android:text="@string/main_toolbar_title"
-                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
-                    app:layout_constraintStart_toEndOf="@id/iconImage"
-                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginStart="16dp"/>
+                    app:layout_constraintStart_toEndOf="@id/iconImage"
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.appbar.MaterialToolbar>

@@ -7,9 +7,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
+import com.google.android.material.snackbar.Snackbar
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.Repository.FirestorageRepository
+import com.takhaki.schoolfoodnavigator.Repository.UserAuth
 import me.zhanghai.android.materialratingbar.MaterialRatingBar
 
 class DetailAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -17,6 +18,9 @@ class DetailAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val repository = FirestorageRepository("Shops")
     private val DETAIL_VIEW_TYPE = 0
     private val USER_VIEW_TYPE = 1
+    private var isFavorite = false
+
+    var shopId: String = ""
 
     var dataComment = listOf<CommentDetailModel>()
         set(value) {
@@ -71,6 +75,7 @@ class DetailAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         .placeholder(R.drawable.ic_add_shop_mall)
                         .into(shopViewHolder.shopImageView)
                 }
+
                 shopViewHolder.nameTextView.text = dataAboutShop.name
                 shopViewHolder.genreTextView.text = dataAboutShop.genre
                 shopViewHolder.totalScore.rating = dataAboutShop.score
@@ -82,13 +87,42 @@ class DetailAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 shopViewHolder.distanceRatingStar.isEnabled = false
                 shopViewHolder.cheepRatingStar.rating = dataAboutShop.cheep
                 shopViewHolder.cheepRatingStar.isEnabled = false
+
+                val auth = UserAuth()
+                auth.checkFavoriteShop(shopId) { containFav ->
+                    if (containFav) {
+                        shopViewHolder.favoriteIconImageView.setImageResource(R.drawable.ic_nav_fill_favorite)
+                        isFavorite = containFav
+                    } else {
+                        shopViewHolder.favoriteIconImageView.setImageResource(R.drawable.ic_nav_favorite)
+                        isFavorite = containFav
+                    }
+                }
+
+                shopViewHolder.favoriteIconImageView.setOnClickListener { view ->
+                    if (isFavorite) {
+                        auth.deleteFavoriteShop(shopId) {
+                            Snackbar.make(view, "お気に入りから削除しました", Snackbar.LENGTH_SHORT).show()
+                            shopViewHolder.favoriteIconImageView.setImageResource(R.drawable.ic_nav_favorite)
+                            isFavorite = false
+                        }
+                    } else {
+                        auth.addFavoriteShop(shopId) {
+                            // お気に入りリストに追加成功
+                            Snackbar.make(view, "お気に入りに追加しました", Snackbar.LENGTH_SHORT).show()
+                            shopViewHolder.favoriteIconImageView.setImageResource(R.drawable.ic_nav_fill_favorite)
+                            isFavorite = true
+                        }
+                    }
+                }
             }
 
             USER_VIEW_TYPE -> {
                 val commentHolder = ShopResultViewHolder(holder.itemView)
-                val item = dataComment[position-1]
+                val item = dataComment[position - 1]
                 commentHolder.userNameTextView.text = item.name
-                commentHolder.totalRating.text = String.format("%1$.1f", (item.gScore+item.dScore+item.cScore)/3)
+                commentHolder.totalRating.text =
+                    String.format("%1$.1f", (item.gScore + item.dScore + item.cScore) / 3)
                 commentHolder.gRatingBar.rating = item.gScore
                 commentHolder.gRatingBar.isEnabled = false
                 commentHolder.dRatingBar.rating = item.dScore
@@ -120,6 +154,7 @@ class DetailAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val distanceRatingStar: MaterialRatingBar =
             detailItemView.findViewById(R.id.distanceRatingStar)
         val cheepRatingStar: MaterialRatingBar = detailItemView.findViewById(R.id.cheepRatingStar)
+        val favoriteIconImageView: ImageView = detailItemView.findViewById(R.id.favoriteIcon)
     }
 
     class ShopResultViewHolder(resultItemView: View) : RecyclerView.ViewHolder(resultItemView) {
