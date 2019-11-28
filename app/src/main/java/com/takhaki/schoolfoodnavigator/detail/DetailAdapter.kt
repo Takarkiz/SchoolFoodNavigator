@@ -35,9 +35,9 @@ class DetailAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
 
     override fun getItemViewType(position: Int): Int {
-        when (position) {
-            0 -> return DETAIL_VIEW_TYPE
-            else -> return USER_VIEW_TYPE
+        return when (position) {
+            0 -> DETAIL_VIEW_TYPE
+            else -> USER_VIEW_TYPE
         }
     }
 

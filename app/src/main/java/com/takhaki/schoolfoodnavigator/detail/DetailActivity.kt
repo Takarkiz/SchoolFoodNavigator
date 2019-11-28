@@ -2,14 +2,12 @@ package com.takhaki.schoolfoodnavigator.detail
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.google.android.material.snackbar.Snackbar
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.assesment.AssesmentActivity
 import com.takhaki.schoolfoodnavigator.databinding.ActivityDetailBinding
