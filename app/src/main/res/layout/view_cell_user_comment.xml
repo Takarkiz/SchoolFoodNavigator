@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="ユーザー名"
+        android:text="@string/start_edit_name_hint"
         android:textColor="@android:color/black"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="@id/userIconImageView"
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="トータル評価"
+        android:text="@string/cell_detail_total_score"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/userIconImageView" />
 
@@ -66,7 +66,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="54dp"
-        android:text="個別評価"
+        android:text="@string/cell_comment_result"
         app:layout_constraintBottom_toBottomOf="@id/totalRateTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/totalRateTextView"
@@ -76,7 +76,7 @@
         android:id="@+id/goodText"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:text="おいしさ"
+        android:text="@string/assesment_category_good"
         app:layout_constraintStart_toStartOf="@id/personalResult"
         app:layout_constraintTop_toBottomOf="@+id/personalResult" />
 
@@ -131,7 +131,7 @@
         android:id="@+id/commentTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="コメント"
+        android:text="@string/assesment_text_comment"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cheepText" />
 

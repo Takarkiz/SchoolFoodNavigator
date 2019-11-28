@@ -22,4 +22,18 @@
 
     <string name="nav_point_format">%s pt</string>
     <string name="main_toolbar_title">ホーム</string>
+    <string name="start_next">次へ</string>
+    <string name="start_share_title">このアプリではスクールでのご飯情報を みんなで共有することができます</string>
+    <string name="start_title">飯ナビへようこそ</string>
+    <string name="start_progress_1">1/3</string>
+    <string name="start_progress_2">2/3</string>
+    <string name="start_write_name">ユーザー名を登録してください</string>
+    <string name="start_edit_name_hint">ユーザ名</string>
+    <string name="start_progress_3">3/3</string>
+    <string name="start_setting_icon">アイコンを設定してください</string>
+    <string name="strat_finish_register">登録を完了する</string>
+    <string name="cell_detail_total_score">トータル評価</string>
+    <string name="cell_comment_result">個別評価</string>
+    <string name="profile_point_title">ナビゲーターポイント</string>
+    <string name="profile_current_title">現在の称号</string>
 </resources>

@@ -42,7 +42,7 @@
 
         <TextView
             style="@style/profile_title"
-            android:text="ナビゲーターポイント"
+            android:text="@string/profile_point_title"
             app:layout_constraintBottom_toTopOf="@id/pointText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -68,7 +68,7 @@
 
         <TextView
             style="@style/profile_title"
-            android:text="現在の称号"
+            android:text="@string/profile_current_title"
             app:layout_constraintBottom_toTopOf="@id/shogoTextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

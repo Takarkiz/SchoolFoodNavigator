@@ -21,7 +21,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:text="お店名"
+        android:text="@string/add_shop_edit_hint_name"
         android:textColor="@android:color/black"
         android:textSize="21sp"
         android:textStyle="bold"
@@ -44,7 +44,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
-        android:text="ジャンル"
+        android:text="@string/add_shop_edit_hint_genre"
         android:textSize="10sp"
         app:layout_constraintStart_toStartOf="@id/shopTitleText"
         app:layout_constraintTop_toBottomOf="@id/shopTitleText" />

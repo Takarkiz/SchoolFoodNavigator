@@ -49,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:layout_marginTop="28dp"
-        android:text="トータル評価"
+        android:text="@string/cell_detail_total_score"
         app:layout_constraintStart_toStartOf="@id/shopName"
         app:layout_constraintTop_toBottomOf="@id/shopName" />
 
@@ -106,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:gravity="center_horizontal"
-                android:text="おいしさ"
+                android:text="@string/assesment_category_good"
                 android:textSize="20sp" />
 
             <me.zhanghai.android.materialratingbar.MaterialRatingBar
@@ -129,7 +129,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:gravity="center_horizontal"
-                android:text="近さ"
+                android:text="@string/assesment_category_near"
                 android:textSize="20sp" />
 
             <me.zhanghai.android.materialratingbar.MaterialRatingBar
@@ -153,7 +153,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:gravity="center_horizontal"
-                android:text="安さ"
+                android:text="@string/assesment_category_cheep"
                 android:textSize="20sp" />
 
             <me.zhanghai.android.materialratingbar.MaterialRatingBar
