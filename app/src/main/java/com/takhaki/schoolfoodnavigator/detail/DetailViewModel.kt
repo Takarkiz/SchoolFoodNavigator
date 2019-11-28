@@ -24,6 +24,10 @@ class DetailViewModel : ViewModel() {
         get() = _scoreList
     private val _scoreList = MutableLiveData<List<CommentDetailModel>>()
 
+    val hasCurrentUserComment: LiveData<Boolean>
+        get() = _hasCurrentUserComment
+    private val _hasCurrentUserComment = MutableLiveData<Boolean>().apply { value = false }
+
 
     private val scores = mutableListOf<CommentDetailModel>()
 
@@ -37,6 +41,7 @@ class DetailViewModel : ViewModel() {
         repository.fetchAllAssesment()
             .subscribeBy(onSuccess = { results ->
                 results.forEach { result ->
+                    if (result.user == auth.currentUser?.uid) _hasCurrentUserComment.value = true
                     auth.userNameAndIconPath(result.user) {
                         it.getOrNull()?.let { pair ->
                             val comment = CommentDetailModel(
@@ -51,7 +56,6 @@ class DetailViewModel : ViewModel() {
                             scores.add(comment)
                         }
                     }
-
                 }
 
                 _scoreList.value = scores

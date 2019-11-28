@@ -1,6 +1,5 @@
 package com.takhaki.schoolfoodnavigator.assesment
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -177,7 +176,7 @@ class AssesmentActivity : AppCompatActivity() {
         animationView.playAnimation()
         MaterialAlertDialogBuilder(this, R.style.reward_alert_dialog)
             .setTitle("お店の評価で3ポイント獲得！")
-            .setPositiveButton("はい",  { dialog, which ->
+            .setPositiveButton("はい", { dialog, which ->
                 backToHome()
             })
             .setCancelable(false)

@@ -3,11 +3,14 @@ package com.takhaki.schoolfoodnavigator.detail
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.RecyclerView
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.assesment.AssesmentActivity
 import com.takhaki.schoolfoodnavigator.databinding.ActivityDetailBinding
@@ -53,6 +56,12 @@ class DetailActivity : AppCompatActivity() {
         scoreListView.adapter = adapter
         val itemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         scoreListView.addItemDecoration(itemDecoration)
+        scoreListView.clearOnScrollListeners()
+        scoreListView.addOnScrollListener(scrollListener)
+
+        viewModel.hasCurrentUserComment.observe(this, Observer { hasCurrentUser ->
+            addAssessmentFab.visibility = if (hasCurrentUser)  View.GONE else View.VISIBLE
+        })
 
         addAssessmentFab.setOnClickListener {
             val intent = Intent(this, AssesmentActivity::class.java)
@@ -60,11 +69,6 @@ class DetailActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
-
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.menu_detail_love, menu)
-//        return true
-//    }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
 
@@ -75,6 +79,21 @@ class DetailActivity : AppCompatActivity() {
             }
 
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private val scrollListener = object : RecyclerView.OnScrollListener() {
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+
+            when (newState) {
+                RecyclerView.SCROLL_STATE_IDLE -> {
+                    viewModel.hasCurrentUserComment.value?.let {
+                        if (!it) addAssessmentFab.show()
+                    }
+                }
+                else -> addAssessmentFab.hide()
+            }
+            super.onScrollStateChanged(recyclerView, newState)
         }
     }
 }
