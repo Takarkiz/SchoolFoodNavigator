@@ -76,7 +76,7 @@
         <TextView
             android:id="@+id/shogoTextView"
             style="@style/profile_big_content"
-            android:text="一般人"
+            android:text="@{profileViewModel.userGradeTitle}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/pointText" />
