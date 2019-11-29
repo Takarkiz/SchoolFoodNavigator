@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.takhaki.schoolfoodnavigator.Model.UserEntity
+import com.takhaki.schoolfoodnavigator.Repository.CompanyRepository
 import com.takhaki.schoolfoodnavigator.Repository.UserAuth
 
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
@@ -18,6 +19,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     val userName = MutableLiveData<String>().apply { value = "ユーザー名" }
     val userPoint = MutableLiveData<Int>().apply { value = 0 }
     val userGradeTitle = MutableLiveData<String>().apply { value = "一般人" }
+    val teamName = MutableLiveData<String>().apply { value = "" }
 
     fun updateUserProfile(uid: String) {
         _pageUserUid.value = uid
@@ -26,6 +28,19 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             userPoint.value = user.navScore
             _userImageUrl.value = user.profImageUrl
             userGradeTitle.value = caliculateUserRank(user.navScore)
+        }
+
+        getUserTeamName()
+    }
+
+    private fun getUserTeamName() {
+        val repository = CompanyRepository(getApplication())
+        repository.fetchCompanyName { result ->
+            if (result.isSuccess) {
+                result.getOrNull()?.let { name ->
+                    teamName.value = name
+                }
+            }
         }
     }
 
@@ -53,7 +68,5 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             in 80..100 -> "グルメマスター"
             else -> "___"
         }
-
-
     }
 }

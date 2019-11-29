@@ -5,7 +5,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.takhaki.schoolfoodnavigator.Model.Company
 import com.takhaki.schoolfoodnavigator.Repository.CompanyRepository
 import com.takhaki.schoolfoodnavigator.Repository.UserAuth
 
@@ -50,7 +49,7 @@ class CreateRoomViewModel(application: Application) : AndroidViewModel(applicati
 
     // チームを作成する
     fun createRoom(handler: (Int) -> Unit) {
-        val repository = CompanyRepository()
+        val repository = CompanyRepository(getApplication())
         val auth = UserAuth(getApplication())
         val uid = auth.currentUser?.uid?.let { it } ?: return
 
@@ -68,8 +67,18 @@ class CreateRoomViewModel(application: Application) : AndroidViewModel(applicati
 
     // チームID検索
     fun searchTeam(id: Int, handler: (Result<Boolean>) -> Unit) {
-        val repository = CompanyRepository()
+        val auth = UserAuth(getApplication())
+        val uid = auth.currentUser?.uid?.let { it } ?: return
+        val repository = CompanyRepository(getApplication())
         repository.searchCompany(id) {
+            if (it.isSuccess) {
+                it.getOrNull()?.let { result ->
+                    if (result) {
+                        repository.joinMember(uid, id)
+                    }
+                }
+
+            }
             handler(it)
         }
     }

@@ -53,11 +53,18 @@ class CreateRoomFragment : Fragment() {
                 viewModel.contentEditText.value?.let { text ->
                     viewModel.searchTeam(text.toInt()) { result ->
                         if (result.isSuccess) {
-                            Snackbar.make(it, "チームに参加完了", Snackbar.LENGTH_SHORT).show()
-                            val action = CreateRoomFragmentDirections.actionCreateTeamFragmentToUserNameResigterFragment(
-                                text.toInt()
-                            )
-                            findNavController().navigate(action)
+                            result.getOrNull()?.let { isSuccess ->
+                                if (isSuccess) {
+                                    Snackbar.make(it, "チームに参加完了", Snackbar.LENGTH_SHORT).show()
+                                    val action = CreateRoomFragmentDirections.actionCreateTeamFragmentToUserNameResigterFragment(
+                                        text.toInt()
+                                    )
+                                    findNavController().navigate(action)
+                                } else {
+                                    Snackbar.make(it, "存在しないチームです", Snackbar.LENGTH_SHORT).show()
+                                }
+                            }
+
                         } else {
                             Snackbar.make(it, "存在しないチームです", Snackbar.LENGTH_SHORT).show()
                         }

@@ -1,9 +1,12 @@
 package com.takhaki.schoolfoodnavigator.Repository
 
+import android.content.Context
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.takhaki.schoolfoodnavigator.Model.CompanyData
+import java.lang.Exception
 
-class CompanyRepository {
+class CompanyRepository(val context: Context) {
 
     private val companyDB = FirebaseFirestore.getInstance().collection("Team")
 
@@ -28,11 +31,26 @@ class CompanyRepository {
     }
 
     fun searchCompany(expectedNumber: Int, handler: (Result<Boolean>) -> Unit) {
-        companyDB.document(expectedNumber.toString()).get()
+        companyDB.whereEqualTo("id", expectedNumber).get()
             .addOnSuccessListener {
-                handler(Result.success(true))
+                if (it.isEmpty) {
+                    handler(Result.success(false))
+                } else {
+                    handler(Result.success(true))
+                }
             }
             .addOnFailureListener { e ->
+                handler(Result.failure(e))
+            }
+    }
+
+    fun fetchCompanyName(handler: (Result<String>) -> Unit) {
+        val teamID = CompanyData.getCompanyId(context)
+        companyDB.document(teamID.toString()).get()
+            .addOnSuccessListener { data ->
+                val name = data["name"].toString()
+                handler(Result.success(name))
+            }.addOnFailureListener { e ->
                 handler(Result.failure(e))
             }
     }
