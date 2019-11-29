@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.takhaki.schoolfoodnavigator.Model.CompanyData
 import com.takhaki.schoolfoodnavigator.Model.UserEntity
 import com.takhaki.schoolfoodnavigator.Repository.CompanyRepository
 import com.takhaki.schoolfoodnavigator.Repository.UserAuth
@@ -34,11 +35,12 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     }
 
     private fun getUserTeamName() {
+        val companyID = CompanyData.getCompanyId(getApplication()).toString()
         val repository = CompanyRepository(getApplication())
         repository.fetchCompanyName { result ->
             if (result.isSuccess) {
                 result.getOrNull()?.let { name ->
-                    teamName.value = name
+                    teamName.value = "${name}(ID: ${companyID})"
                 }
             }
         }
