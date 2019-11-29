@@ -1,12 +1,13 @@
 package com.takhaki.schoolfoodnavigator.profile
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.takhaki.schoolfoodnavigator.Model.UserEntity
 import com.takhaki.schoolfoodnavigator.Repository.UserAuth
 
-class ProfileViewModel : ViewModel() {
+class ProfileViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _pageUserUid = MutableLiveData<String>()
 
@@ -29,7 +30,7 @@ class ProfileViewModel : ViewModel() {
     }
 
     private fun getUser(handler: (UserEntity) -> Unit) {
-        val auth = UserAuth()
+        val auth = UserAuth(getApplication())
         _pageUserUid.value?.let { uid ->
             auth.fetchUser(uid) { result ->
                 if (result.isSuccess) {

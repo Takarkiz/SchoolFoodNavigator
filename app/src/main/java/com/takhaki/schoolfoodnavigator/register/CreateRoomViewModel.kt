@@ -1,13 +1,15 @@
 package com.takhaki.schoolfoodnavigator.register
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
+import com.takhaki.schoolfoodnavigator.Model.Company
 import com.takhaki.schoolfoodnavigator.Repository.CompanyRepository
 import com.takhaki.schoolfoodnavigator.Repository.UserAuth
 
-class CreateRoomViewModel : ViewModel() {
+class CreateRoomViewModel(application: Application) : AndroidViewModel(application) {
 
     val titleText = MutableLiveData<String>().apply { value = "" }
     val hintText = MutableLiveData<String>().apply { value = "" }
@@ -35,7 +37,8 @@ class CreateRoomViewModel : ViewModel() {
 
     // サインインを行う
     fun signInAuth() {
-        val auth = UserAuth()
+        val auth = UserAuth(getApplication())
+        if (auth.currentUser != null) return
         auth.signInUser { result ->
             if (result.isSuccess) {
                 result.getOrNull()?.let { uid ->
@@ -46,9 +49,9 @@ class CreateRoomViewModel : ViewModel() {
     }
 
     // チームを作成する
-    fun createRoom(handler:(Int) -> Unit) {
+    fun createRoom(handler: (Int) -> Unit) {
         val repository = CompanyRepository()
-        val auth = UserAuth()
+        val auth = UserAuth(getApplication())
         val uid = auth.currentUser?.uid?.let { it } ?: return
 
         contentEditText.value?.let { name ->
@@ -61,6 +64,13 @@ class CreateRoomViewModel : ViewModel() {
                 }
             }
         }
+    }
 
+    // チームID検索
+    fun searchTeam(id: Int, handler: (Result<Boolean>) -> Unit) {
+        val repository = CompanyRepository()
+        repository.searchCompany(id) {
+            handler(it)
+        }
     }
 }

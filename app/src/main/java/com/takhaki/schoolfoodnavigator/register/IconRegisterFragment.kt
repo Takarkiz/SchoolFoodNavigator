@@ -49,9 +49,6 @@ class IconRegisterFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
 
         viewModel.putUserName(args.name)
-        context?.let {
-            viewModel.saveCompanyID(args.teamID, it)
-        }
         return inflater.inflate(R.layout.fragment_icon_register, container, false)
     }
 
@@ -64,13 +61,18 @@ class IconRegisterFragment : Fragment() {
         finishRegisterButton.setOnClickListener {
             loadingAnimationView.visibility = View.VISIBLE
             loadingAnimationView.playAnimation()
+            context?.let { context ->
+                viewModel.saveCompanyID(args.teamID, context)
+            }
             viewModel.createUser()
+            finishRegisterButton.isEnabled = false
         }
 
         viewModel.isCompletedUserData.observe(this, Observer { complete ->
             if (complete) {
                 loadingAnimationView.visibility = View.GONE
                 loadingAnimationView.pauseAnimation()
+                finishRegisterButton.isEnabled = true
                 val intent = Intent(context, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                 context?.startActivity(intent)
@@ -117,6 +119,7 @@ class IconRegisterFragment : Fragment() {
 
     fun didTapSelectUserPhoto() {
         context?.let { context ->
+
             if (ContextCompat.checkSelfPermission(
                     context,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE

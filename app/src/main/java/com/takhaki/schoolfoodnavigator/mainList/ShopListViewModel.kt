@@ -1,8 +1,9 @@
 package com.takhaki.schoolfoodnavigator.mainList
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.takhaki.schoolfoodnavigator.Model.ShopEntity
 import com.takhaki.schoolfoodnavigator.Repository.AssesmentRepository
 import com.takhaki.schoolfoodnavigator.Repository.ShopInfoRepository
@@ -11,16 +12,8 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancelChildren
-import kotlin.coroutines.CoroutineContext
 
-class ShopListViewModel : ViewModel(), CoroutineScope {
-
-    override val coroutineContext: CoroutineContext
-        get() = SupervisorJob() + Dispatchers.Main
+class ShopListViewModel(application: Application) : AndroidViewModel(application) {
 
     val shopItemList: LiveData<List<ShopListItemModel>>
         get() = _shopItems
@@ -31,11 +24,6 @@ class ShopListViewModel : ViewModel(), CoroutineScope {
     private var number: Int = 0
 
 
-    override fun onCleared() {
-        super.onCleared()
-        coroutineContext.cancelChildren()
-    }
-
     private val _shops = MutableLiveData<List<ShopEntity>>()
     private val _shopItems = MutableLiveData<List<ShopListItemModel>>()
 
@@ -45,7 +33,7 @@ class ShopListViewModel : ViewModel(), CoroutineScope {
     private val disposable: CompositeDisposable = CompositeDisposable()
 
     fun loadListShopItem() {
-        val repository = ShopInfoRepository()
+        val repository = ShopInfoRepository(getApplication())
         repository.fetchAllShops()
             .subscribeBy(
                 onSuccess = {
@@ -61,7 +49,7 @@ class ShopListViewModel : ViewModel(), CoroutineScope {
 
     private fun getShopItems(shop: ShopEntity) {
 
-        val repository = AssesmentRepository(shop.id)
+        val repository = AssesmentRepository(shop.id, getApplication())
         repository.fetchAllAssesment()
             .observeOn(Schedulers.computation())
             .subscribeBy(
@@ -69,7 +57,7 @@ class ShopListViewModel : ViewModel(), CoroutineScope {
                     val totalScore = assesments.map { assessment ->
                         (assessment.good + assessment.cheep + assessment.distance) / 3
                     }.average()
-                    val auth = UserAuth()
+                    val auth = UserAuth(getApplication())
                     auth.checkFavoriteShop(shop.id) { isFavorite ->
                         val shopItem = ShopListItemModel(
                             id = shop.id,
@@ -114,7 +102,7 @@ class ShopListViewModel : ViewModel(), CoroutineScope {
     }
 
     private fun addShopItem(shopItem: ShopListItemModel) {
-        shopItems.forEach{ item ->
+        shopItems.forEach { item ->
             if (item.id == shopItem.id) {
                 return
             }

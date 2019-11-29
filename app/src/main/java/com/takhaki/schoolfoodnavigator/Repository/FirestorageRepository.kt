@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.takhaki.schoolfoodnavigator.Model.CompanyData
 import com.takhaki.schoolfoodnavigator.Utility.getFileName
 import java.io.File
 import java.io.FileInputStream
@@ -26,8 +27,9 @@ class FirestorageRepository(private val filePathScheme: String) {
         handler: (Result<String>) -> Unit
     ) {
 
+        val companyID = CompanyData.getCompanyId(context).toString()
         val fileName = iconUri.getFileName(context) ?: ""
-        val filePath = "${filePathScheme}/${id}/${fileName}"
+        val filePath = "${companyID}/${filePathScheme}/${id}/${fileName}"
         val shopImageRef = storage.reference.child(filePath)
 
         val stream = FileInputStream(File(iconUri.path!!))

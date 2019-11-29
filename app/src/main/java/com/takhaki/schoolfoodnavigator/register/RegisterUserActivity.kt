@@ -1,7 +1,7 @@
 package com.takhaki.schoolfoodnavigator.register
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.takhaki.schoolfoodnavigator.R
 
 class RegisterUserActivity : AppCompatActivity() {

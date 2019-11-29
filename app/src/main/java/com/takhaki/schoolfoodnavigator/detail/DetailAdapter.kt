@@ -1,5 +1,6 @@
 package com.takhaki.schoolfoodnavigator.detail
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +14,7 @@ import com.takhaki.schoolfoodnavigator.Repository.FirestorageRepository
 import com.takhaki.schoolfoodnavigator.Repository.UserAuth
 import me.zhanghai.android.materialratingbar.MaterialRatingBar
 
-class DetailAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class DetailAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val repository = FirestorageRepository("Shops")
     private val DETAIL_VIEW_TYPE = 0
@@ -88,7 +89,7 @@ class DetailAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 shopViewHolder.cheepRatingStar.rating = dataAboutShop.cheep
                 shopViewHolder.cheepRatingStar.isEnabled = false
 
-                val auth = UserAuth()
+                val auth = UserAuth(context)
                 auth.checkFavoriteShop(shopId) { containFav ->
                     if (containFav) {
                         shopViewHolder.favoriteIconImageView.setImageResource(R.drawable.ic_nav_fill_favorite)

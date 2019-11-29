@@ -41,10 +41,7 @@ class IconRegisterViewModel(application: Application) : AndroidViewModel(applica
     }
 
     fun createUser() {
-        val auth = UserAuth()
-        if (auth.currentUser != null) {
-            return
-        }
+        val auth = UserAuth(getApplication())
         val name = _userName.value ?: return
         val iconUri = _iconImageUri.value
 

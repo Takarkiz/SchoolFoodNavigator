@@ -41,7 +41,7 @@ class StartFragment : Fragment() {
             val companyID = CompanyData.getCompanyId(context)
 
             // 既にログインしている かつ カンパニーIDが端末に保存済の場合はメインメニューに移動
-            if (checkLoginUser() && companyID != null) {
+            if (checkLoginUser() && companyID != 0) {
                 val intent = Intent(context, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(intent)
@@ -51,7 +51,7 @@ class StartFragment : Fragment() {
     }
 
     private fun checkLoginUser(): Boolean {
-        val auth = UserAuth()
+        val auth = UserAuth(context!!)
         return auth.currentUser != null
     }
 

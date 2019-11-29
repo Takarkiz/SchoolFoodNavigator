@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val auth = UserAuth()
+        val auth = UserAuth(this)
         val uid = auth.currentUser?.uid
         auth.currentUserIconUrl { result ->
             if (result.isSuccess) {

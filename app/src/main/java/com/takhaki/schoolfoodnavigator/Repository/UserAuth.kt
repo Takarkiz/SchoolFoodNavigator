@@ -4,22 +4,27 @@ import android.content.Context
 import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
+import com.takhaki.schoolfoodnavigator.Model.CompanyData
 import com.takhaki.schoolfoodnavigator.Model.UserEntity
 
-class UserAuth {
+class UserAuth(context: Context) {
 
-    private val auth: FirebaseAuth
-    private val userDB = FirebaseFirestore.getInstance().collection("User")
+    private val auth = FirebaseAuth.getInstance()
+    private val userDB: CollectionReference
 
 
     val currentUser: FirebaseUser?
         get() = auth.currentUser
 
     init {
-        auth = FirebaseAuth.getInstance()
+        val companyID = CompanyData.getCompanyId(context)
+        userDB = FirebaseFirestore.getInstance().collection("Team").document(companyID.toString())
+            .collection("User")
+
     }
 
     fun signInUser(handler: (Result<String>) -> Unit) {

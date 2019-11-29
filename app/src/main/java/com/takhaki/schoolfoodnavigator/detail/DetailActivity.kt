@@ -41,7 +41,7 @@ class DetailActivity : AppCompatActivity() {
         binding.detailViewModel = viewModel
 
         viewModel.putShopId(shopId)
-        val adapter = DetailAdapter()
+        val adapter = DetailAdapter(this)
         adapter.shopId = shopId
         viewModel.loadShopDetail()
 

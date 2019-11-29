@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.snackbar.Snackbar
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.databinding.FragmentCreateRoomBinding
 import kotlinx.android.synthetic.main.fragment_create_room.*
@@ -47,9 +48,30 @@ class CreateRoomFragment : Fragment() {
         viewModel.signInAuth()
 
         finishEditTeamName.setOnClickListener {
-            viewModel.createRoom { teamID ->
-                val action = CreateRoomFragmentDirections.actionCreateTeamFragmentToUserNameResigterFragment(teamID)
-                findNavController().navigate(action)
+            if (args.join) {
+                // 成功した場合は入力したIDを送るようにする
+                viewModel.contentEditText.value?.let { text ->
+                    viewModel.searchTeam(text.toInt()) { result ->
+                        if (result.isSuccess) {
+                            Snackbar.make(it, "チームに参加完了", Snackbar.LENGTH_SHORT).show()
+                            val action = CreateRoomFragmentDirections.actionCreateTeamFragmentToUserNameResigterFragment(
+                                text.toInt()
+                            )
+                            findNavController().navigate(action)
+                        } else {
+                            Snackbar.make(it, "存在しないチームです", Snackbar.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+
+            } else {
+                viewModel.createRoom { teamID ->
+                    val action =
+                        CreateRoomFragmentDirections.actionCreateTeamFragmentToUserNameResigterFragment(
+                            teamID
+                        )
+                    findNavController().navigate(action)
+                }
             }
         }
     }

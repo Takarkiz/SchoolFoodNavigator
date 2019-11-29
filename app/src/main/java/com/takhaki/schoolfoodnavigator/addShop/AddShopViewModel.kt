@@ -45,8 +45,8 @@ class AddShopViewModel(application: Application) : AndroidViewModel(application)
 
     fun onSendShopInfo() {
 
-        val auth = UserAuth()
-        val userID = auth.currentUser?.uid?: return
+        val auth = UserAuth(getApplication())
+        val userID = auth.currentUser?.uid ?: return
         isVisibleLoading.value = true
         val shopId = UUID.randomUUID().toString()
 
@@ -60,7 +60,7 @@ class AddShopViewModel(application: Application) : AndroidViewModel(application)
             images = listOf()
         )
 
-        val shopInfoRepository = ShopInfoRepository()
+        val shopInfoRepository = ShopInfoRepository(getApplication())
         shopInfoRepository.registrateShop(shop, shopImageUri.value, appContext) { result ->
             if (result.isSuccess) {
                 result.getOrNull()?.let { id ->

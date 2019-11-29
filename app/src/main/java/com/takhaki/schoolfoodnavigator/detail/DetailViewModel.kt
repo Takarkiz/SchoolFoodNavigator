@@ -1,8 +1,9 @@
 package com.takhaki.schoolfoodnavigator.detail
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.takhaki.schoolfoodnavigator.Repository.AssesmentRepository
 import com.takhaki.schoolfoodnavigator.Repository.ShopInfoRepository
 import com.takhaki.schoolfoodnavigator.Repository.UserAuth
@@ -10,10 +11,10 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 
-class DetailViewModel : ViewModel() {
+class DetailViewModel(application: Application) : AndroidViewModel(application) {
 
     private val disposable: CompositeDisposable = CompositeDisposable()
-    private val shopRepository = ShopInfoRepository()
+    private val shopRepository = ShopInfoRepository(getApplication())
 
     private var shopId: String = ""
     val shopDetail: LiveData<AboutShopDetailModel>
@@ -36,8 +37,8 @@ class DetailViewModel : ViewModel() {
     }
 
     fun loadShopDetail() {
-        val auth = UserAuth()
-        val repository = AssesmentRepository(shopId)
+        val auth = UserAuth(getApplication())
+        val repository = AssesmentRepository(shopId, getApplication())
         repository.fetchAllAssesment()
             .subscribeBy(onSuccess = { results ->
                 results.forEach { result ->

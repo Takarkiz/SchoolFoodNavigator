@@ -35,7 +35,7 @@ class ProfileActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.profileViewModel = viewModel
 
-        UserAuth().currentUser?.uid?.let {
+        UserAuth(this).currentUser?.uid?.let {
             viewModel.updateUserProfile(it)
         }
 

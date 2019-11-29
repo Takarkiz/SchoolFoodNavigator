@@ -21,10 +21,10 @@ class CompanyData {
         }
 
         // チームIDを返す(もしなければNullが返る)
-        fun getCompanyId(context: Context): Int? {
+        fun getCompanyId(context: Context): Int {
             val pref = context.getSharedPreferences("Company", Context.MODE_PRIVATE)
             val id = pref.getInt("ID", 0)
-            return if (id != 0) id else null
+            return id
         }
     }
 }

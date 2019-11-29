@@ -5,7 +5,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class CompanyRepository {
 
-    val companyDB = FirebaseFirestore.getInstance().collection("Company")
+    private val companyDB = FirebaseFirestore.getInstance().collection("Team")
 
     fun createCompany(teamName: String, handler: (Result<Int>) -> Unit) {
 
@@ -25,5 +25,15 @@ class CompanyRepository {
 
     fun joinMember(memberID: String, companyID: Int) {
         companyDB.document(companyID.toString()).update("members", FieldValue.arrayUnion(memberID))
+    }
+
+    fun searchCompany(expectedNumber: Int, handler: (Result<Boolean>) -> Unit) {
+        companyDB.document(expectedNumber.toString()).get()
+            .addOnSuccessListener {
+                handler(Result.success(true))
+            }
+            .addOnFailureListener { e ->
+                handler(Result.failure(e))
+            }
     }
 }

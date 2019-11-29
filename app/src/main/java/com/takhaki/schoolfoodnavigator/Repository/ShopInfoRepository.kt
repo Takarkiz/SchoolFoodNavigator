@@ -2,20 +2,28 @@ package com.takhaki.schoolfoodnavigator.Repository
 
 import android.content.Context
 import android.net.Uri
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
+import com.takhaki.schoolfoodnavigator.Model.CompanyData
 import com.takhaki.schoolfoodnavigator.Model.ShopEntity
 import com.takhaki.schoolfoodnavigator.Utility.getFileName
 import io.reactivex.Single
 import java.io.File
 import java.io.FileInputStream
 
-class ShopInfoRepository {
+class ShopInfoRepository(context: Context) {
 
-    val shopDB = FirebaseFirestore.getInstance().collection("Shops")
+    val shopDB: CollectionReference
     val storage = FirebaseStorage.getInstance("gs://schoolfoodnavigator.appspot.com")
+
+    init {
+        val id = CompanyData.getCompanyId(context)
+        shopDB = FirebaseFirestore.getInstance().collection("Team").document(id.toString())
+            .collection("Shops")
+    }
 
     // お店の登録->結果としてショップIDを返す
     fun registrateShop(
@@ -98,7 +106,8 @@ class ShopInfoRepository {
         handler: (Result<String>) -> Unit
     ) {
         val fileName = imageUri.getFileName(context) ?: ""
-        val filePath = "Shops/${shopID}/${fileName}"
+        val companyID = CompanyData.getCompanyId(context)
+        val filePath = "${companyID}/Shops/${shopID}/${fileName}"
         val shopImageRef = storage.reference.child(filePath)
 
         val stream = FileInputStream(File(imageUri.path!!))

@@ -1,16 +1,20 @@
 package com.takhaki.schoolfoodnavigator.Repository
 
+import android.content.Context
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
+import com.takhaki.schoolfoodnavigator.Model.CompanyData
 import io.reactivex.Single
 
-class AssesmentRepository(shopId: String) {
+class AssesmentRepository(shopId: String, context: Context) {
 
     private val collectionRef: CollectionReference
 
     init {
-        collectionRef = FirebaseFirestore.getInstance().collection("Shops").document(shopId)
+        val id = CompanyData.getCompanyId(context)
+        collectionRef = FirebaseFirestore.getInstance().collection("Team").document(id.toString())
+            .collection("Shops").document(shopId)
             .collection("comment")
     }
 

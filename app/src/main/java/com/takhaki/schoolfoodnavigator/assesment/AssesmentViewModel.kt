@@ -1,14 +1,15 @@
 package com.takhaki.schoolfoodnavigator.assesment
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
 import com.takhaki.schoolfoodnavigator.Repository.AssesmentRepository
 import com.takhaki.schoolfoodnavigator.Repository.ShopInfoRepository
 import com.takhaki.schoolfoodnavigator.Repository.UserAuth
 
-class AssesmentViewModel : ViewModel() {
+class AssesmentViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _shopId = MutableLiveData<String>()
     val shopId: LiveData<String>
@@ -46,15 +47,15 @@ class AssesmentViewModel : ViewModel() {
     }
 
     fun uploadAssessment(finishUploadHander: (Result<String>) -> Unit) {
-        val userId = UserAuth().currentUser?.uid?.let { it } ?: return
-        val auth = UserAuth()
+        val auth = UserAuth(getApplication())
+        val userId = auth.currentUser?.uid?.let { it } ?: return
 
         shopId.value?.let { id ->
             val good = goodValue.value?.let { it } ?: 3f
             val distance = distanceValue.value?.let { it } ?: 3f
             val cheep = cheepValue.value?.let { it } ?: 3f
 
-            val repository = AssesmentRepository(id)
+            val repository = AssesmentRepository(id, getApplication())
             val assesment = AssessmentEntity(
                 user = userId,
                 good = good,
@@ -63,7 +64,7 @@ class AssesmentViewModel : ViewModel() {
                 comment = commentText.value?.let { it } ?: ""
             )
 
-            val shopRepository = ShopInfoRepository()
+            val shopRepository = ShopInfoRepository(getApplication())
 
             repository.addAssessment(assesment) { result ->
                 if (result.isSuccess) {
