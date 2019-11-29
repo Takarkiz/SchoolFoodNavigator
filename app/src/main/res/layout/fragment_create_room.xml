@@ -7,21 +7,21 @@
     <data>
 
         <variable
-            name="nameRegisterViewModel"
-            type="com.takhaki.schoolfoodnavigator.register.NameRegisterViewModel" />
+            name="createRoomViewModel"
+            type="com.takhaki.schoolfoodnavigator.register.CreateRoomViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorPrimary"
-        tools:context=".register.NameRegisterFragment">
+        tools:context=".register.CreateRoomFragment">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            android:text="@string/start_progress_2"
+            android:text="@string/start_progress_1"
             android:textColor="@android:color/white"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -34,19 +34,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="52dp"
-            android:text="@string/start_write_name"
+            android:text="@{createRoomViewModel.titleText}"
             android:textColor="@android:color/white"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/inputUserName"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="チーム名を入力" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputUserName"
             android:layout_width="240dp"
             android:layout_height="wrap_content"
-            android:hint="@string/start_edit_name_hint"
+            android:hint="@{createRoomViewModel.hintText}"
             app:endIconMode="clear_text"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -54,23 +55,23 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/textFieldUserName"
+                android:id="@+id/textEditTeamName"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="240dp"
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
                 android:inputType="text"
-                android:text="@={nameRegisterViewModel.nameTextView}" />
+                android:text="@={createRoomViewModel.contentEditText}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/finishEditUserName"
+            android:id="@+id/finishEditTeamName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="40dp"
             android:text="@string/start_next"
             android:textColor="@android:color/white"
-            android:visibility="@{nameRegisterViewModel.isVisibleUserFinishButton() ? android.view.View.VISIBLE : android.view.View.GONE}"
+            android:visibility="@{createRoomViewModel.isShowFinishButton() ? android.view.View.VISIBLE : android.view.View.GONE}"
             app:backgroundTint="@color/colorAccent"
             app:icon="@drawable/ic_fab_next"
             app:iconTint="@android:color/white"
@@ -79,4 +80,5 @@
             app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

@@ -1,26 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/navigation_user_register"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_user_register"
     app:startDestination="@id/start_fragment">
 
     <fragment
         android:id="@+id/start_fragment"
         android:name="com.takhaki.schoolfoodnavigator.register.StartFragment"
-        android:label="FirstFragment">
+        android:label="FirstFragment"
+        tools:layout="@layout/fragment_start">
 
         <action
-            android:id="@+id/action_start_fragment_to_userNameResigterFragment"
+            android:id="@+id/action_start_fragment_to_createTeamFragment"
+            app:destination="@id/createTeamFragment"
+            app:enterAnim="@anim/side_from_right"
+            app:exitAnim="@anim/side_to_left"
+            app:popEnterAnim="@anim/side_from_left"
+            app:popExitAnim="@anim/side_to_right" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/createTeamFragment"
+        android:name="com.takhaki.schoolfoodnavigator.register.CreateRoomFragment"
+        android:label="TeamFragment"
+        tools:layout="@layout/fragment_create_room">
+
+        <action
+            android:id="@+id/action_createTeamFragment_to_userNameResigterFragment"
             app:destination="@id/userNameResigterFragment"
             app:enterAnim="@anim/side_from_right"
             app:exitAnim="@anim/side_to_left"
             app:popEnterAnim="@anim/side_from_left"
             app:popExitAnim="@anim/side_to_right" />
+
+        <argument
+            android:name="join"
+            app:argType="boolean" />
+
     </fragment>
 
     <fragment
         android:id="@+id/userNameResigterFragment"
         android:name="com.takhaki.schoolfoodnavigator.register.NameRegisterFragment"
-        android:label="SecondFragment">
+        android:label="SecondFragment"
+        tools:layout="@layout/fragment_name_register">
         <action
             android:id="@+id/action_userNameResigterFragment_to_userIconRegisterFragment"
             app:destination="@id/userIconRegisterFragment"
@@ -28,16 +53,26 @@
             app:exitAnim="@anim/side_to_left"
             app:popEnterAnim="@anim/side_from_left"
             app:popExitAnim="@anim/side_to_right" />
+
+        <argument
+            android:name="teamID"
+            app:argType="integer" />
     </fragment>
 
     <fragment
         android:id="@+id/userIconRegisterFragment"
         android:name="com.takhaki.schoolfoodnavigator.register.IconRegisterFragment"
-        android:label="ThirdFragment">
+        android:label="ThirdFragment"
+        tools:layout="@layout/fragment_icon_register">
 
         <argument
             android:name="name"
-            app:argType="string"/>
+            app:argType="string" />
+
+        <argument
+            android:name="teamID"
+            app:argType="integer" />
+
     </fragment>
 
 </navigation>

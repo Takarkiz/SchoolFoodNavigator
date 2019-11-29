@@ -22,6 +22,16 @@ class UserAuth {
         auth = FirebaseAuth.getInstance()
     }
 
+    fun signInUser(handler: (Result<String>) -> Unit) {
+        signInAnonymousUser { result ->
+            if (result.isSuccess) {
+                result.getOrNull()?.let { uid ->
+                    handler(Result.success(uid))
+                }
+            }
+        }
+    }
+
 
     fun createUser(
         name: String,
@@ -29,20 +39,16 @@ class UserAuth {
         context: Context,
         handler: (Result<String>) -> Unit
     ) {
-        signInAnonymousUser { result ->
+        val uid = currentUser?.uid?.let { it } ?: return
+
+        createUserAccount(uid, name, iconUri, context) { result ->
             if (result.isSuccess) {
-                result.getOrNull()?.let { uid ->
-                    createUserAccount(uid, name, iconUri, context) { result ->
-                        if (result.isSuccess) {
-                            result.getOrNull()?.let {
-                                handler(Result.success(it))
-                            }
-                        } else {
-                            result.exceptionOrNull()?.let { e ->
-                                handler(Result.failure(e))
-                            }
-                        }
-                    }
+                result.getOrNull()?.let {
+                    handler(Result.success(it))
+                }
+            } else {
+                result.exceptionOrNull()?.let { e ->
+                    handler(Result.failure(e))
                 }
             }
         }
@@ -74,14 +80,14 @@ class UserAuth {
             .document(userID)
             .get()
             .addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                task.result?.let {
-                    val path = it["iconUrl"].toString()
-                    val name = it["name"].toString()
-                    handler(Result.success(Pair(name, path)))
+                if (task.isSuccessful) {
+                    task.result?.let {
+                        val path = it["iconUrl"].toString()
+                        val name = it["name"].toString()
+                        handler(Result.success(Pair(name, path)))
+                    }
                 }
             }
-        }
     }
 
     fun currentUserIconUrl(handler: (Result<StorageReference>) -> Unit) {

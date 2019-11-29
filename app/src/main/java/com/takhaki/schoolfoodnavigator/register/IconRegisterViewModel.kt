@@ -1,8 +1,10 @@
 package com.takhaki.schoolfoodnavigator.register
 
 import android.app.Application
+import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.*
+import com.takhaki.schoolfoodnavigator.Model.CompanyData
 import com.takhaki.schoolfoodnavigator.Repository.UserAuth
 
 class IconRegisterViewModel(application: Application) : AndroidViewModel(application) {
@@ -52,5 +54,9 @@ class IconRegisterViewModel(application: Application) : AndroidViewModel(applica
             }
             // TODO: - エラーハンドリングする
         }
+    }
+
+    fun saveCompanyID(id: Int, context: Context) {
+        CompanyData.saveCompanyId(id, context)
     }
 }

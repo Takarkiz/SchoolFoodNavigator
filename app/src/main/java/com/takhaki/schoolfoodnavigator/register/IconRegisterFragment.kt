@@ -49,6 +49,9 @@ class IconRegisterFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
 
         viewModel.putUserName(args.name)
+        context?.let {
+            viewModel.saveCompanyID(args.teamID, it)
+        }
         return inflater.inflate(R.layout.fragment_icon_register, container, false)
     }
 
@@ -85,7 +88,7 @@ class IconRegisterFragment : Fragment() {
         when (requestCode) {
             REQUEST_EXTERNAL_STORAGE -> {
 
-                val resultUri = if (data != null) data.data else viewModel.iconImageUri.value
+                val resultUri = if (data?.data != null) data.data else viewModel.iconImageUri.value
 
                 resultUri?.let {
                     startCrop(it)?.let { uri ->

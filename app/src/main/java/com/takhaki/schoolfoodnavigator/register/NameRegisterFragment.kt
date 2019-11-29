@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.databinding.FragmentNameRegisterBinding
 import kotlinx.android.synthetic.main.fragment_name_register.*
@@ -19,6 +20,7 @@ import kotlinx.android.synthetic.main.fragment_name_register.*
 class NameRegisterFragment : Fragment() {
 
     lateinit var viewModel: NameRegisterViewModel
+    private val args: NameRegisterFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,7 +44,10 @@ class NameRegisterFragment : Fragment() {
 
         finishEditUserName.setOnClickListener {
             val content = viewModel.nameTextView.value.toString()
-            val action = NameRegisterFragmentDirections.actionUserNameResigterFragmentToUserIconRegisterFragment(content)
+            val action =
+                NameRegisterFragmentDirections.actionUserNameResigterFragmentToUserIconRegisterFragment(
+                    content, args.teamID
+                )
             findNavController().navigate(action)
         }
     }

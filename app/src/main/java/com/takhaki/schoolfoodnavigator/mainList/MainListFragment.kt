@@ -38,7 +38,6 @@ class MainListFragment : Fragment() {
             inflater, R.layout.fragment_main_list, container, false
         )
 
-        //val application = requireNotNull(this.activity).application
         viewModel = ViewModelProviders.of(
             this
         ).get(ShopListViewModel::class.java)
