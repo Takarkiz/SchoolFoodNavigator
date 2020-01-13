@@ -1,6 +1,7 @@
 package com.takhaki.schoolfoodnavigator.profile
 
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
@@ -46,6 +47,10 @@ class ProfileActivity : AppCompatActivity() {
                 .placeholder(R.drawable.ic_default_user)
                 .into(iconImageView)
         })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

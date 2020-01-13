@@ -110,7 +110,9 @@ class ShopInfoRepository(context: Context) {
         val filePath = "${companyID}/Shops/${shopID}/${fileName}"
         val shopImageRef = storage.reference.child(filePath)
 
-        val stream = FileInputStream(File(imageUri.path!!))
+        // TODO - ここの強制unwrapよくない
+        val path = imageUri.path?: return
+        val stream = FileInputStream(File(path))
         val uploadTask = shopImageRef.putStream(stream)
         uploadTask.addOnFailureListener { error ->
             handler(Result.failure(error))

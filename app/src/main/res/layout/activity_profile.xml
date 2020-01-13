@@ -47,7 +47,8 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iconImageView" />
+            app:layout_constraintTop_toBottomOf="@id/iconImageView"
+            tools:text="名前"/>
 
         <TextView
             style="@style/profile_title"
@@ -73,7 +74,8 @@
             android:text="@{@string/nav_point_format(profileViewModel.userPoint.toString())}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/userNameTextView" />
+            app:layout_constraintTop_toBottomOf="@id/userNameTextView"
+            tools:text="ポイント"/>
 
         <TextView
             style="@style/profile_title"
@@ -100,7 +102,8 @@
             android:text="@{profileViewModel.userGradeTitle}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/pointText" />
+            app:layout_constraintTop_toBottomOf="@id/pointText"
+            tools:text="称号"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
