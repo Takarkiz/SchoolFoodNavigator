@@ -15,7 +15,6 @@ class ShopListAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
 
     private val repository = FirestorageRepository("Shops")
     private lateinit var listener: OnItemClickListener
-
     var data = listOf<ShopListItemModel>()
         set(value) {
             field = value
