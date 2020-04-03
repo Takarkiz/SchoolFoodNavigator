@@ -1,7 +1,7 @@
 package com.takhaki.schoolfoodnavigator.mainList
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.takhaki.schoolfoodnavigator.Model.ShopEntity
@@ -12,19 +12,22 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import java.lang.ref.WeakReference
 
-class ShopListViewModel(application: Application) : AndroidViewModel(application) {
+class ShopListViewModel(
+    application: Application,
+    private val navigator: ShopListNavigatorAbstract
+) : ShopListViewModelBase(application) {
 
-    val shopItemList: LiveData<List<ShopListItemModel>>
+    override val shopItemList: LiveData<List<ShopListItemModel>>
         get() = _shopItems
 
-    val shops: LiveData<List<ShopEntity>>
-        get() = _shops
+    override fun activity(activity: AppCompatActivity) {
+        navigator.weakActivity = WeakReference(activity)
+    }
 
     private var number: Int = 0
 
-
-    private val _shops = MutableLiveData<List<ShopEntity>>()
     private val _shopItems = MutableLiveData<List<ShopListItemModel>>()
 
     // 内部のみで保持しているshopItems
@@ -32,7 +35,7 @@ class ShopListViewModel(application: Application) : AndroidViewModel(application
 
     private val disposable: CompositeDisposable = CompositeDisposable()
 
-    fun loadListShopItem() {
+    override fun loadListShopItem() {
         val repository = ShopInfoRepository(getApplication())
         repository.fetchAllShops()
             .subscribeBy(
@@ -97,7 +100,7 @@ class ShopListViewModel(application: Application) : AndroidViewModel(application
             ).addTo(disposable)
     }
 
-    fun putTabNumber(num: Int) {
+    override fun putTabNumber(num: Int) {
         number = num
     }
 
