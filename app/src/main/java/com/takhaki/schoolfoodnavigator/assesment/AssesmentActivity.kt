@@ -22,6 +22,25 @@ import kotlinx.android.synthetic.main.activity_assesment.*
 
 class AssesmentActivity : AppCompatActivity() {
 
+    companion object {
+
+        /**
+         * 遷移用のインテントを作る
+         *
+         */
+
+        fun makeIntent(activity: AppCompatActivity, id: String, name: String): Intent {
+            return Intent(activity, AssesmentActivity::class.java).apply {
+                putExtra(EXTRA_KEY_SHOP_ID, id)
+                putExtra(EXTRA_KEY_SHOP_NAME, name)
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+        }
+
+        private const val EXTRA_KEY_SHOP_ID = "shopId"
+        private const val EXTRA_KEY_SHOP_NAME = "shopName"
+    }
+
     private lateinit var viewModel: AssesmentViewModel
     private lateinit var binding: ActivityAssesmentBinding
 
@@ -30,11 +49,7 @@ class AssesmentActivity : AppCompatActivity() {
         setContentView(R.layout.activity_assesment)
         val shopId: String = intent.getCharSequenceExtra("shopId").toString()
         actionBar?.setDisplayShowHomeEnabled(true)
-        intent.getCharSequenceExtra("shopName")?.let { name ->
-            setTitle(name)
-        }.run {
-            setTitle("評価")
-        }
+        supportActionBar?.title = intent.getCharSequenceExtra("shopName") ?: ""
 
         binding = DataBindingUtil.setContentView(
             this,
@@ -109,7 +124,11 @@ class AssesmentActivity : AppCompatActivity() {
                 axisMaximum = 3.5f
                 valueFormatter = object : ValueFormatter() {
 
-                    val labels = listOf("おいしさ", "近さ", "安さ")
+                    val labels = listOf(
+                        resources.getString(R.string.assesment_category_good),
+                        resources.getString(R.string.assesment_category_near),
+                        resources.getString(R.string.assesment_category_near)
+                    )
 
                     override fun getFormattedValue(value: Float): String {
                         return labels[value.toInt() % labels.size]
@@ -175,10 +194,10 @@ class AssesmentActivity : AppCompatActivity() {
         animationView.speed = 1.5f
         animationView.playAnimation()
         MaterialAlertDialogBuilder(this, R.style.reward_alert_dialog)
-            .setTitle("お店の評価で3ポイント獲得！")
-            .setPositiveButton("はい", { dialog, which ->
+            .setTitle(resources.getString(R.string.assessment_dialog_title_text))
+            .setPositiveButton(resources.getString(R.string.assessment_dialog_positive_text)) { _, _ ->
                 backToHome()
-            })
+            }
             .setCancelable(false)
             .setView(animationView)
             .show()

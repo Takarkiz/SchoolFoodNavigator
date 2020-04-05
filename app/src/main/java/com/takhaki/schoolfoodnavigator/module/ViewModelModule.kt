@@ -1,6 +1,7 @@
 package com.takhaki.schoolfoodnavigator.module
 
 import com.takhaki.schoolfoodnavigator.addShop.AddShopViewModel
+import com.takhaki.schoolfoodnavigator.addShop.AddShopViewModelBase
 import com.takhaki.schoolfoodnavigator.assesment.AssesmentViewModel
 import com.takhaki.schoolfoodnavigator.detail.DetailViewModel
 import com.takhaki.schoolfoodnavigator.mainList.ShopListViewModel
@@ -17,7 +18,7 @@ val viewModelModule = module(override = true) {
 
     viewModel<ShopListViewModelBase> { ShopListViewModel(androidApplication(), get()) }
 
-    viewModel { AddShopViewModel(androidApplication()) }
+    viewModel { AddShopViewModel(androidApplication(), get()) }
 
     viewModel { AssesmentViewModel(androidApplication()) }
 

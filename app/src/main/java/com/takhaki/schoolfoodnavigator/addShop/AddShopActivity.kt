@@ -3,7 +3,6 @@ package com.takhaki.schoolfoodnavigator.addShop
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.app.Activity
 import android.content.ContentValues
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -16,16 +15,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.Utility.getFileName
-import com.takhaki.schoolfoodnavigator.assesment.AssesmentActivity
 import com.takhaki.schoolfoodnavigator.databinding.ActivityAddShopBinding
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.activity_add_shop.*
+import org.koin.android.viewmodel.ext.android.getViewModel
+import org.koin.android.viewmodel.ext.android.viewModel
 import java.io.File
 
 
@@ -43,7 +41,6 @@ class AddShopActivity : AppCompatActivity() {
         }
     }
 
-    private lateinit var viewModel: AddShopViewModel
     private lateinit var binding: ActivityAddShopBinding
 
     private val REQUEST_EXTERNAL_STORAGE = 1000
@@ -69,8 +66,9 @@ class AddShopActivity : AppCompatActivity() {
             this,
             R.layout.activity_add_shop
         )
-        viewModel = ViewModelProviders.of(this).get(AddShopViewModel::class.java)
 
+        lifecycle.addObserver(viewModel)
+        viewModel.activity(this)
         binding.lifecycleOwner = this
         binding.addShopViewModel = viewModel
 
@@ -79,7 +77,7 @@ class AddShopActivity : AppCompatActivity() {
         }
 
         actionBar?.setDisplayHomeAsUpEnabled(true)
-        setTitle(R.string.actionbar_title_add_new_shop)
+        actionBar?.title = resources.getString(R.string.actionbar_title_add_new_shop)
 
         deleteButton.setOnClickListener {
             viewModel.deletePhoto()
@@ -87,17 +85,16 @@ class AddShopActivity : AppCompatActivity() {
             shopImageView.setImageResource(R.drawable.add_photo)
         }
 
-        viewModel.willIntentAssessment.observe(this, Observer { shouldShowDialog ->
-            if (shouldShowDialog) showMaterialDialog()
-        })
-
-        viewModel.isVisibleLoading.observe(this, Observer {
+        viewModel.isVisibleLoading.observe({ lifecycle }, {
             if (it) {
                 loadingAnimation.playAnimation()
                 loadingAnimation.visibility = View.VISIBLE
             } else {
                 loadingAnimation.pauseAnimation()
                 loadingAnimation.visibility = View.GONE
+                if (viewModel.isVisibleFinishButton.value!!) {
+                    showMaterialDialog()
+                }
             }
         })
 
@@ -125,7 +122,7 @@ class AddShopActivity : AppCompatActivity() {
         when (requestCode) {
             REQUEST_EXTERNAL_STORAGE -> {
 
-                val resultUri = data?.data?: viewModel.shopImageUri.value
+                val resultUri = data?.data ?: viewModel.shopImageUri.value
                 resultUri?.let {
                     viewModel.shopImageUri.value = startCrop(it)
                 }
@@ -149,6 +146,9 @@ class AddShopActivity : AppCompatActivity() {
         }
     }
 
+    // Private
+    private val viewModel: AddShopViewModel by viewModel()
+
     // 画像選択
     private fun addNewPhoto() {
         // カメラのIntent作成
@@ -166,7 +166,10 @@ class AddShopActivity : AppCompatActivity() {
         galleryIntent.addCategory(Intent.CATEGORY_OPENABLE)
         galleryIntent.type = "image/*"
 
-        val intent = Intent.createChooser(cameraIntent, "画像の選択")
+        val intent = Intent.createChooser(
+            cameraIntent,
+            resources.getString(R.string.add_shop_register_select_image)
+        )
         intent.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(galleryIntent))
         startActivityForResult(intent, REQUEST_EXTERNAL_STORAGE)
     }
@@ -178,7 +181,7 @@ class AddShopActivity : AppCompatActivity() {
         options.apply {
             setToolbarColor(resources.getColor(R.color.colorPrimary))
             setStatusBarColor(resources.getColor(R.color.colorPrimaryDark))
-            setToolbarTitle("写真の編集")
+            setToolbarTitle(resources.getString(R.string.add_shop_register_edit_image))
             setToolbarWidgetColor(resources.getColor(R.color.white))
         }
         UCrop.of(uri, resultUri)
@@ -189,33 +192,25 @@ class AddShopActivity : AppCompatActivity() {
         return resultUri
     }
 
-
-    private val okListener = DialogInterface.OnClickListener { dialog, which ->
-        viewModel.toIntentAssessment(shouldGoAssessments = false)
-
-        // 評価画面に遷移する(ここでの遷移時はバックで戻るとお店一覧に戻る)
-        val intent = Intent(this, AssesmentActivity::class.java)
-        intent.putExtra("shopName", viewModel.shopName.value)
-        intent.putExtra("shopId", viewModel.shopId.value)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(intent)
-    }
-    private val cancelListener = DialogInterface.OnClickListener { dialog, which ->
-        viewModel.toIntentAssessment(shouldGoAssessments = false)
-        finish()
-    }
-
-
     private fun showMaterialDialog() {
         val animationView = LottieAnimationView(this)
         animationView.setAnimation(R.raw.coin_animation)
         animationView.speed = 1.5f
         animationView.playAnimation()
         MaterialAlertDialogBuilder(this, R.style.reward_alert_dialog)
-            .setTitle("お店の登録で5ポイント獲得！")
-            .setMessage("今回登録したお店の評価を続けますか？")
-            .setPositiveButton("はい", okListener)
-            .setNegativeButton("いいえ", cancelListener)
+            .setTitle(resources.getString(R.string.add_shop_register_dialog_text_title))
+            .setMessage(resources.getString(R.string.add_shop_register_dialog_text_message))
+            .setPositiveButton(
+                resources.getString(R.string.add_shop_register_dialog_positive_text)
+            ) { _, _ ->
+                // 評価画面に遷移する(ここでの遷移時はバックで戻るとお店一覧に戻る)
+                viewModel.willMoveToAssessment()
+            }
+            .setNegativeButton(
+                resources.getString(R.string.add_shop_register_dialog_negative_text)
+            ) { _, _ ->
+                viewModel.backToShopList()
+            }
             .setCancelable(false)
             .setView(animationView)
             .show()

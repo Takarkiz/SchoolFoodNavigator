@@ -9,6 +9,15 @@
     <string name="add_shop_edit_hint_name">店名</string>
     <string name="add_shop_text_shopinfo">お店情報</string>
     <string name="add_shop_text_regist_photo">写真の登録</string>
+
+    <string name="add_shop_register_select_image">画像の選択</string>
+    <string name="add_shop_register_edit_image">画像の編集</string>
+
+    <string name="add_shop_register_dialog_text_title">お店の登録で5ポイント獲得!</string>
+    <string name="add_shop_register_dialog_text_message">今回登録したお店の評価を続けますか？</string>
+    <string name="add_shop_register_dialog_positive_text">はい</string>
+    <string name="add_shop_register_dialog_negative_text">いいえ</string>
+
     <string name="assesment_text_assesment">お店の評価</string>
     <string name="assesment_category_good">おいしさ</string>
     <string name="assesment_category_near">近さ</string>
@@ -16,6 +25,9 @@
     <string name="assesment_text_comment">コメント</string>
     <string name="assesment_edittext_hint">ここに記入</string>
     <string name="assesment_radar_graph">レーダーグラフ</string>
+    <string name="assessment_dialog_title_text">お店の評価で3ポイント獲得！</string>
+    <string name="assessment_dialog_positive_text">はい</string>
+
     <string name="nav_item_home">ホーム</string>
     <string name="nav_item_mypage">マイページ</string>
     <string name="tab_title_favorite">お気に入り</string>
@@ -37,6 +49,4 @@
     <string name="profile_point_title">ナビゲーターポイント</string>
     <string name="profile_current_title">現在の称号</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

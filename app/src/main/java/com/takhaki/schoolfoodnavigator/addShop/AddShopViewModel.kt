@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.net.Uri
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,25 +12,27 @@ import androidx.lifecycle.Observer
 import com.takhaki.schoolfoodnavigator.Model.ShopEntity
 import com.takhaki.schoolfoodnavigator.Repository.ShopInfoRepository
 import com.takhaki.schoolfoodnavigator.Repository.UserAuth
+import java.lang.ref.WeakReference
 import java.util.*
 
-class AddShopViewModel(application: Application) : AndroidViewModel(application) {
+class AddShopViewModel(
+    application: Application,
+    private val navigator: AddShopNavigatorAbstract
+) : AddShopViewModelBase(application) {
 
-    val shopName = MutableLiveData<String>().apply { value = "" }
-    val genreTitle = MutableLiveData<String>().apply { value = "" }
-    private val _shopId = MutableLiveData<String>()
-    val shopId: LiveData<String>
-        get() = _shopId
+    override val shopName = MutableLiveData<String>().apply { value = "" }
+    override val genreTitle = MutableLiveData<String>().apply { value = "" }
 
-    var isVisibleFinishButton = MediatorLiveData<Boolean>().apply { value = false }
+    override val isVisibleFinishButton = MediatorLiveData<Boolean>().apply { value = false }
     val isVisibleDeleteButton = MediatorLiveData<Boolean>().apply { value = false }
-    val shopImageUri = MediatorLiveData<Uri>().apply { value = null }
+    override val shopImageUri = MediatorLiveData<Uri>().apply { value = null }
 
-    private var _willIntentAssessment = MutableLiveData<Boolean>().apply { value = false }
-    val willIntentAssessment: LiveData<Boolean>
-        get() = _willIntentAssessment
+    override val isVisibleLoading: MutableLiveData<Boolean>
+        get() = _isVisibleLoading
 
-    val isVisibleLoading = MutableLiveData<Boolean>().apply { value = false }
+    override fun activity(activity: AppCompatActivity) {
+        navigator.weakActivity = WeakReference(activity)
+    }
 
     init {
         val textObserver = Observer<String> {
@@ -43,15 +45,14 @@ class AddShopViewModel(application: Application) : AndroidViewModel(application)
     }
 
 
-    fun onSendShopInfo() {
+    override fun uploadShopInfo() {
 
         val auth = UserAuth(getApplication())
         val userID = auth.currentUser?.uid ?: return
-        isVisibleLoading.value = true
-        val shopId = UUID.randomUUID().toString()
+        val id = UUID.randomUUID().toString()
 
         val shop = ShopEntity(
-            id = shopId,
+            id = id,
             name = shopName.value!!,
             genre = genreTitle.value!!,
             userID = userID,
@@ -64,26 +65,33 @@ class AddShopViewModel(application: Application) : AndroidViewModel(application)
         shopInfoRepository.registerShop(shop, shopImageUri.value, appContext) { result ->
             if (result.isSuccess) {
                 result.getOrNull()?.let { id ->
-                    _shopId.value = id
-                    _willIntentAssessment.value = true
+                    shopId = id
                     auth.addPointShop()
                 }
-
             } else {
                 Log.e("Firebase", "失敗", result.exceptionOrNull())
             }
-            isVisibleLoading.value = false
+            _isVisibleLoading.value = false
         }
     }
 
-    fun toIntentAssessment(shouldGoAssessments: Boolean) {
-        _willIntentAssessment.value = shouldGoAssessments
+    override fun willMoveToAssessment() {
+        navigator.toAssessment(shopId, shopName.value?: "")
     }
 
-    fun deletePhoto() {
+    override fun backToShopList() {
+        navigator.finish()
+    }
+
+    override fun deletePhoto() {
         isVisibleDeleteButton.value = false
         shopImageUri.value = null
     }
+
+    // Private
+    private var shopId: String = ""
+
+    private val _isVisibleLoading = MutableLiveData<Boolean>().apply { value = false }
 
     private val appContext: Context get() = getApplication()
 
