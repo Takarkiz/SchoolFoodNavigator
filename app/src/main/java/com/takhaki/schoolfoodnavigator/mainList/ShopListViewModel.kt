@@ -40,6 +40,10 @@ class ShopListViewModel(
         navigator.toProfilePage(id)
     }
 
+    override fun didTapShopItem(id: String, name: String) {
+        navigator.toShopDetail(id, name)
+    }
+
     override fun putTabNumber(num: Int) {
         number = num
     }

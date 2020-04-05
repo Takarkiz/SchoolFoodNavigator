@@ -43,6 +43,11 @@ interface ShopListViewModelContract {
     fun didTapOwnProfileIcon(id: String)
 
     /**
+     * ショップをタップした時
+     */
+    fun didTapShopItem(id: String, name: String)
+
+    /**
      * タブタップ時のリスト切替
      */
     fun putTabNumber(index: Int)
@@ -59,7 +64,7 @@ abstract class ShopListNavigatorAbstract : BaseNavigator() {
     /**
      * ショップ詳細画面への遷移
      */
-    abstract fun toShopDetail(id: String)
+    abstract fun toShopDetail(id: String, name: String)
 
     /**
      * プロフィールページへの繊維

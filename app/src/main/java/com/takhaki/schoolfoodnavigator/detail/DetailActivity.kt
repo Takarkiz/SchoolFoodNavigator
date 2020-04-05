@@ -18,6 +18,24 @@ import kotlinx.android.synthetic.main.activity_detail.*
 
 class DetailActivity : AppCompatActivity() {
 
+    companion object {
+
+        /**
+         * 遷移用のインテントを作る
+         *
+         * @param activity アクティビティ
+         */
+        fun makeIntent(activity: AppCompatActivity, shopId: String, name: String): Intent {
+            return Intent(activity, DetailActivity::class.java).apply {
+                putExtra(EXTRA_KEY_SHOP_ID, shopId)
+                putExtra(EXTRA_KEY_SHOP_NAME, name)
+            }
+        }
+
+        private const val EXTRA_KEY_SHOP_ID = "shopId"
+        private const val EXTRA_KEY_SHOP_NAME = "name"
+    }
+
     private lateinit var viewModel: DetailViewModel
     private lateinit var binding: ActivityDetailBinding
 
@@ -25,10 +43,11 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
-        intent.getStringExtra("shopName")?.let { name ->
-            setTitle(name)
+        intent.getStringExtra(EXTRA_KEY_SHOP_NAME)?.let { name ->
+            supportActionBar?.setDisplayShowTitleEnabled(true)
+            supportActionBar?.title = name
         }
-        val shopId: String = intent.getStringExtra("shopId")
+        val shopId: String = intent.getStringExtra(EXTRA_KEY_SHOP_ID)
         actionBar?.setDisplayShowHomeEnabled(true)
 
         binding = DataBindingUtil.setContentView(

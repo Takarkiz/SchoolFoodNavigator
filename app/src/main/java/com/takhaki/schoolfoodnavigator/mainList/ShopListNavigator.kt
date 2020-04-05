@@ -1,6 +1,7 @@
 package com.takhaki.schoolfoodnavigator.mainList
 
 import com.takhaki.schoolfoodnavigator.addShop.AddShopActivity
+import com.takhaki.schoolfoodnavigator.detail.DetailActivity
 import com.takhaki.schoolfoodnavigator.profile.ProfileActivity
 
 /**
@@ -15,9 +16,10 @@ class ShopListNavigator: ShopListNavigatorAbstract() {
         }
     }
 
-    override fun toShopDetail(id: String) {
+    override fun toShopDetail(id: String, name: String) {
         weakActivity?.get()?.let { activity ->
-
+            val intent = DetailActivity.makeIntent(activity, id, name)
+            activity.startActivity(intent)
         }
     }
 

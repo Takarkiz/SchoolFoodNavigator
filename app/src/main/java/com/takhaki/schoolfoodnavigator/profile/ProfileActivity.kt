@@ -40,7 +40,8 @@ class ProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
-        setTitle("プロフィール")
+        supportActionBar?.setDisplayShowTitleEnabled(true)
+        supportActionBar?.title = "プロフィール"
 
         binding = DataBindingUtil.setContentView(
             this,
@@ -62,10 +63,6 @@ class ProfileActivity : AppCompatActivity() {
                 .placeholder(R.drawable.ic_default_user)
                 .into(iconImageView)
         })
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
