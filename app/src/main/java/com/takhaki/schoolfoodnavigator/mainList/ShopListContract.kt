@@ -25,7 +25,7 @@ interface ShopListViewModelContract {
     /**
      * ショップリスト一覧
      */
-    val shopItemList: LiveData<List<ShopListItemModel>>
+    val shopItemLists: LiveData<List<List<ShopListItemModel>>>
 
     /**
      * ショップリストのアクティビティ
@@ -33,9 +33,14 @@ interface ShopListViewModelContract {
     fun activity(activity: AppCompatActivity)
 
     /**
-     * ショップリストの読み込み
+     * 追加アイコンをタップした時
      */
-    fun loadListShopItem()
+    fun didTapAddFabIcon()
+
+    /**
+     * 自分のプロフアイコンをタップした時
+     */
+    fun didTapOwnProfileIcon(id: String)
 
     /**
      * タブタップ時のリスト切替
@@ -55,4 +60,9 @@ abstract class ShopListNavigatorAbstract : BaseNavigator() {
      * ショップ詳細画面への遷移
      */
     abstract fun toShopDetail(id: String)
+
+    /**
+     * プロフィールページへの繊維
+     */
+    abstract fun toProfilePage(id: String)
 }

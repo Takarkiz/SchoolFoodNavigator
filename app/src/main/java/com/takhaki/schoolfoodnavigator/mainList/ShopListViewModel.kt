@@ -1,9 +1,13 @@
 package com.takhaki.schoolfoodnavigator.mainList
 
 import android.app.Application
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.OnLifecycleEvent
+import com.takhaki.schoolfoodnavigator.DefaultSetting
 import com.takhaki.schoolfoodnavigator.Model.ShopEntity
 import com.takhaki.schoolfoodnavigator.Repository.AssesmentRepository
 import com.takhaki.schoolfoodnavigator.Repository.ShopInfoRepository
@@ -19,29 +23,60 @@ class ShopListViewModel(
     private val navigator: ShopListNavigatorAbstract
 ) : ShopListViewModelBase(application) {
 
-    override val shopItemList: LiveData<List<ShopListItemModel>>
+    // ShopListViewModelContract
+
+    override val shopItemLists: LiveData<List<List<ShopListItemModel>>>
         get() = _shopItems
 
     override fun activity(activity: AppCompatActivity) {
         navigator.weakActivity = WeakReference(activity)
     }
 
-    private var number: Int = 0
+    override fun didTapAddFabIcon() {
+        navigator.toAddShopView()
+    }
 
-    private val _shopItems = MutableLiveData<List<ShopListItemModel>>()
+    override fun didTapOwnProfileIcon(id: String) {
+        navigator.toProfilePage(id)
+    }
+
+    override fun putTabNumber(num: Int) {
+        number = num
+    }
+
+    // LifecycleObserver
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+    fun onCreate() {
+        subscribeShopList()
+    }
+
+    // AndroidViewModel
+    override fun onCleared() {
+        super.onCleared()
+        disposable.dispose()
+    }
+
+    // Private
+
+    private var number: Int = 0
+    private var appContext: Context = getApplication<DefaultSetting>()
+    private val _shopItems = MutableLiveData<List<List<ShopListItemModel>>>()
 
     // 内部のみで保持しているshopItems
-    private val shopItems = mutableListOf<ShopListItemModel>()
+    private val shopItemsByDate = mutableListOf<ShopListItemModel>()
+    private val shopItemsByValue = mutableListOf<ShopListItemModel>()
+    private val shopItemsByOnlyFav = mutableListOf<ShopListItemModel>()
 
     private val disposable: CompositeDisposable = CompositeDisposable()
 
-    override fun loadListShopItem() {
-        val repository = ShopInfoRepository(getApplication())
+    private fun subscribeShopList() {
+        val repository = ShopInfoRepository(appContext)
         repository.fetchAllShops()
             .subscribeBy(
                 onSuccess = {
                     it.forEach { shop ->
-                        getShopItems(shop)
+                        getShopAssessments(shop)
                     }
                 },
                 onError = {
@@ -50,17 +85,20 @@ class ShopListViewModel(
             ).addTo(disposable)
     }
 
-    private fun getShopItems(shop: ShopEntity) {
+    private fun getShopAssessments(shop: ShopEntity) {
 
-        val repository = AssesmentRepository(shop.id, getApplication())
+//        // すでにshopItemsに取得した値が入っていれば終了する
+//        if (shopItems.isNotEmpty()) return
+
+        val repository = AssesmentRepository(shop.id, appContext)
         repository.fetchAllAssesment()
             .observeOn(Schedulers.computation())
             .subscribeBy(
-                onSuccess = { assesments ->
-                    val totalScore = assesments.map { assessment ->
+                onSuccess = { assessments ->
+                    val totalScore = assessments.map { assessment ->
                         (assessment.good + assessment.cheep + assessment.distance) / 3
                     }.average()
-                    val auth = UserAuth(getApplication())
+                    val auth = UserAuth(appContext)
                     auth.checkFavoriteShop(shop.id) { isFavorite ->
                         val shopItem = ShopListItemModel(
                             id = shop.id,
@@ -72,26 +110,16 @@ class ShopListViewModel(
                             score = totalScore.toFloat()
                         )
 
-                        when (number) {
-                            0 -> {
-                                addShopItem(shopItem)
-                                shopItems.sortBy {
-                                    it.editedAt
-                                }
-                            }
-                            1 -> {
-                                addShopItem(shopItem)
-                                shopItems.sortByDescending {
-                                    it.score
-                                }
-                            }
-                            2 -> {
-                                // お気に入りのみを表示
-                                if (shopItem.isFavorite) addShopItem(shopItem)
-                            }
-                        }
+                        addShopItem(shopItem, index = 0)
+                        shopItemsByDate.sortBy { it.editedAt }
 
-                        _shopItems.value = shopItems
+                        addShopItem(shopItem, index = 1)
+                        shopItemsByValue.sortByDescending { it.score }
+
+                        // お気に入りのみを表示
+                        if (shopItem.isFavorite) addShopItem(shopItem, index = 2)
+                        _shopItems.value =
+                            listOf(shopItemsByDate, shopItemsByValue, shopItemsByOnlyFav)
                     }
                 },
                 onError = {
@@ -100,16 +128,33 @@ class ShopListViewModel(
             ).addTo(disposable)
     }
 
-    override fun putTabNumber(num: Int) {
-        number = num
-    }
-
-    private fun addShopItem(shopItem: ShopListItemModel) {
-        shopItems.forEach { item ->
-            if (item.id == shopItem.id) {
-                return
+    private fun addShopItem(shopItem: ShopListItemModel, index: Int) {
+        when (index) {
+            0 -> {
+                shopItemsByDate.forEach { item ->
+                    if (item.id == shopItem.id) {
+                        return
+                    }
+                }
+                shopItemsByDate.add(shopItem)
+            }
+            1 -> {
+                shopItemsByValue.forEach { item ->
+                    if (item.id == shopItem.id) {
+                        return
+                    }
+                }
+                shopItemsByValue.add(shopItem)
+            }
+            2 -> {
+                shopItemsByOnlyFav.forEach { item ->
+                    if (item.id == shopItem.id) {
+                        return
+                    }
+                }
+                shopItemsByOnlyFav.add(shopItem)
             }
         }
-        shopItems.add(shopItem)
+
     }
 }

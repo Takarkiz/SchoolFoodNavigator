@@ -1,5 +1,6 @@
 package com.takhaki.schoolfoodnavigator.profile
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -18,6 +19,20 @@ import com.takhaki.schoolfoodnavigator.databinding.ActivityProfileBinding
 import kotlinx.android.synthetic.main.activity_profile.*
 
 class ProfileActivity : AppCompatActivity() {
+
+    companion object {
+
+        /**
+         * 遷移用のインテントを作る
+         */
+        fun makeIntent(activity: AppCompatActivity, userId: String): Intent {
+            return Intent(activity, ProfileActivity::class.java).apply {
+                putExtra(EXTRA_KEY_USER_ID, userId)
+            }
+        }
+
+        private const val EXTRA_KEY_USER_ID = "user_id"
+    }
 
     private lateinit var viewModel: ProfileViewModel
     private lateinit var binding: ActivityProfileBinding

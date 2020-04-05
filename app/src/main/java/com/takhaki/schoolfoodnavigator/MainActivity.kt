@@ -1,18 +1,18 @@
 package com.takhaki.schoolfoodnavigator
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.takhaki.schoolfoodnavigator.Repository.UserAuth
-import com.takhaki.schoolfoodnavigator.addShop.AddShopActivity
 import com.takhaki.schoolfoodnavigator.mainList.MainListFragment
-import com.takhaki.schoolfoodnavigator.profile.ProfileActivity
+import com.takhaki.schoolfoodnavigator.mainList.ShopListViewModel
+import com.takhaki.schoolfoodnavigator.mainList.ShopListViewModelBase
 import kotlinx.android.synthetic.main.activity_main.*
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,24 +29,19 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount(): Int = tabLayoutTitle.size
 
-            override fun createFragment(position: Int): Fragment {
-                return MainListFragment.newInstance(position)
-            }
+            override fun createFragment(position: Int): Fragment
+                = MainListFragment.newInstance(position)
         }
 
         TabLayoutMediator(
             tabLayout,
             viewPager,
-            object : TabLayoutMediator.TabConfigurationStrategy {
-                override fun onConfigureTab(tab: TabLayout.Tab, position: Int) {
-                    tab.setText(tabLayoutTitle[position])
-                }
-
+            TabLayoutMediator.TabConfigurationStrategy { tab, position ->
+                tab.text = tabLayoutTitle[position]
             }).attach()
 
         fab.setOnClickListener {
-            val intent = Intent(this, AddShopActivity::class.java)
-            startActivity(intent)
+            viewModel.didTapAddFabIcon()
         }
 
         val auth = UserAuth(this)
@@ -63,14 +58,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         iconImage.setOnClickListener {
-            val intent = Intent(this, ProfileActivity::class.java)
-            intent.putExtra("UserId", uid)
-            startActivity(intent)
+            uid?.let {
+                viewModel.didTapOwnProfileIcon(it)
+            }
         }
 
+        lifecycle.addObserver(viewModel)
+        viewModel.activity(this)
     }
 
     override fun onBackPressed() {
         //super.onBackPressed()
     }
+
+    private val viewModel: ShopListViewModelBase by viewModel()
+
 }

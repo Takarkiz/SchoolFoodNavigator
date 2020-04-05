@@ -8,18 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.databinding.FragmentMainListBinding
 import com.takhaki.schoolfoodnavigator.detail.DetailActivity
 import kotlinx.android.synthetic.main.fragment_main_list.*
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 
 
 class MainListFragment : Fragment() {
 
-    private lateinit var viewModel: ShopListViewModel
+    private val viewModel: ShopListViewModelContract by sharedViewModel<ShopListViewModelBase>()
     private var tabIndex = 0
 
     companion object {
@@ -37,13 +36,7 @@ class MainListFragment : Fragment() {
         val binding: FragmentMainListBinding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_main_list, container, false
         )
-
-        viewModel = ViewModelProviders.of(
-            this
-        ).get(ShopListViewModel::class.java)
         viewModel.putTabNumber(tabIndex)
-        binding.lifecycleOwner = this
-        binding.listViewModel = viewModel
         // Inflate the layout for this fragment
         return binding.root
     }
@@ -52,10 +45,9 @@ class MainListFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         val adapter = ShopListAdapter()
-        viewModel.loadListShopItem()
 
-        viewModel.shopItemList.observe(this, Observer { items ->
-            adapter.data = items
+        viewModel.shopItemLists.observe({ lifecycle }, { items ->
+            adapter.data = items[tabIndex]
             shopList.adapter = adapter
         })
 

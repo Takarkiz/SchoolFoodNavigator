@@ -31,13 +31,25 @@ import java.io.File
 
 class AddShopActivity : AppCompatActivity() {
 
+    companion object {
+
+        /**
+         * 遷移用のインテントを作る
+         *
+         * @param activity アクティビティ
+         */
+        fun makeIntent(activity: AppCompatActivity): Intent {
+            return Intent(activity, AddShopActivity::class.java)
+        }
+    }
+
     private lateinit var viewModel: AddShopViewModel
     private lateinit var binding: ActivityAddShopBinding
 
     private val REQUEST_EXTERNAL_STORAGE = 1000
 
 
-    fun didTapAddNewPhoto() {
+    private fun didTapAddNewPhoto() {
         if (ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE)
             != PackageManager.PERMISSION_GRANTED
         ) {
