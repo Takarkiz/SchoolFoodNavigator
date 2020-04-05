@@ -4,7 +4,6 @@ import android.content.Context
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.takhaki.schoolfoodnavigator.Model.CompanyData
-import java.lang.Exception
 
 class CompanyRepository(val context: Context) {
 

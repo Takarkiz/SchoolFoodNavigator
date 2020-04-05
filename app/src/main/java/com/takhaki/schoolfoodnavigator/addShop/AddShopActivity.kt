@@ -87,7 +87,7 @@ class AddShopActivity : AppCompatActivity() {
             shopImageView.setImageResource(R.drawable.add_photo)
         }
 
-        viewModel.willIntentAssesment.observe(this, Observer { shouldShowDialog ->
+        viewModel.willIntentAssessment.observe(this, Observer { shouldShowDialog ->
             if (shouldShowDialog) showMaterialDialog()
         })
 
@@ -191,7 +191,7 @@ class AddShopActivity : AppCompatActivity() {
 
 
     private val okListener = DialogInterface.OnClickListener { dialog, which ->
-        viewModel.toIntentAssesment(shoudGoAssesment = false)
+        viewModel.toIntentAssessment(shouldGoAssessments = false)
 
         // 評価画面に遷移する(ここでの遷移時はバックで戻るとお店一覧に戻る)
         val intent = Intent(this, AssesmentActivity::class.java)
@@ -201,7 +201,7 @@ class AddShopActivity : AppCompatActivity() {
         startActivity(intent)
     }
     private val cancelListener = DialogInterface.OnClickListener { dialog, which ->
-        viewModel.toIntentAssesment(shoudGoAssesment = false)
+        viewModel.toIntentAssessment(shouldGoAssessments = false)
         finish()
     }
 

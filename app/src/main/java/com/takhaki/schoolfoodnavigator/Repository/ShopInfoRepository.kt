@@ -16,8 +16,8 @@ import java.io.FileInputStream
 
 class ShopInfoRepository(context: Context) {
 
-    val shopDB: CollectionReference
-    val storage = FirebaseStorage.getInstance("gs://schoolfoodnavigator.appspot.com")
+    private val shopDB: CollectionReference
+    private val storage = FirebaseStorage.getInstance("gs://schoolfoodnavigator.appspot.com")
 
     init {
         val id = CompanyData.getCompanyId(context)
@@ -26,7 +26,7 @@ class ShopInfoRepository(context: Context) {
     }
 
     // お店の登録->結果としてショップIDを返す
-    fun registrateShop(
+    fun registerShop(
         shop: ShopEntity,
         imageUri: Uri?,
         context: Context,
@@ -125,7 +125,7 @@ class ShopInfoRepository(context: Context) {
 
     fun fetchAllShops(): Single<List<ShopEntity>> {
 
-        return Single.create<List<ShopEntity>> { emitter ->
+        return Single.create { emitter ->
             val query = shopDB.orderBy("editedAt", Query.Direction.DESCENDING)
             query.get()
                 .addOnSuccessListener { snapshot ->

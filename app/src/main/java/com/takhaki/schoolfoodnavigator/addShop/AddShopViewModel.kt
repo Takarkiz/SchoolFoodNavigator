@@ -26,9 +26,9 @@ class AddShopViewModel(application: Application) : AndroidViewModel(application)
     val isVisibleDeleteButton = MediatorLiveData<Boolean>().apply { value = false }
     val shopImageUri = MediatorLiveData<Uri>().apply { value = null }
 
-    private var _willIntentAssesment = MutableLiveData<Boolean>().apply { value = false }
-    val willIntentAssesment: LiveData<Boolean>
-        get() = _willIntentAssesment
+    private var _willIntentAssessment = MutableLiveData<Boolean>().apply { value = false }
+    val willIntentAssessment: LiveData<Boolean>
+        get() = _willIntentAssessment
 
     val isVisibleLoading = MutableLiveData<Boolean>().apply { value = false }
 
@@ -61,11 +61,11 @@ class AddShopViewModel(application: Application) : AndroidViewModel(application)
         )
 
         val shopInfoRepository = ShopInfoRepository(getApplication())
-        shopInfoRepository.registrateShop(shop, shopImageUri.value, appContext) { result ->
+        shopInfoRepository.registerShop(shop, shopImageUri.value, appContext) { result ->
             if (result.isSuccess) {
                 result.getOrNull()?.let { id ->
                     _shopId.value = id
-                    _willIntentAssesment.value = true
+                    _willIntentAssessment.value = true
                     auth.addPointShop()
                 }
 
@@ -76,8 +76,8 @@ class AddShopViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    fun toIntentAssesment(shoudGoAssesment: Boolean) {
-        _willIntentAssesment.value = shoudGoAssesment
+    fun toIntentAssessment(shouldGoAssessments: Boolean) {
+        _willIntentAssessment.value = shouldGoAssessments
     }
 
     fun deletePhoto() {

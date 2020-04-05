@@ -7,7 +7,7 @@ import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
 import com.takhaki.schoolfoodnavigator.Model.CompanyData
 import io.reactivex.Single
 
-class AssesmentRepository(shopId: String, context: Context) {
+class AssessmentRepository(shopId: String, context: Context) {
 
     private val collectionRef: CollectionReference
 
@@ -19,7 +19,7 @@ class AssesmentRepository(shopId: String, context: Context) {
     }
 
     fun fetchAllAssesment(): Single<List<AssessmentEntity>> {
-        return Single.create<List<AssessmentEntity>> { emitter ->
+        return Single.create { emitter ->
             collectionRef.get()
                 .addOnSuccessListener { snapshot ->
                     val assessments = snapshot.documents.mapNotNull {
@@ -36,7 +36,6 @@ class AssesmentRepository(shopId: String, context: Context) {
 
     fun addAssessment(assessment: AssessmentEntity, handler: (Result<String>) -> Unit) {
 
-        // TODO: - アップロードする時にShopの最終更新日時を更新するようにする
         collectionRef
             .add(assesmentToMap(assessment))
             .addOnSuccessListener { doc ->

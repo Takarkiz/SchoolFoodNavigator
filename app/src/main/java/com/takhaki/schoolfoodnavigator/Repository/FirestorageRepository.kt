@@ -11,8 +11,8 @@ import java.io.FileInputStream
 
 class FirestorageRepository(private val filePathScheme: String) {
 
-    val storageUrl = "gs://schoolfoodnavigator.appspot.com"
-    val storage = FirebaseStorage.getInstance(storageUrl)
+    private val storageUrl = "gs://schoolfoodnavigator.appspot.com"
+    private val storage = FirebaseStorage.getInstance(storageUrl)
 
     /**
      * ユーザーアイコンをFirestorageにアップロードする

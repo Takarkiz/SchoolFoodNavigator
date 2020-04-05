@@ -9,7 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.OnLifecycleEvent
 import com.takhaki.schoolfoodnavigator.DefaultSetting
 import com.takhaki.schoolfoodnavigator.Model.ShopEntity
-import com.takhaki.schoolfoodnavigator.Repository.AssesmentRepository
+import com.takhaki.schoolfoodnavigator.Repository.AssessmentRepository
 import com.takhaki.schoolfoodnavigator.Repository.ShopInfoRepository
 import com.takhaki.schoolfoodnavigator.Repository.UserAuth
 import io.reactivex.disposables.CompositeDisposable
@@ -94,7 +94,7 @@ class ShopListViewModel(
 //        // すでにshopItemsに取得した値が入っていれば終了する
 //        if (shopItems.isNotEmpty()) return
 
-        val repository = AssesmentRepository(shop.id, appContext)
+        val repository = AssessmentRepository(shop.id, appContext)
         repository.fetchAllAssesment()
             .observeOn(Schedulers.computation())
             .subscribeBy(

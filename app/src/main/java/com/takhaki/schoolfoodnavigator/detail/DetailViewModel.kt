@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.takhaki.schoolfoodnavigator.Repository.AssesmentRepository
+import com.takhaki.schoolfoodnavigator.Repository.AssessmentRepository
 import com.takhaki.schoolfoodnavigator.Repository.ShopInfoRepository
 import com.takhaki.schoolfoodnavigator.Repository.UserAuth
 import io.reactivex.disposables.CompositeDisposable
@@ -38,7 +38,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
     fun loadShopDetail() {
         val auth = UserAuth(getApplication())
-        val repository = AssesmentRepository(shopId, getApplication())
+        val repository = AssessmentRepository(shopId, getApplication())
         repository.fetchAllAssesment()
             .subscribeBy(onSuccess = { results ->
                 results.forEach { result ->
