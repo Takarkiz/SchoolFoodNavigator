@@ -1,34 +1,54 @@
 package com.takhaki.schoolfoodnavigator.profile
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.OnLifecycleEvent
 import com.takhaki.schoolfoodnavigator.Model.CompanyData
 import com.takhaki.schoolfoodnavigator.Model.UserEntity
 import com.takhaki.schoolfoodnavigator.Repository.CompanyRepository
 import com.takhaki.schoolfoodnavigator.Repository.UserAuth
 
-class ProfileViewModel(application: Application) : AndroidViewModel(application) {
+class ProfileViewModel(
+    application: Application,
+    private val userId: String,
+    private val navigator: ProfileNavigatorAbstract
+) : ProfileViewModelBase(application) {
 
-    private val _pageUserUid = MutableLiveData<String>()
-
-    private val _userImageUrl = MutableLiveData<String>()
-    val userImageUrl: LiveData<String>
+    override val userImageUrl: LiveData<String>
         get() = _userImageUrl
 
-    val userName = MutableLiveData<String>().apply { value = "ユーザー名" }
-    val userPoint = MutableLiveData<Int>().apply { value = 0 }
-    val userGradeTitle = MutableLiveData<String>().apply { value = "一般人" }
-    val teamName = MutableLiveData<String>().apply { value = "" }
+    override val userName: LiveData<String>
+        get() = _userName
+    override val userPoint: LiveData<Int>
+        get() = _userPoint
+    override val userGradeTitle: LiveData<String>
+        get() = _userGradeTitle
+    override val teamName: LiveData<String>
+        get() = _teamName
 
-    fun updateUserProfile(uid: String) {
-        _pageUserUid.value = uid
+
+    // LifecycleObserver
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+    fun onCreate() {
+        updateUserProfile()
+    }
+
+    // Private
+    private val _userImageUrl = MutableLiveData<String>()
+    private val _userName = MutableLiveData<String>().apply { value = "ユーザー名" }
+    private val _userPoint = MutableLiveData<Int>().apply { value = 0 }
+    private val _userGradeTitle = MutableLiveData<String>().apply { value = "一般人" }
+    private val _teamName = MutableLiveData<String>().apply { value = "" }
+
+    private fun updateUserProfile() {
         getUser { user ->
-            userName.value = user.name
-            userPoint.value = user.navScore
+            _userName.value = user.name
+            _userPoint.value = user.navScore
             _userImageUrl.value = user.profImageUrl
-            userGradeTitle.value = caliculateUserRank(user.navScore)
+            _userGradeTitle.value = caliculateUserRank(user.navScore)
         }
 
         getUserTeamName()
@@ -40,7 +60,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         repository.fetchCompanyName { result ->
             if (result.isSuccess) {
                 result.getOrNull()?.let { name ->
-                    teamName.value = "${name}(ID: ${companyID})"
+                    _teamName.value = "${name}(ID: ${companyID})"
                 }
             }
         }
@@ -48,12 +68,10 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     private fun getUser(handler: (UserEntity) -> Unit) {
         val auth = UserAuth(getApplication())
-        _pageUserUid.value?.let { uid ->
-            auth.fetchUser(uid) { result ->
-                if (result.isSuccess) {
-                    result.getOrNull()?.let { user ->
-                        handler(user)
-                    }
+        auth.fetchUser(userId) { result ->
+            if (result.isSuccess) {
+                result.getOrNull()?.let { user ->
+                    handler(user)
                 }
             }
         }

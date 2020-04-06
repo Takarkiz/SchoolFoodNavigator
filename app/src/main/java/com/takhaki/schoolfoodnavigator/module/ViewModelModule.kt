@@ -24,7 +24,9 @@ val viewModelModule = module(override = true) {
 
     viewModel { DetailViewModel(androidApplication()) }
 
-    viewModel { ProfileViewModel(androidApplication()) }
+    viewModel {  (userId: String) ->
+        ProfileViewModel(androidApplication(), userId, get())
+    }
 
     viewModel { CreateRoomViewModel(androidApplication()) }
 

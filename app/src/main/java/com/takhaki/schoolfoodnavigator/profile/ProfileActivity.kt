@@ -17,6 +17,8 @@ import com.takhaki.schoolfoodnavigator.Repository.FirestorageRepository
 import com.takhaki.schoolfoodnavigator.Repository.UserAuth
 import com.takhaki.schoolfoodnavigator.databinding.ActivityProfileBinding
 import kotlinx.android.synthetic.main.activity_profile.*
+import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -34,9 +36,6 @@ class ProfileActivity : AppCompatActivity() {
         private const val EXTRA_KEY_USER_ID = "user_id"
     }
 
-    private lateinit var viewModel: ProfileViewModel
-    private lateinit var binding: ActivityProfileBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
@@ -48,13 +47,9 @@ class ProfileActivity : AppCompatActivity() {
             R.layout.activity_profile
         )
 
-        viewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
         binding.lifecycleOwner = this
         binding.profileViewModel = viewModel
-
-        UserAuth(this).currentUser?.uid?.let {
-            viewModel.updateUserProfile(it)
-        }
+        lifecycle.addObserver(viewModel)
 
         viewModel.userImageUrl.observe(this, Observer {
             val storage = FirestorageRepository("User")
@@ -74,4 +69,10 @@ class ProfileActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    private val viewModel: ProfileViewModel by viewModel {
+        val uid = intent.extras?.getString(EXTRA_KEY_USER_ID)
+        parametersOf(uid)
+    }
+    private lateinit var binding: ActivityProfileBinding
 }
