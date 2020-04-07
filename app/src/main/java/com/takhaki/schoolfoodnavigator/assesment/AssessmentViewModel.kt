@@ -9,7 +9,9 @@ import com.takhaki.schoolfoodnavigator.Repository.AssessmentRepository
 import com.takhaki.schoolfoodnavigator.Repository.ShopInfoRepository
 import com.takhaki.schoolfoodnavigator.Repository.UserAuth
 
-class AssesmentViewModel(application: Application) : AndroidViewModel(application) {
+class AssessmentViewModel(
+    application: Application,
+private val navigator) : AndroidViewModel(application) {
 
     private val _shopId = MutableLiveData<String>()
     val shopId: LiveData<String>
@@ -46,7 +48,7 @@ class AssesmentViewModel(application: Application) : AndroidViewModel(applicatio
         _cheepValue.value = rating
     }
 
-    fun uploadAssessment(finishUploadHander: (Result<String>) -> Unit) {
+    fun uploadAssessment(finishUploadHandler: (Result<String>) -> Unit) {
         val auth = UserAuth(getApplication())
         val userId = auth.currentUser?.uid?.let { it } ?: return
 
@@ -71,13 +73,13 @@ class AssesmentViewModel(application: Application) : AndroidViewModel(applicatio
                     try {
                         shopRepository.updateEdiedDate(id)
                         auth.addPointAssessment()
-                        finishUploadHander(Result.success(result.getOrThrow()))
+                        finishUploadHandler(Result.success(result.getOrThrow()))
                     } catch (e: Error) {
-                        finishUploadHander(Result.failure(e))
+                        finishUploadHandler(Result.failure(e))
                     }
                 } else {
                     result.exceptionOrNull()?.let { e ->
-                        finishUploadHander(Result.failure(e))
+                        finishUploadHandler(Result.failure(e))
                     }
                 }
             }

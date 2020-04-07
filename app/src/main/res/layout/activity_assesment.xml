@@ -8,7 +8,7 @@
 
         <variable
             name="assesmentViewModel"
-            type="com.takhaki.schoolfoodnavigator.assesment.AssesmentViewModel" />
+            type="com.takhaki.schoolfoodnavigator.assesment.AssessmentViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

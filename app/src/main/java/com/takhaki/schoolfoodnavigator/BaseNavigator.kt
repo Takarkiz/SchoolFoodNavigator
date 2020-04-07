@@ -1,6 +1,5 @@
 package com.takhaki.schoolfoodnavigator
 
-import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import java.lang.ref.WeakReference
 

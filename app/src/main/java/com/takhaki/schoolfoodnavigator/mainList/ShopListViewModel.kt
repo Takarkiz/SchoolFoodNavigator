@@ -91,9 +91,6 @@ class ShopListViewModel(
 
     private fun getShopAssessments(shop: ShopEntity) {
 
-//        // すでにshopItemsに取得した値が入っていれば終了する
-//        if (shopItems.isNotEmpty()) return
-
         val repository = AssessmentRepository(shop.id, appContext)
         repository.fetchAllAssesment()
             .observeOn(Schedulers.computation())

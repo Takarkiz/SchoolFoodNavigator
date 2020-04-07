@@ -41,7 +41,7 @@ class AssesmentActivity : AppCompatActivity() {
         private const val EXTRA_KEY_SHOP_NAME = "shopName"
     }
 
-    private lateinit var viewModel: AssesmentViewModel
+    private lateinit var viewModel: AssessmentViewModel
     private lateinit var binding: ActivityAssesmentBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +56,7 @@ class AssesmentActivity : AppCompatActivity() {
             R.layout.activity_assesment
         )
 
-        viewModel = ViewModelProviders.of(this).get(AssesmentViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(AssessmentViewModel::class.java)
         binding.lifecycleOwner = this
         binding.assesmentViewModel = viewModel
 
