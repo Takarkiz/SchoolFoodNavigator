@@ -1,5 +1,6 @@
 package com.takhaki.schoolfoodnavigator
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -15,6 +16,19 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
+
+    companion object {
+
+        /**
+         * 繊維用のインテントを作る
+         */
+
+        fun makeIntent(activity: AppCompatActivity) : Intent {
+            return Intent(activity, MainActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

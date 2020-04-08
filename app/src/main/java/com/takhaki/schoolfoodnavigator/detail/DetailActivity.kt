@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.takhaki.schoolfoodnavigator.R
-import com.takhaki.schoolfoodnavigator.assesment.AssesmentActivity
+import com.takhaki.schoolfoodnavigator.assesment.AssessmentActivity
 import com.takhaki.schoolfoodnavigator.databinding.ActivityDetailBinding
 import kotlinx.android.synthetic.main.activity_detail.*
 
@@ -83,7 +83,7 @@ class DetailActivity : AppCompatActivity() {
         })
 
         addAssessmentFab.setOnClickListener {
-            val intent = Intent(this, AssesmentActivity::class.java)
+            val intent = Intent(this, AssessmentActivity::class.java)
             intent.putExtra("shopId", shopId)
             startActivity(intent)
         }

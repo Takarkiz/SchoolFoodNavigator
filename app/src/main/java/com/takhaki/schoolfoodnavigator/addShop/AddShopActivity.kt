@@ -76,8 +76,8 @@ class AddShopActivity : AppCompatActivity() {
             didTapAddNewPhoto()
         }
 
-        actionBar?.setDisplayHomeAsUpEnabled(true)
-        actionBar?.title = resources.getString(R.string.actionbar_title_add_new_shop)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = resources.getString(R.string.actionbar_title_add_new_shop)
 
         deleteButton.setOnClickListener {
             viewModel.deletePhoto()

@@ -19,18 +19,23 @@ import com.takhaki.schoolfoodnavigator.MainActivity
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.databinding.ActivityAssesmentBinding
 import kotlinx.android.synthetic.main.activity_assesment.*
+import org.koin.android.viewmodel.compat.ScopeCompat.viewModel
+import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
-class AssesmentActivity : AppCompatActivity() {
+class AssessmentActivity : AppCompatActivity() {
 
     companion object {
 
         /**
          * 遷移用のインテントを作る
          *
+         * @param activity: アクティビティ
+         * @param id: ショップID
+         * @param name: ショップ名
          */
-
         fun makeIntent(activity: AppCompatActivity, id: String, name: String): Intent {
-            return Intent(activity, AssesmentActivity::class.java).apply {
+            return Intent(activity, AssessmentActivity::class.java).apply {
                 putExtra(EXTRA_KEY_SHOP_ID, id)
                 putExtra(EXTRA_KEY_SHOP_NAME, name)
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
@@ -41,7 +46,10 @@ class AssesmentActivity : AppCompatActivity() {
         private const val EXTRA_KEY_SHOP_NAME = "shopName"
     }
 
-    private lateinit var viewModel: AssessmentViewModel
+    private var viewModel: AssessmentViewModel by viewModel<AssessmentViewModel> {
+        val shopId = intent.extras?.getString(EXTRA_KEY_SHOP_ID)
+        parametersOf(shopId)
+    }
     private lateinit var binding: ActivityAssesmentBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +57,7 @@ class AssesmentActivity : AppCompatActivity() {
         setContentView(R.layout.activity_assesment)
         val shopId: String = intent.getCharSequenceExtra("shopId").toString()
         actionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.title = intent.getCharSequenceExtra("shopName") ?: ""
+        supportActionBar?.title = intent.getCharSequenceExtra(EXTRA_KEY_SHOP_NAME) ?: ""
 
         binding = DataBindingUtil.setContentView(
             this,
@@ -62,8 +70,6 @@ class AssesmentActivity : AppCompatActivity() {
 
         setUpRadarChart()
         updateRadarChart()
-
-        viewModel.putShopId(shopId)
 
         foodGoodRating.setOnRatingChangeListener { ratingBar, rating ->
             viewModel.onUpdateGood(rating)

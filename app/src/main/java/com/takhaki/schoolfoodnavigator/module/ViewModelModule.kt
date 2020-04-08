@@ -19,11 +19,13 @@ val viewModelModule = module(override = true) {
 
     viewModel { AddShopViewModel(androidApplication(), get()) }
 
-    viewModel { AssessmentViewModel(androidApplication()) }
+    viewModel { (shopId: String) ->
+        AssessmentViewModel(androidApplication(), shopId, get())
+    }
 
     viewModel { DetailViewModel(androidApplication()) }
 
-    viewModel {  (userId: String) ->
+    viewModel { (userId: String) ->
         ProfileViewModel(androidApplication(), userId, get())
     }
 
