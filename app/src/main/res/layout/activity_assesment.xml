@@ -33,7 +33,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:text="@string/assesment_radar_graph"
+                    android:text="@string/assessment_radar_graph"
                     android:textColor="@android:color/black" />
 
 
@@ -47,7 +47,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:text="@string/assesment_text_assesment"
+                    android:text="@string/assessment_text_assessment"
                     android:textColor="@android:color/black" />
 
                 <LinearLayout
@@ -66,7 +66,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
-                        android:text="@string/assesment_category_good"
+                        android:text="@string/assessment_category_good"
                         android:textSize="14sp" />
 
                     <me.zhanghai.android.materialratingbar.MaterialRatingBar
@@ -96,7 +96,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
-                        android:text="@string/assesment_category_near"
+                        android:text="@string/assessment_category_near"
                         android:textSize="14sp" />
 
                     <me.zhanghai.android.materialratingbar.MaterialRatingBar
@@ -126,7 +126,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
-                        android:text="@string/assesment_category_cheep"
+                        android:text="@string/assessment_category_cheep"
                         android:textSize="14sp" />
 
                     <me.zhanghai.android.materialratingbar.MaterialRatingBar
@@ -145,14 +145,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:layout_marginBottom="8dp"
-                    android:text="@string/assesment_text_comment"
+                    android:text="@string/assessment_text_comment"
                     android:textColor="@android:color/black" />
 
                 <EditText
                     android:id="@+id/commentEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/assesment_edittext_hint"
+                    android:hint="@string/assessment_edit_text_hint"
                     android:text="@={assesmentViewModel.commentText}" />
 
 

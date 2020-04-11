@@ -18,13 +18,13 @@
     <string name="add_shop_register_dialog_positive_text">はい</string>
     <string name="add_shop_register_dialog_negative_text">いいえ</string>
 
-    <string name="assesment_text_assesment">お店の評価</string>
-    <string name="assesment_category_good">おいしさ</string>
-    <string name="assesment_category_near">近さ</string>
-    <string name="assesment_category_cheep">安さ</string>
-    <string name="assesment_text_comment">コメント</string>
-    <string name="assesment_edittext_hint">ここに記入</string>
-    <string name="assesment_radar_graph">レーダーグラフ</string>
+    <string name="assessment_text_assessment">お店の評価</string>
+    <string name="assessment_category_good">おいしさ</string>
+    <string name="assessment_category_near">近さ</string>
+    <string name="assessment_category_cheep">安さ</string>
+    <string name="assessment_text_comment">コメント</string>
+    <string name="assessment_edit_text_hint">ここに記入</string>
+    <string name="assessment_radar_graph">レーダーグラフ</string>
     <string name="assessment_dialog_title_text">お店の評価で3ポイント獲得！</string>
     <string name="assessment_dialog_positive_text">はい</string>
 
@@ -43,10 +43,11 @@
     <string name="start_edit_name_hint">ユーザ名</string>
     <string name="start_progress_3">3/3</string>
     <string name="start_setting_icon">アイコンを設定してください</string>
-    <string name="strat_finish_register">登録を完了する</string>
+    <string name="start_finish_register">登録を完了する</string>
     <string name="cell_detail_total_score">トータル評価</string>
     <string name="cell_comment_result">個別評価</string>
     <string name="profile_point_title">ナビゲーターポイント</string>
     <string name="profile_current_title">現在の称号</string>
+    <string name="profile_explain_reward"><u>(称号について)</u></string>
 
 </resources>

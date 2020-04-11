@@ -7,7 +7,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProviders
 import com.airbnb.lottie.LottieAnimationView
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.data.RadarData
@@ -15,7 +14,6 @@ import com.github.mikephil.charting.data.RadarDataSet
 import com.github.mikephil.charting.data.RadarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.takhaki.schoolfoodnavigator.MainActivity
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.databinding.ActivityAssesmentBinding
 import kotlinx.android.synthetic.main.activity_assesment.*
@@ -130,9 +128,9 @@ class AssessmentActivity : AppCompatActivity() {
                 valueFormatter = object : ValueFormatter() {
 
                     val labels = listOf(
-                        resources.getString(R.string.assesment_category_good),
-                        resources.getString(R.string.assesment_category_near),
-                        resources.getString(R.string.assesment_category_near)
+                        resources.getString(R.string.assessment_category_good),
+                        resources.getString(R.string.assessment_category_near),
+                        resources.getString(R.string.assessment_category_near)
                     )
 
                     override fun getFormattedValue(value: Float): String {

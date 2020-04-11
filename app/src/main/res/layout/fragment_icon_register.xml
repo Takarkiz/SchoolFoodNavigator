@@ -73,7 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="40dp"
-            android:text="@string/strat_finish_register"
+            android:text="@string/start_finish_register"
             android:textColor="@android:color/white"
             app:backgroundTint="@color/colorAccent"
             app:icon="@drawable/ic_add_shop_fab_check"

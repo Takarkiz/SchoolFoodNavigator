@@ -9,6 +9,8 @@
     <color name="colorAnalogousYellow">#ffcd43</color>
 
     <color name="gray">#C0C0C0</color>
+    <color name="baseTextColor">#808080</color>
+    <color name="darkerGrayColor">#696969</color>
 
     <color name="white">#FFFFFF</color>
 </resources>

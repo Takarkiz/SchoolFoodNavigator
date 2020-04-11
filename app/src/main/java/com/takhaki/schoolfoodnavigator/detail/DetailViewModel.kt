@@ -37,6 +37,11 @@ class DetailViewModel(
         }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        disposable.clear()
+    }
+
     // LifecycleObserver
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)

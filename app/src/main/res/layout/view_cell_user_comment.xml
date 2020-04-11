@@ -76,7 +76,7 @@
         android:id="@+id/goodText"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:text="@string/assesment_category_good"
+        android:text="@string/assessment_category_good"
         app:layout_constraintStart_toStartOf="@id/personalResult"
         app:layout_constraintTop_toBottomOf="@+id/personalResult" />
 
@@ -131,7 +131,7 @@
         android:id="@+id/commentTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/assesment_text_comment"
+        android:text="@string/assessment_text_comment"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cheepText" />
 
