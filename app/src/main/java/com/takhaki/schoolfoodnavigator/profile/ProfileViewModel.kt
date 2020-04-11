@@ -1,6 +1,7 @@
 package com.takhaki.schoolfoodnavigator.profile
 
 import android.app.Application
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,12 +10,17 @@ import com.takhaki.schoolfoodnavigator.Model.CompanyData
 import com.takhaki.schoolfoodnavigator.Model.UserEntity
 import com.takhaki.schoolfoodnavigator.Repository.CompanyRepository
 import com.takhaki.schoolfoodnavigator.Repository.UserAuth
+import java.lang.ref.WeakReference
 
 class ProfileViewModel(
     application: Application,
     private val userId: String,
     private val navigator: ProfileNavigatorAbstract
 ) : ProfileViewModelBase(application) {
+
+    override fun activity(activity: AppCompatActivity) {
+        navigator.weakActivity = WeakReference(activity)
+    }
 
     override val userImageUrl: LiveData<String>
         get() = _userImageUrl

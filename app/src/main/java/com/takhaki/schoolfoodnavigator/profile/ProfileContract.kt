@@ -1,6 +1,7 @@
 package com.takhaki.schoolfoodnavigator.profile
 
 import android.app.Application
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LiveData
@@ -19,6 +20,11 @@ abstract class ProfileViewModelBase(
  * プロフィール ViewModel-Contract
  */
 interface ProfileViewModelContract {
+
+    /**
+     * 実行中のアクティビティ
+     */
+    fun activity(activity: AppCompatActivity)
 
     /**
      * プロフィール画像のURL

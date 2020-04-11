@@ -1,18 +1,24 @@
 package com.takhaki.schoolfoodnavigator.assesment
 
 import android.app.Application
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
 import com.takhaki.schoolfoodnavigator.Repository.AssessmentRepository
 import com.takhaki.schoolfoodnavigator.Repository.ShopInfoRepository
 import com.takhaki.schoolfoodnavigator.Repository.UserAuth
+import java.lang.ref.WeakReference
 
 class AssessmentViewModel(
     application: Application,
     private val shopId: String,
     private val navigator: AssessmentNavigatorAbstract
 ) : AssessmentViewModelBase(application) {
+
+    override fun activity(activity: AppCompatActivity) {
+        navigator.weakActivity = WeakReference(activity)
+    }
 
     private val _goodValue = MutableLiveData<Float>().apply { value = 3f }
     override val goodValue: LiveData<Float>
@@ -42,11 +48,11 @@ class AssessmentViewModel(
 
     override fun uploadAssessment(finishUploadHandler: (Result<String>) -> Unit) {
         val auth = UserAuth(getApplication())
-        val userId = auth.currentUser?.uid?.let { it } ?: return
+        val userId = auth.currentUser?.uid ?: return
 
-        val good = goodValue.value?.let { it } ?: 3f
-        val distance = distanceValue.value?.let { it } ?: 3f
-        val cheep = cheepValue.value?.let { it } ?: 3f
+        val good = goodValue.value ?: 3f
+        val distance = distanceValue.value ?: 3f
+        val cheep = cheepValue.value ?: 3f
 
         val repository = AssessmentRepository(shopId, getApplication())
         val assessment = AssessmentEntity(
@@ -54,7 +60,7 @@ class AssessmentViewModel(
             good = good,
             distance = distance,
             cheep = cheep,
-            comment = commentText.value?.let { it } ?: ""
+            comment = commentText.value ?: ""
         )
 
         val shopRepository = ShopInfoRepository(getApplication())
@@ -75,6 +81,10 @@ class AssessmentViewModel(
             }
         }
 
+    }
+
+    override fun finishUpload() {
+        navigator.backToHome()
     }
 
 }

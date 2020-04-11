@@ -49,6 +49,7 @@ class ProfileActivity : AppCompatActivity() {
 
         binding.lifecycleOwner = this
         binding.profileViewModel = viewModel
+        viewModel.activity(this)
         lifecycle.addObserver(viewModel)
 
         viewModel.userImageUrl.observe(this, Observer {

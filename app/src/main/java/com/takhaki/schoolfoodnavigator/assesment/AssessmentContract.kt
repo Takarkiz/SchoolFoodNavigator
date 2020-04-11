@@ -1,6 +1,7 @@
 package com.takhaki.schoolfoodnavigator.assesment
 
 import android.app.Application
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
 import com.takhaki.schoolfoodnavigator.BaseNavigator
 import com.takhaki.schoolfoodnavigator.Repository.AssessmentRespositoryContract
@@ -12,6 +13,11 @@ abstract class AssessmentViewModelBase(
         AssessmentViewModelContract
 
 interface AssessmentViewModelContract {
+
+    /**
+     * 実行中Activityインスタンス
+     */
+    fun activity(activity: AppCompatActivity)
 
     /**
      * 美味しさ値
@@ -52,6 +58,11 @@ interface AssessmentViewModelContract {
      * 評価のアップロード
      */
     fun uploadAssessment(finishUploadHandler: (Result<String>) -> Unit)
+
+    /**
+     * 評価のアップロード終了
+     */
+    fun finishUpload()
 }
 
 abstract class AssessmentNavigatorAbstract: BaseNavigator() {

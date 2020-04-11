@@ -19,7 +19,6 @@ import com.takhaki.schoolfoodnavigator.MainActivity
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.databinding.ActivityAssesmentBinding
 import kotlinx.android.synthetic.main.activity_assesment.*
-import org.koin.android.viewmodel.compat.ScopeCompat.viewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -46,8 +45,8 @@ class AssessmentActivity : AppCompatActivity() {
         private const val EXTRA_KEY_SHOP_NAME = "shopName"
     }
 
-    private var viewModel: AssessmentViewModel by viewModel<AssessmentViewModel> {
-        val shopId = intent.extras?.getString(EXTRA_KEY_SHOP_ID)
+    private val viewModel: AssessmentViewModel by viewModel {
+        val shopId = intent.extras?.getString(EXTRA_KEY_SHOP_ID) ?: ""
         parametersOf(shopId)
     }
     private lateinit var binding: ActivityAssesmentBinding
@@ -55,7 +54,6 @@ class AssessmentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_assesment)
-        val shopId: String = intent.getCharSequenceExtra("shopId").toString()
         actionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.title = intent.getCharSequenceExtra(EXTRA_KEY_SHOP_NAME) ?: ""
 
@@ -64,7 +62,8 @@ class AssessmentActivity : AppCompatActivity() {
             R.layout.activity_assesment
         )
 
-        viewModel = ViewModelProviders.of(this).get(AssessmentViewModel::class.java)
+        viewModel.activity(this)
+        lifecycle.addObserver(viewModel)
         binding.lifecycleOwner = this
         binding.assesmentViewModel = viewModel
 
@@ -212,8 +211,6 @@ class AssessmentActivity : AppCompatActivity() {
 
     private fun backToHome() {
         // それ以外はメイン画面に戻る
-        val intent = Intent(this, MainActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
+        viewModel.finishUpload()
     }
 }
