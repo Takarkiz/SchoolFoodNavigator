@@ -6,6 +6,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -15,6 +16,8 @@ import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.assesment.AssessmentActivity
 import com.takhaki.schoolfoodnavigator.databinding.ActivityDetailBinding
 import kotlinx.android.synthetic.main.activity_detail.*
+import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class DetailActivity : AppCompatActivity() {
 
@@ -36,7 +39,10 @@ class DetailActivity : AppCompatActivity() {
         private const val EXTRA_KEY_SHOP_NAME = "name"
     }
 
-    private lateinit var viewModel: DetailViewModel
+    private val viewModel: DetailViewModel by viewModel {
+        val shopId = intent.extras?.getString(EXTRA_KEY_SHOP_ID)
+        parametersOf(shopId)
+    }
     private lateinit var binding: ActivityDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,14 +61,13 @@ class DetailActivity : AppCompatActivity() {
             R.layout.activity_detail
         )
 
-        viewModel = ViewModelProviders.of(this).get(DetailViewModel::class.java)
+        viewModel.activity(this)
+        lifecycle.addObserver(viewModel)
         binding.lifecycleOwner = this
         binding.detailViewModel = viewModel
 
-        viewModel.putShopId(shopId)
         val adapter = DetailAdapter(this)
         adapter.shopId = shopId
-        viewModel.loadShopDetail()
 
         viewModel.scoreList.observe(this, androidx.lifecycle.Observer {
             adapter.dataComment = it
@@ -79,13 +84,11 @@ class DetailActivity : AppCompatActivity() {
         scoreListView.addOnScrollListener(scrollListener)
 
         viewModel.hasCurrentUserComment.observe(this, Observer { hasCurrentUser ->
-            addAssessmentFab.visibility = if (hasCurrentUser)  View.GONE else View.VISIBLE
+            addAssessmentFab.isVisible = !hasCurrentUser
         })
 
         addAssessmentFab.setOnClickListener {
-            val intent = Intent(this, AssessmentActivity::class.java)
-            intent.putExtra("shopId", shopId)
-            startActivity(intent)
+            viewModel.didTapAddFab()
         }
     }
 

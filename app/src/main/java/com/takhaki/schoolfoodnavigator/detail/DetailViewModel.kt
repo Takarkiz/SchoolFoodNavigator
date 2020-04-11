@@ -1,42 +1,61 @@
 package com.takhaki.schoolfoodnavigator.detail
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.OnLifecycleEvent
 import com.takhaki.schoolfoodnavigator.Repository.AssessmentRepository
 import com.takhaki.schoolfoodnavigator.Repository.ShopInfoRepository
 import com.takhaki.schoolfoodnavigator.Repository.UserAuth
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
+import java.lang.ref.WeakReference
 
-class DetailViewModel(application: Application) : AndroidViewModel(application) {
+class DetailViewModel(
+    application: Application,
+    private val shopId: String,
+    private val navigator: DetailNavigatorAbstract
+) : DetailViewModelBase(application) {
+
+    override fun activity(activity: AppCompatActivity) {
+        navigator.weakActivity = WeakReference(activity)
+    }
+
+    override val shopDetail: LiveData<AboutShopDetailModel>
+        get() = _shopDetail
+    override val scoreList: LiveData<List<CommentDetailModel>>
+        get() = _scoreList
+    override val hasCurrentUserComment: LiveData<Boolean>
+        get() = _hasCurrentUserComment
+
+    override fun didTapAddFab() {
+        shopDetail.value?.let {
+            navigator.toAssessmentView(shopId, it.name)
+        }
+    }
+
+    // LifecycleObserver
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+    fun onCreate() {
+        loadShopDetail()
+    }
+
+    // Private
 
     private val disposable: CompositeDisposable = CompositeDisposable()
     private val shopRepository = ShopInfoRepository(getApplication())
+    private val scores = mutableListOf<CommentDetailModel>()
 
-    private var shopId: String = ""
-    val shopDetail: LiveData<AboutShopDetailModel>
-        get() = _shopDetail
     private val _shopDetail = MutableLiveData<AboutShopDetailModel>()
-
-    val scoreList: LiveData<List<CommentDetailModel>>
-        get() = _scoreList
     private val _scoreList = MutableLiveData<List<CommentDetailModel>>()
-
-    val hasCurrentUserComment: LiveData<Boolean>
-        get() = _hasCurrentUserComment
     private val _hasCurrentUserComment = MutableLiveData<Boolean>().apply { value = false }
 
 
-    private val scores = mutableListOf<CommentDetailModel>()
-
-    fun putShopId(id: String) {
-        shopId = id
-    }
-
-    fun loadShopDetail() {
+    private fun loadShopDetail() {
         val auth = UserAuth(getApplication())
         val repository = AssessmentRepository(shopId, getApplication())
         repository.fetchAllAssesment()

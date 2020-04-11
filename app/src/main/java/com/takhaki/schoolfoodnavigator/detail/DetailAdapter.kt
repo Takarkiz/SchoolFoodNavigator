@@ -91,12 +91,11 @@ class DetailAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.Vi
 
                 val auth = UserAuth(context)
                 auth.checkFavoriteShop(shopId) { containFav ->
+                    isFavorite = containFav
                     if (containFav) {
                         shopViewHolder.favoriteIconImageView.setImageResource(R.drawable.ic_nav_fill_favorite)
-                        isFavorite = containFav
                     } else {
                         shopViewHolder.favoriteIconImageView.setImageResource(R.drawable.ic_nav_favorite)
-                        isFavorite = containFav
                     }
                 }
 
