@@ -80,7 +80,7 @@ class AddShopViewModel(
     }
 
     override fun backToShopList() {
-        navigator.finish()
+        navigator.backToHome()
     }
 
     override fun deletePhoto() {

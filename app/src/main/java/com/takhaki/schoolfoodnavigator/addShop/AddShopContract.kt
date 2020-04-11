@@ -81,4 +81,9 @@ abstract class AddShopNavigatorAbstract : BaseNavigator() {
      */
     abstract fun toAssessment(id: String, name: String)
 
+    /**
+     * 一覧画面への遷移
+     */
+    abstract fun backToHome()
+
 }
