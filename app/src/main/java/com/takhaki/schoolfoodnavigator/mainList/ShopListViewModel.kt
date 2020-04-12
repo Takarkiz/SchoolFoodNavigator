@@ -44,8 +44,8 @@ class ShopListViewModel(
         navigator.toShopDetail(id, name)
     }
 
-    override fun putTabNumber(num: Int) {
-        number = num
+    override fun putTabNumber(index: Int) {
+        number = index
     }
 
     // LifecycleObserver

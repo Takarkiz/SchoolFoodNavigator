@@ -44,7 +44,7 @@ class UserAuth(context: Context) {
         context: Context,
         handler: (Result<String>) -> Unit
     ) {
-        val uid = currentUser?.uid?.let { it } ?: return
+        val uid = currentUser?.uid?: return
 
         createUserAccount(uid, name, iconUri, context) { result ->
             if (result.isSuccess) {

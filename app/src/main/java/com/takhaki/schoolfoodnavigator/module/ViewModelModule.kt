@@ -3,6 +3,7 @@ package com.takhaki.schoolfoodnavigator.module
 import com.takhaki.schoolfoodnavigator.addShop.AddShopViewModel
 import com.takhaki.schoolfoodnavigator.assesment.AssessmentViewModel
 import com.takhaki.schoolfoodnavigator.detail.DetailViewModel
+import com.takhaki.schoolfoodnavigator.detailReward.viewModel.DetailRewardViewModel
 import com.takhaki.schoolfoodnavigator.mainList.ShopListViewModel
 import com.takhaki.schoolfoodnavigator.mainList.ShopListViewModelBase
 import com.takhaki.schoolfoodnavigator.profile.ProfileViewModel
@@ -30,6 +31,8 @@ val viewModelModule = module(override = true) {
     viewModel { (userId: String) ->
         ProfileViewModel(androidApplication(), userId, get())
     }
+
+    viewModel { DetailRewardViewModel(androidApplication()) }
 
     viewModel { CreateRoomViewModel(androidApplication()) }
 

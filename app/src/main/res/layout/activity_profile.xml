@@ -24,6 +24,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
+                android:clickable="true"
+                android:focusable="true"
                 android:text="@{profileViewModel.teamName}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -57,21 +59,21 @@
             <TextView
                 android:id="@+id/navPointTitle"
                 style="@style/profile_title"
-                android:text="@string/profile_point_title"
                 android:layout_marginTop="48dp"
-                app:layout_constraintTop_toBottomOf="@id/userNameTextView"
+                android:text="@string/profile_point_title"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/userNameTextView" />
 
             <LinearLayout
                 android:id="@+id/pointTextLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
+                android:gravity="center"
                 android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@id/navPointTitle"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/navPointTitle">
 
                 <com.airbnb.lottie.LottieAnimationView
                     android:layout_width="60dp"
@@ -102,7 +104,7 @@
                 android:id="@+id/rewardTextLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
+                android:gravity="center"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -120,9 +122,21 @@
                 <TextView
                     android:id="@+id/shogoTextView"
                     style="@style/profile_big_content"
+                    android:gravity="center"
                     android:text="@{profileViewModel.userGradeTitle}"
                     tools:text="称号" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/aboutRewardText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:text="@string/profile_explain_reward"
+                android:textColor="@color/darkerGrayColor"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rewardTextLayout" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

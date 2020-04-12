@@ -51,9 +51,20 @@ interface ProfileViewModelContract {
      */
     val teamName: LiveData<String>
 
+    /**
+     * 称号の詳細ページに遷移
+     */
+    fun didTapShowRewardDetail()
+
 }
 
 /**
  * プロフィール Navigator
  */
-abstract class ProfileNavigatorAbstract : BaseNavigator()
+abstract class ProfileNavigatorAbstract : BaseNavigator() {
+
+    /**
+     * 称号の詳細画面を表示
+     */
+    abstract fun toRewardDetail()
+}

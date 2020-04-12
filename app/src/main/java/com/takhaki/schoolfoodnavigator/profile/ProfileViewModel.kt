@@ -10,6 +10,7 @@ import com.takhaki.schoolfoodnavigator.Model.CompanyData
 import com.takhaki.schoolfoodnavigator.Model.UserEntity
 import com.takhaki.schoolfoodnavigator.Repository.CompanyRepository
 import com.takhaki.schoolfoodnavigator.Repository.UserAuth
+import com.takhaki.schoolfoodnavigator.Utility.RewardUtil.Companion.calculateUserRank
 import java.lang.ref.WeakReference
 
 class ProfileViewModel(
@@ -34,6 +35,9 @@ class ProfileViewModel(
     override val teamName: LiveData<String>
         get() = _teamName
 
+    override fun didTapShowRewardDetail() {
+        navigator.toRewardDetail()
+    }
 
     // LifecycleObserver
 
@@ -46,7 +50,7 @@ class ProfileViewModel(
     private val _userImageUrl = MutableLiveData<String>()
     private val _userName = MutableLiveData<String>().apply { value = "ユーザー名" }
     private val _userPoint = MutableLiveData<Int>().apply { value = 0 }
-    private val _userGradeTitle = MutableLiveData<String>().apply { value = "一般人" }
+    private val _userGradeTitle = MutableLiveData<String>().apply { value = "--" }
     private val _teamName = MutableLiveData<String>().apply { value = "" }
 
     private fun updateUserProfile() {
@@ -54,7 +58,7 @@ class ProfileViewModel(
             _userName.value = user.name
             _userPoint.value = user.navScore
             _userImageUrl.value = user.profImageUrl
-            _userGradeTitle.value = caliculateUserRank(user.navScore)
+            _userGradeTitle.value = calculateUserRank(user.navScore).text
         }
 
         getUserTeamName()
@@ -80,19 +84,6 @@ class ProfileViewModel(
                     handler(user)
                 }
             }
-        }
-    }
-
-    // ユーザーの称号を計算するメソッド
-    private fun caliculateUserRank(point: Int): String {
-        return when (point) {
-            in 0..9 -> "一般人"
-            in 10..19 -> "ちょっと詳しい人"
-            in 20..39 -> "グルメな人"
-            in 40..59 -> "通りの達人"
-            in 60..79 -> "グルメ案内人"
-            in 80..100 -> "グルメマスター"
-            else -> "___"
         }
     }
 }
