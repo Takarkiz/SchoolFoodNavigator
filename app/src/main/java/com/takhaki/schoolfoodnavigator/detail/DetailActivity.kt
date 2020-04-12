@@ -66,7 +66,7 @@ class DetailActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.detailViewModel = viewModel
 
-        val adapter = DetailAdapter(this)
+        val adapter = DetailAdapter(this, viewModel)
         adapter.shopId = shopId
 
         viewModel.scoreList.observe(this, androidx.lifecycle.Observer {
