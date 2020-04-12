@@ -11,7 +11,8 @@ abstract class DetailViewModelBase(
     application: Application
 ) : AndroidViewModel(application),
     LifecycleObserver,
-    DetailViewModelContract
+    DetailViewModelContract,
+    DetailAdapter.UserIconClickListener
 
 interface DetailViewModelContract {
 
@@ -41,7 +42,15 @@ interface DetailViewModelContract {
     fun didTapAddFab()
 }
 
-abstract class DetailNavigatorAbstract: BaseNavigator() {
+abstract class DetailNavigatorAbstract : BaseNavigator() {
 
+    /**
+     * 評価画面への遷移
+     */
     abstract fun toAssessmentView(id: String, name: String)
+
+    /**
+     * ユーザー詳細画面へ遷移
+     */
+    abstract fun toUserProfile(id: String)
 }

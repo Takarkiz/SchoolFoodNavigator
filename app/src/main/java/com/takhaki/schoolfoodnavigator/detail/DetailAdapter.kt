@@ -14,7 +14,7 @@ import com.takhaki.schoolfoodnavigator.Repository.FirestorageRepository
 import com.takhaki.schoolfoodnavigator.Repository.UserAuth
 import me.zhanghai.android.materialratingbar.MaterialRatingBar
 
-class DetailAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class DetailAdapter(val context: Context, private val userIconClickListener: UserIconClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val repository = FirestorageRepository("Shops")
     private val DETAIL_VIEW_TYPE = 0
@@ -45,15 +45,15 @@ class DetailAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.Vi
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
 
-        when (viewType) {
+        return when (viewType) {
             DETAIL_VIEW_TYPE -> {
                 val view = layoutInflater.inflate(R.layout.view_cell_detail_shop, parent, false)
-                return ShopDetailViewHolder(view)
+                ShopDetailViewHolder(view)
             }
 
             USER_VIEW_TYPE -> {
                 val view = layoutInflater.inflate(R.layout.view_cell_user_comment, parent, false)
-                return ShopResultViewHolder(view)
+                ShopResultViewHolder(view)
             }
 
             else -> throw IllegalAccessException("存在しないセル")
@@ -65,8 +65,7 @@ class DetailAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.Vi
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val viewType = getItemViewType(position)
-        when (viewType) {
+        when (getItemViewType(position)) {
             DETAIL_VIEW_TYPE -> {
                 val shopViewHolder = ShopDetailViewHolder(holder.itemView)
                 dataAboutShop.imageUrl?.let { url ->
@@ -131,6 +130,9 @@ class DetailAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.Vi
                 commentHolder.cRatingBar.isEnabled = false
                 commentHolder.commentTextView.text = item.comment
                 commentHolder.totalRatingSampleBar.isEnabled = false
+                commentHolder.iconImageView.setOnClickListener {
+                    userIconClickListener.onClickIcon(item.id)
+                }
 
                 item.userIcon?.let { url ->
                     val storage = FirestorageRepository("User")
@@ -167,6 +169,11 @@ class DetailAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.Vi
         val cRatingBar: MaterialRatingBar = resultItemView.findViewById(R.id.crate)
         val commentTextView: TextView = resultItemView.findViewById(R.id.commentContentTextView)
         val totalRatingSampleBar: MaterialRatingBar = resultItemView.findViewById(R.id.totalRating)
+    }
+
+    interface UserIconClickListener{
+
+        fun onClickIcon(userId: String)
     }
 }
 
