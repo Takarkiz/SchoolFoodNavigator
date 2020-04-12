@@ -13,6 +13,7 @@ data class AboutShopDetailModel(
 )
 
 data class CommentDetailModel(
+    val id: String = "",
     val name: String = "",
     val userIcon: String? = null,
     val gScore: Float = 0f,

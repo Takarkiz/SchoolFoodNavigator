@@ -20,6 +20,8 @@ class DetailViewModel(
     private val navigator: DetailNavigatorAbstract
 ) : DetailViewModelBase(application) {
 
+    // DetailViewModelContract
+
     override fun activity(activity: AppCompatActivity) {
         navigator.weakActivity = WeakReference(activity)
     }
@@ -35,6 +37,12 @@ class DetailViewModel(
         shopDetail.value?.let {
             navigator.toAssessmentView(shopId, it.name)
         }
+    }
+
+    // DetailAdapter.UserIconClickListener
+
+    override fun onClickIcon(userId: String) {
+        navigator.toUserProfile(userId)
     }
 
     override fun onCleared() {
@@ -70,6 +78,7 @@ class DetailViewModel(
                     auth.userNameAndIconPath(result.user) {
                         it.getOrNull()?.let { pair ->
                             val comment = CommentDetailModel(
+                                id = result.user,
                                 name = pair.first,
                                 userIcon = pair.second,
                                 gScore = result.good,
