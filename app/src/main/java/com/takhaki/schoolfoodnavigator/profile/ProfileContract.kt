@@ -56,6 +56,11 @@ interface ProfileViewModelContract {
      */
     fun didTapShowRewardDetail()
 
+    /**
+     * 組織名タップ時
+     */
+    fun didTapCompanyText()
+
 }
 
 /**
@@ -67,4 +72,9 @@ abstract class ProfileNavigatorAbstract : BaseNavigator() {
      * 称号の詳細画面を表示
      */
     abstract fun toRewardDetail()
+
+    /**
+     * メンバー一覧へ遷移
+     */
+    abstract fun toMemberList()
 }

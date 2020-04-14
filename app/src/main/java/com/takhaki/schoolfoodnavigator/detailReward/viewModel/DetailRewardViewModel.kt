@@ -39,7 +39,7 @@ class DetailRewardViewModel(
             auth.fetchUser(uid) {
                 if (it.isSuccess) {
                     it.getOrNull()?.let { user ->
-                        val point = user.navScore
+                        val point = user.score
                         _userGrade.postValue(RewardUtil.calculateUserRank(point))
                     }
                 }

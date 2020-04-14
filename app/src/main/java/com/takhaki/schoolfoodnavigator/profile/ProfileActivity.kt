@@ -53,7 +53,7 @@ class ProfileActivity : AppCompatActivity() {
         lifecycle.addObserver(viewModel)
 
         viewModel.userImageUrl.observe(this, Observer {
-            val storage = FirestorageRepository("User")
+            val storage = FirestorageRepository(FirestorageRepository.StorageTypes.USER)
             Glide.with(this)
                 .load(storage.getGSReference(it))
                 .placeholder(R.drawable.ic_default_user)
@@ -62,6 +62,10 @@ class ProfileActivity : AppCompatActivity() {
 
         aboutRewardText.setOnClickListener {
             viewModel.didTapShowRewardDetail()
+        }
+
+        companyTextView.setOnClickListener {
+            viewModel.didTapCompanyText()
         }
     }
 

@@ -13,7 +13,7 @@ import me.zhanghai.android.materialratingbar.MaterialRatingBar
 
 class ShopListAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
 
-    private val repository = FirestorageRepository("Shops")
+    private val repository = FirestorageRepository(FirestorageRepository.StorageTypes.SHOP)
     private lateinit var listener: OnItemClickListener
     var data = listOf<ShopListItemModel>()
         set(value) {

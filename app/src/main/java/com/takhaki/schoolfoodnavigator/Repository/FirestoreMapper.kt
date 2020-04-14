@@ -30,8 +30,8 @@ fun UserEntity.toEntity():  UserEntity {
     return UserEntity(
         id = id,
         name = name,
-        profImageUrl = profImageUrl,
-        navScore = navScore,
+        iconUrl = iconUrl,
+        score = score,
         favList = favList
     )
 }

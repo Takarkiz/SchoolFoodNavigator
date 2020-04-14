@@ -11,11 +11,12 @@ import com.takhaki.schoolfoodnavigator.Model.UserEntity
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.Repository.FirestorageRepository
 
-class MemberListAdapter() :
+class MemberListAdapter :
     RecyclerView.Adapter<MemberListViewHolder>() {
 
     fun setMemberList(members: List<UserEntity>) {
         memberList = members
+        notifyDataSetChanged()
     }
 
     fun setOnClickListener(listener: MemberListClickListener) {
@@ -40,16 +41,16 @@ class MemberListAdapter() :
             userNameTextView.text = item.name
             userPointTextView.text = String.format(
                 itemView.context.resources.getString(R.string.member_list_user_point),
-                item.navScore
+                item.score
             )
 
-            item.profImageUrl?.let { imagePath ->
+            item.iconUrl?.let { imagePath ->
                 val repository = FirestorageRepository(FirestorageRepository.StorageTypes.USER)
                 val storageUrl = repository.getGSReference(imagePath)
                 Glide.with(itemView)
                     .load(storageUrl)
                     .placeholder(R.drawable.default_person)
-                    .into(holder.imageView)
+                    .into(imageView)
             }
 
             itemView.setOnClickListener {

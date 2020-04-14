@@ -36,6 +36,7 @@ class MemberListActivity : AppCompatActivity() {
         val adapter = MemberListAdapter()
         adapter.setOnClickListener(viewModel)
         membersList.adapter = adapter
+
         val itemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         membersList.addItemDecoration(itemDecoration)
 

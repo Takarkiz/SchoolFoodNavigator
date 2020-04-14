@@ -39,6 +39,10 @@ class ProfileViewModel(
         navigator.toRewardDetail()
     }
 
+    override fun didTapCompanyText() {
+        navigator.toMemberList()
+    }
+
     // LifecycleObserver
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
@@ -56,9 +60,9 @@ class ProfileViewModel(
     private fun updateUserProfile() {
         getUser { user ->
             _userName.value = user.name
-            _userPoint.value = user.navScore
-            _userImageUrl.value = user.profImageUrl
-            _userGradeTitle.value = calculateUserRank(user.navScore).text
+            _userPoint.value = user.score
+            _userImageUrl.value = user.iconUrl
+            _userGradeTitle.value = calculateUserRank(user.score).text
         }
 
         getUserTeamName()

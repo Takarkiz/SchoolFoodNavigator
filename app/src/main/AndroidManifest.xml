@@ -15,7 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".memberList.view.MemberListActivity"></activity>
+        <activity android:name=".memberList.view.MemberListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
         <activity
             android:name=".detailReward.view.DetailRewardActivity"
             android:parentActivityName=".profile.ProfileActivity">

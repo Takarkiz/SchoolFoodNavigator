@@ -65,7 +65,7 @@ class UserAuth(context: Context) {
         return Single.create { emitter ->
             val query = userDB.orderBy("score", Query.Direction.DESCENDING)
             query.addSnapshotListener { querySnapshot, error ->
-                val members = querySnapshot?.documents?.mapNotNull {
+                querySnapshot?.documents?.mapNotNull {
                     val member = it.toObject(UserEntity::class.java)
                     member?.toEntity()
                 }?.let {
@@ -87,8 +87,8 @@ class UserAuth(context: Context) {
                     val user = UserEntity(
                         id = result["id"].toString(),
                         name = result["name"].toString(),
-                        profImageUrl = result["iconUrl"].toString(),
-                        navScore = result["score"].toString().toLong().toInt(),
+                        iconUrl = result["iconUrl"].toString(),
+                        score = result["score"].toString().toLong().toInt(),
                         favList = result["favList"] as List<String>
                     )
 
@@ -217,8 +217,8 @@ class UserAuth(context: Context) {
                         val user = UserEntity(
                             id = uid,
                             name = name,
-                            profImageUrl = url,
-                            navScore = 0,
+                            iconUrl = url,
+                            score = 0,
                             favList = listOf()
                         )
                         uploadUserData(user) { result ->
@@ -237,8 +237,8 @@ class UserAuth(context: Context) {
                 UserEntity(
                     id = uid,
                     name = name,
-                    profImageUrl = null,
-                    navScore = 0,
+                    iconUrl = null,
+                    score = 0,
                     favList = listOf()
                 )
             uploadUserData(user) { result ->
@@ -257,8 +257,8 @@ class UserAuth(context: Context) {
             mapOf(
                 "id" to user.id,
                 "name" to user.name,
-                "iconUrl" to user.profImageUrl,
-                "score" to user.navScore,
+                "iconUrl" to user.iconUrl,
+                "score" to user.score,
                 "favList" to user.favList
             )
         ).addOnSuccessListener {
