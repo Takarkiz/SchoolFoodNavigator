@@ -9,7 +9,7 @@ import com.takhaki.schoolfoodnavigator.Utility.getFileName
 import java.io.File
 import java.io.FileInputStream
 
-class FirestorageRepository(private val filePathScheme: String) {
+class FirestorageRepository(private val filePathScheme: StorageTypes) {
 
     private val storageUrl = "gs://schoolfoodnavigator.appspot.com"
     private val storage = FirebaseStorage.getInstance(storageUrl)
@@ -29,7 +29,7 @@ class FirestorageRepository(private val filePathScheme: String) {
 
         val companyID = CompanyData.getCompanyId(context).toString()
         val fileName = iconUri.getFileName(context) ?: ""
-        val filePath = "${companyID}/${filePathScheme}/${id}/${fileName}"
+        val filePath = "${companyID}/${filePathScheme.path}/${id}/${fileName}"
         val shopImageRef = storage.reference.child(filePath)
 
         val stream = FileInputStream(File(iconUri.path!!))
@@ -43,6 +43,11 @@ class FirestorageRepository(private val filePathScheme: String) {
     }
 
     fun getGSReference(urlPath: String): StorageReference {
-            return storage.getReferenceFromUrl("gs://schoolfoodnavigator.appspot.com/${urlPath}")
+        return storage.getReferenceFromUrl("gs://schoolfoodnavigator.appspot.com/${urlPath}")
+    }
+
+    enum class StorageTypes(val path: String) {
+        SHOP("Shops"),
+        USER("User")
     }
 }

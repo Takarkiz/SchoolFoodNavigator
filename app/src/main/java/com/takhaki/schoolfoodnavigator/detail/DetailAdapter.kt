@@ -14,9 +14,12 @@ import com.takhaki.schoolfoodnavigator.Repository.FirestorageRepository
 import com.takhaki.schoolfoodnavigator.Repository.UserAuth
 import me.zhanghai.android.materialratingbar.MaterialRatingBar
 
-class DetailAdapter(val context: Context, private val userIconClickListener: UserIconClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class DetailAdapter(
+    val context: Context,
+    private val userIconClickListener: UserIconClickListener
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val repository = FirestorageRepository("Shops")
+    private val repository = FirestorageRepository(FirestorageRepository.StorageTypes.SHOP)
     private val DETAIL_VIEW_TYPE = 0
     private val USER_VIEW_TYPE = 1
     private var isFavorite = false
@@ -135,7 +138,7 @@ class DetailAdapter(val context: Context, private val userIconClickListener: Use
                 }
 
                 item.userIcon?.let { url ->
-                    val storage = FirestorageRepository("User")
+                    val storage = FirestorageRepository(FirestorageRepository.StorageTypes.USER)
                     Glide.with(holder.itemView)
                         .load(storage.getGSReference(url))
                         .placeholder(R.drawable.ic_default_user)
@@ -171,7 +174,7 @@ class DetailAdapter(val context: Context, private val userIconClickListener: Use
         val totalRatingSampleBar: MaterialRatingBar = resultItemView.findViewById(R.id.totalRating)
     }
 
-    interface UserIconClickListener{
+    interface UserIconClickListener {
 
         fun onClickIcon(userId: String)
     }

@@ -95,7 +95,7 @@ class ShopInfoRepository(context: Context) {
 
     }
 
-    fun updateEdiedDate(shopId: String) {
+    fun updateEditedDate(shopId: String) {
         shopDB.document(shopId).update("editedAt", FieldValue.serverTimestamp())
     }
 

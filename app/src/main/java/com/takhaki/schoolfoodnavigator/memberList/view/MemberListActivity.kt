@@ -1,16 +1,16 @@
-package com.takhaki.schoolfoodnavigator.detailReward.view
+package com.takhaki.schoolfoodnavigator.memberList.view
 
 import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.takhaki.schoolfoodnavigator.R
-import com.takhaki.schoolfoodnavigator.detailReward.viewModel.DetailRewardViewModel
-import kotlinx.android.synthetic.main.activity_detail_reward.*
+import com.takhaki.schoolfoodnavigator.memberList.view_model.MemberListViewModel
+import kotlinx.android.synthetic.main.activity_member_list.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class DetailRewardActivity : AppCompatActivity() {
+class MemberListActivity : AppCompatActivity() {
 
     companion object {
 
@@ -18,32 +18,32 @@ class DetailRewardActivity : AppCompatActivity() {
          * 遷移用のインテントを作成する
          */
         fun makeIntent(activity: AppCompatActivity): Intent {
-            return Intent(activity, DetailRewardActivity::class.java).apply {
-            }
+            return Intent(activity, MemberListActivity::class.java)
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detail_reward)
+        setContentView(R.layout.activity_member_list)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
-        supportActionBar?.title = resources.getString(R.string.detail_reward_title)
-
-        val adapter = RewardListAdapter()
-        recyclerView.adapter = adapter
+        supportActionBar?.title = resources.getString(R.string.member_list_title)
 
         viewModel.activity(this)
         lifecycle.addObserver(viewModel)
 
+        val adapter = MemberListAdapter()
+        adapter.setOnClickListener(viewModel)
+        membersList.adapter = adapter
         val itemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-        recyclerView.addItemDecoration(itemDecoration)
+        membersList.addItemDecoration(itemDecoration)
 
-        viewModel.userGrade.observe({ lifecycle }, {
-            adapter.setUserGrade(it)
+
+        viewModel.memberList.observe({ lifecycle }, {
+            adapter.setMemberList(it)
         })
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -58,5 +58,5 @@ class DetailRewardActivity : AppCompatActivity() {
 
     // Private
 
-    private val viewModel: DetailRewardViewModel by viewModel()
+    private val viewModel: MemberListViewModel by viewModel()
 }

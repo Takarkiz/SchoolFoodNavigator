@@ -68,7 +68,7 @@ class AssessmentViewModel(
         repository.addAssessment(assessment) { result ->
             if (result.isSuccess) {
                 try {
-                    shopRepository.updateEdiedDate(shopId)
+                    shopRepository.updateEditedDate(shopId)
                     auth.addPointAssessment()
                     finishUploadHandler(Result.success(result.getOrThrow()))
                 } catch (e: Error) {

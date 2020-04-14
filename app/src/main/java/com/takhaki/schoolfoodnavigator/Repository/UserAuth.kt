@@ -7,9 +7,11 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.storage.StorageReference
 import com.takhaki.schoolfoodnavigator.Model.CompanyData
 import com.takhaki.schoolfoodnavigator.Model.UserEntity
+import io.reactivex.Single
 
 class UserAuth(context: Context) {
 
@@ -44,7 +46,7 @@ class UserAuth(context: Context) {
         context: Context,
         handler: (Result<String>) -> Unit
     ) {
-        val uid = currentUser?.uid?: return
+        val uid = currentUser?.uid ?: return
 
         createUserAccount(uid, name, iconUri, context) { result ->
             if (result.isSuccess) {
@@ -54,6 +56,24 @@ class UserAuth(context: Context) {
             } else {
                 result.exceptionOrNull()?.let { e ->
                     handler(Result.failure(e))
+                }
+            }
+        }
+    }
+
+    fun fetchAllUser(): Single<List<UserEntity>> {
+        return Single.create { emitter ->
+            val query = userDB.orderBy("score", Query.Direction.DESCENDING)
+            query.addSnapshotListener { querySnapshot, error ->
+                val members = querySnapshot?.documents?.mapNotNull {
+                    val member = it.toObject(UserEntity::class.java)
+                    member?.toEntity()
+                }?.let {
+                    emitter.onSuccess(it)
+                }
+
+                if (error != null) {
+                    emitter.onError(error)
                 }
             }
         }
@@ -103,7 +123,7 @@ class UserAuth(context: Context) {
             if (task.isSuccessful) {
                 task.result?.let {
                     val path = it["iconUrl"].toString()
-                    val storage = FirestorageRepository("User")
+                    val storage = FirestorageRepository(FirestorageRepository.StorageTypes.USER)
                     handler(Result.success(storage.getGSReference(path)))
                 }
             }
@@ -184,7 +204,7 @@ class UserAuth(context: Context) {
         context: Context,
         handler: (Result<String>) -> Unit
     ) {
-        val repository = FirestorageRepository("Users")
+        val repository = FirestorageRepository(FirestorageRepository.StorageTypes.USER)
 
         iconUri?.let { uri ->
             repository.uploadUserPhoto(uid, uri, context) { result ->

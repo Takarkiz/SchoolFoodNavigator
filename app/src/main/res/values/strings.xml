@@ -54,4 +54,7 @@
     <string name="detail_reward_title">称号について</string>
     <string name="detail_reward_user_rank_title">あなたのランク</string>
 
+    <string name="member_list_title">メンバー一覧</string>
+    <string name="member_list_user_point">%1$dポイント</string>
+
 </resources>
