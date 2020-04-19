@@ -5,7 +5,7 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.takhaki.schoolfoodnavigator.Model.CompanyData
 
-class CompanyRepository(val context: Context) {
+class CompanyRepository(private val context: Context) {
 
     private val companyDB = FirebaseFirestore.getInstance().collection("Team")
 

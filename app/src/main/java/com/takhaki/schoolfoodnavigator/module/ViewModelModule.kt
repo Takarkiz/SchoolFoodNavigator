@@ -8,6 +8,7 @@ import com.takhaki.schoolfoodnavigator.mainList.ShopListViewModel
 import com.takhaki.schoolfoodnavigator.mainList.ShopListViewModelBase
 import com.takhaki.schoolfoodnavigator.memberList.view_model.MemberListViewModel
 import com.takhaki.schoolfoodnavigator.profile.ProfileViewModel
+import com.takhaki.schoolfoodnavigator.qrcode.view_model.QRCodeViewModel
 import com.takhaki.schoolfoodnavigator.register.CreateRoomViewModel
 import com.takhaki.schoolfoodnavigator.register.IconRegisterViewModel
 import com.takhaki.schoolfoodnavigator.register.NameRegisterViewModel
@@ -34,6 +35,8 @@ val viewModelModule = module(override = true) {
     }
 
     viewModel { MemberListViewModel(androidApplication(), get()) }
+
+    viewModel { QRCodeViewModel(androidApplication(), get()) }
 
     viewModel { DetailRewardViewModel(androidApplication()) }
 

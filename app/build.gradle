@@ -13,7 +13,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.takhaki.schoolfoodnavigator"
-        minSdkVersion 23
+        minSdkVersion 24
         targetSdkVersion 28
         versionCode 3
         versionName "1.2"
@@ -61,6 +61,9 @@ dependencies {
 
     implementation 'com.firebaseui:firebase-ui-storage:4.3.2'
 
+    // QRCode
+    implementation 'com.journeyapps:zxing-android-embedded:4.1.0'
+
     //Material Design
     def material_design_version = "1.1.0"
     implementation "com.google.android.material:material:$material_design_version"
@@ -92,7 +95,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     // Navigation
-    def navigationVersion = "2.2.1"
+    def navigationVersion = "2.2.2"
     implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
 

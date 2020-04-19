@@ -29,6 +29,10 @@ class MemberListViewModel(
         navigator.weakActivity = WeakReference(activity)
     }
 
+    override fun didTapAddMember() {
+        navigator.toAddMemberView()
+    }
+
     // MemberListClickListener
 
     override fun onClickMember(userId: String) {

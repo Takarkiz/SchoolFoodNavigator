@@ -33,11 +33,19 @@ interface MemberListViewModelContract {
     /**
      * メンバーの追加ボタンをタップした時
      */
-    //fun didTapAddMember()
+    fun didTapAddMember()
 
 }
 
 abstract class MemberListNavigatorAbstract : BaseNavigator() {
 
+    /**
+     * メンバーのプロフィールページ
+     */
     abstract fun toMemberProfile(id: String)
+
+    /**
+     * メンバーの追加ページ
+     */
+    abstract fun toAddMemberView()
 }

@@ -45,6 +45,10 @@ class MemberListActivity : AppCompatActivity() {
             adapter.setMemberList(it)
         })
 
+        addMemberFab.setOnClickListener {
+            viewModel.didTapAddMember()
+        }
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

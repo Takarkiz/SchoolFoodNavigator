@@ -12,6 +12,8 @@ import com.takhaki.schoolfoodnavigator.memberList.MemberListNavigatorAbstract
 import com.takhaki.schoolfoodnavigator.memberList.navigator.MemberListNavigator
 import com.takhaki.schoolfoodnavigator.profile.ProfileNavigator
 import com.takhaki.schoolfoodnavigator.profile.ProfileNavigatorAbstract
+import com.takhaki.schoolfoodnavigator.qrcode.QRCodeNavigatorAbstract
+import com.takhaki.schoolfoodnavigator.qrcode.navigator.QRCodeNavigator
 import org.koin.dsl.module
 
 val navigatorModule = module(override = true) {
@@ -27,4 +29,6 @@ val navigatorModule = module(override = true) {
     factory<ProfileNavigatorAbstract> { ProfileNavigator() }
 
     factory<MemberListNavigatorAbstract> { MemberListNavigator() }
+
+    factory<QRCodeNavigatorAbstract> { QRCodeNavigator() }
 }
