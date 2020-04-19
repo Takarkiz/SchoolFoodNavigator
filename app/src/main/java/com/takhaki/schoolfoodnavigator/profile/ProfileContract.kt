@@ -61,6 +61,11 @@ interface ProfileViewModelContract {
      */
     fun didTapCompanyText()
 
+    /**
+     * ユーザーを削除
+     */
+    fun didTapDeleteUser()
+
 }
 
 /**
@@ -77,4 +82,9 @@ abstract class ProfileNavigatorAbstract : BaseNavigator() {
      * メンバー一覧へ遷移
      */
     abstract fun toMemberList()
+
+    /**
+     * 最初の画面に戻る
+     */
+    abstract fun toFirstView()
 }

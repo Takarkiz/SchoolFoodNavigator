@@ -62,5 +62,6 @@
     <string name="qrcode_error_show">QRコードの表示に失敗しました</string>
     <string name="member_list_add_member_fab_text">メンバーを追加</string>
     <string name="qrcode_description_text">相手がこのQRコードを読み取る\nもしくは登録コードを入力することで\nチームに参加することができます</string>
+    <string name="register_create_photo_qr">QRコードを読み取る</string>
 
 </resources>

@@ -23,8 +23,16 @@ class CompanyData {
         // チームIDを返す(もしなければNullが返る)
         fun getCompanyId(context: Context): Int {
             val pref = context.getSharedPreferences("Company", Context.MODE_PRIVATE)
-            val id = pref.getInt("ID", 0)
-            return id
+            return pref.getInt("ID", 0)
+        }
+
+        // 端末のチームIDを削除する
+        fun deleteCompanyId(context: Context) {
+            val pref = context.getSharedPreferences("Company", Context.MODE_PRIVATE)
+            pref.edit {
+                remove("ID")
+                commit()
+            }
         }
     }
 }

@@ -43,6 +43,11 @@ class ProfileViewModel(
         navigator.toMemberList()
     }
 
+    override fun didTapDeleteUser() {
+        CompanyData.deleteCompanyId(getApplication())
+        navigator.toFirstView()
+    }
+
     // LifecycleObserver
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)

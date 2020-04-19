@@ -5,16 +5,12 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.NavUtils
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
-import com.google.firebase.storage.StorageReference
-import com.takhaki.schoolfoodnavigator.DataBinderMapperImpl
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.Repository.FirestorageRepository
-import com.takhaki.schoolfoodnavigator.Repository.UserAuth
 import com.takhaki.schoolfoodnavigator.databinding.ActivityProfileBinding
 import kotlinx.android.synthetic.main.activity_profile.*
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -69,8 +65,17 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_profile, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item?.itemId) {
+            R.id.menu_item_profile_delete -> {
+                deleteUser()
+                true
+            }
             android.R.id.home -> {
                 finish()
                 true
@@ -84,4 +89,15 @@ class ProfileActivity : AppCompatActivity() {
         parametersOf(uid)
     }
     private lateinit var binding: ActivityProfileBinding
+
+    private fun deleteUser() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("ユーザー情報を削除します")
+            .setMessage("削除されたデータには2度とアクセスできませんがよろしいですか？")
+            .setPositiveButton("はい") { dialog, which ->
+                viewModel.didTapDeleteUser()
+            }
+            .setNegativeButton("キャンセル", null)
+            .show()
+    }
 }

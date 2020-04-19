@@ -11,6 +11,7 @@ import com.takhaki.schoolfoodnavigator.MainActivity
 import com.takhaki.schoolfoodnavigator.Model.CompanyData
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.Repository.UserAuth
+import kotlinx.android.synthetic.main.fragment_create_room.*
 import kotlinx.android.synthetic.main.fragment_start.*
 
 
@@ -51,7 +52,8 @@ class StartFragment : Fragment() {
     }
 
     private fun checkLoginUser(): Boolean {
-        val auth = UserAuth(context!!)
+        val context = requireContext()
+        val auth = UserAuth(context)
         return auth.currentUser != null
     }
 
