@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
 import com.takhaki.schoolfoodnavigator.BaseNavigator
-import com.takhaki.schoolfoodnavigator.Repository.AssessmentRespositoryContract
 
 abstract class AssessmentViewModelBase(
     application: Application

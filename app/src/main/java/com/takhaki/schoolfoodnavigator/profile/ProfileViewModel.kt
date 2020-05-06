@@ -8,8 +8,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.OnLifecycleEvent
 import com.takhaki.schoolfoodnavigator.Model.CompanyData
 import com.takhaki.schoolfoodnavigator.Model.UserEntity
-import com.takhaki.schoolfoodnavigator.Repository.CompanyRepository
-import com.takhaki.schoolfoodnavigator.Repository.UserAuth
+import com.takhaki.schoolfoodnavigator.repository.CompanyRepository
+import com.takhaki.schoolfoodnavigator.repository.UserAuth
 import com.takhaki.schoolfoodnavigator.Utility.RewardUtil.Companion.calculateUserRank
 import java.lang.ref.WeakReference
 

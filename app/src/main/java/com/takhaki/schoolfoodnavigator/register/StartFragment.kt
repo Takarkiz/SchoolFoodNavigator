@@ -10,8 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.takhaki.schoolfoodnavigator.MainActivity
 import com.takhaki.schoolfoodnavigator.Model.CompanyData
 import com.takhaki.schoolfoodnavigator.R
-import com.takhaki.schoolfoodnavigator.Repository.UserAuth
-import kotlinx.android.synthetic.main.fragment_create_room.*
+import com.takhaki.schoolfoodnavigator.repository.UserAuth
 import kotlinx.android.synthetic.main.fragment_start.*
 
 

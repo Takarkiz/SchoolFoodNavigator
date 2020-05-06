@@ -9,9 +9,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.OnLifecycleEvent
 import com.takhaki.schoolfoodnavigator.DefaultSetting
 import com.takhaki.schoolfoodnavigator.Model.ShopEntity
-import com.takhaki.schoolfoodnavigator.Repository.AssessmentRepository
-import com.takhaki.schoolfoodnavigator.Repository.ShopInfoRepository
-import com.takhaki.schoolfoodnavigator.Repository.UserAuth
+import com.takhaki.schoolfoodnavigator.repository.AssessmentRepository
+import com.takhaki.schoolfoodnavigator.repository.ShopInfoRepository
+import com.takhaki.schoolfoodnavigator.repository.UserAuth
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy

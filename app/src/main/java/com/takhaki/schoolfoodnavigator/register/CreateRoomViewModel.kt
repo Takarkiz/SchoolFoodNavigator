@@ -5,8 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.takhaki.schoolfoodnavigator.Repository.CompanyRepository
-import com.takhaki.schoolfoodnavigator.Repository.UserAuth
+import com.takhaki.schoolfoodnavigator.repository.CompanyRepository
+import com.takhaki.schoolfoodnavigator.repository.UserAuth
 
 class CreateRoomViewModel(application: Application) : AndroidViewModel(application) {
 

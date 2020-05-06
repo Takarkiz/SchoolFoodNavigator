@@ -5,13 +5,12 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.takhaki.schoolfoodnavigator.Model.ShopEntity
-import com.takhaki.schoolfoodnavigator.Repository.ShopInfoRepository
-import com.takhaki.schoolfoodnavigator.Repository.UserAuth
+import com.takhaki.schoolfoodnavigator.repository.ShopInfoRepository
+import com.takhaki.schoolfoodnavigator.repository.UserAuth
 import java.lang.ref.WeakReference
 import java.util.*
 

@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.OnLifecycleEvent
 import com.takhaki.schoolfoodnavigator.Model.UserEntity
-import com.takhaki.schoolfoodnavigator.Repository.UserAuth
+import com.takhaki.schoolfoodnavigator.repository.UserAuth
 import com.takhaki.schoolfoodnavigator.memberList.MemberListNavigatorAbstract
 import com.takhaki.schoolfoodnavigator.memberList.MemberListViewModelBase
 import io.reactivex.disposables.CompositeDisposable

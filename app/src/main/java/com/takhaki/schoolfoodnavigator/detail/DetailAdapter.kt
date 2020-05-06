@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.takhaki.schoolfoodnavigator.R
-import com.takhaki.schoolfoodnavigator.Repository.FirestorageRepository
-import com.takhaki.schoolfoodnavigator.Repository.UserAuth
+import com.takhaki.schoolfoodnavigator.repository.FirestorageRepository
+import com.takhaki.schoolfoodnavigator.repository.UserAuth
 import me.zhanghai.android.materialratingbar.MaterialRatingBar
 
 class DetailAdapter(

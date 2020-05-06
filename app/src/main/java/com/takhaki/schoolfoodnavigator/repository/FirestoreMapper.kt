@@ -1,4 +1,4 @@
-package com.takhaki.schoolfoodnavigator.Repository
+package com.takhaki.schoolfoodnavigator.repository
 
 import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
 import com.takhaki.schoolfoodnavigator.Model.ShopEntity

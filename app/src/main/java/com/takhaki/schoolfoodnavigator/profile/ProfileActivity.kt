@@ -10,7 +10,7 @@ import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.takhaki.schoolfoodnavigator.R
-import com.takhaki.schoolfoodnavigator.Repository.FirestorageRepository
+import com.takhaki.schoolfoodnavigator.repository.FirestorageRepository
 import com.takhaki.schoolfoodnavigator.databinding.ActivityProfileBinding
 import kotlinx.android.synthetic.main.activity_profile.*
 import org.koin.android.viewmodel.ext.android.viewModel

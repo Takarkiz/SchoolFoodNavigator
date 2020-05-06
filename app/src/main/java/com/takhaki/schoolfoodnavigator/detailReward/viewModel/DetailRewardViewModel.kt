@@ -6,7 +6,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.OnLifecycleEvent
-import com.takhaki.schoolfoodnavigator.Repository.UserAuth
+import com.takhaki.schoolfoodnavigator.repository.UserAuth
 import com.takhaki.schoolfoodnavigator.Utility.RewardUtil
 import com.takhaki.schoolfoodnavigator.detailReward.DetailRewardViewModelBase
 

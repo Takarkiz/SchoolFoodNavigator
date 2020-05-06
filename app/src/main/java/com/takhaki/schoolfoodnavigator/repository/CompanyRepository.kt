@@ -1,4 +1,4 @@
-package com.takhaki.schoolfoodnavigator.Repository
+package com.takhaki.schoolfoodnavigator.repository
 
 import android.content.Context
 import com.google.firebase.firestore.FieldValue

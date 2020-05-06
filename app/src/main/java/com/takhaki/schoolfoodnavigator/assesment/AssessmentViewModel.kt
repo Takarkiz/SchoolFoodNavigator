@@ -5,9 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
-import com.takhaki.schoolfoodnavigator.Repository.AssessmentRepository
-import com.takhaki.schoolfoodnavigator.Repository.ShopInfoRepository
-import com.takhaki.schoolfoodnavigator.Repository.UserAuth
+import com.takhaki.schoolfoodnavigator.repository.AssessmentRepository
+import com.takhaki.schoolfoodnavigator.repository.ShopInfoRepository
+import com.takhaki.schoolfoodnavigator.repository.UserAuth
 import java.lang.ref.WeakReference
 
 class AssessmentViewModel(

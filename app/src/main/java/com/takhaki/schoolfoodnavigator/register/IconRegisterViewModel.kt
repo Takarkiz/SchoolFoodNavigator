@@ -5,7 +5,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.*
 import com.takhaki.schoolfoodnavigator.Model.CompanyData
-import com.takhaki.schoolfoodnavigator.Repository.UserAuth
+import com.takhaki.schoolfoodnavigator.repository.UserAuth
 
 class IconRegisterViewModel(application: Application) : AndroidViewModel(application) {
 

@@ -5,12 +5,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
-import com.takhaki.schoolfoodnavigator.Repository.UserAuth
+import com.takhaki.schoolfoodnavigator.repository.UserAuth
 import com.takhaki.schoolfoodnavigator.mainList.MainListFragment
-import com.takhaki.schoolfoodnavigator.mainList.ShopListViewModel
 import com.takhaki.schoolfoodnavigator.mainList.ShopListViewModelBase
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.viewmodel.ext.android.viewModel

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.takhaki.schoolfoodnavigator.Model.UserEntity
 import com.takhaki.schoolfoodnavigator.R
-import com.takhaki.schoolfoodnavigator.Repository.FirestorageRepository
+import com.takhaki.schoolfoodnavigator.repository.FirestorageRepository
 
 class MemberListAdapter :
     RecyclerView.Adapter<MemberListViewHolder>() {
