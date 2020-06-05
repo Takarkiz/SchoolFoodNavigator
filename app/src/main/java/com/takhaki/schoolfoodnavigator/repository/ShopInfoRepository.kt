@@ -7,58 +7,52 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
+import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
 import com.takhaki.schoolfoodnavigator.Model.CompanyData
 import com.takhaki.schoolfoodnavigator.Model.ShopEntity
 import com.takhaki.schoolfoodnavigator.Utility.getFileName
+import com.takhaki.schoolfoodnavigator.detail.AboutShopDetailModel
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
 import io.reactivex.Single
+import io.reactivex.rxkotlin.Flowables
+import io.reactivex.rxkotlin.subscribeBy
+import timber.log.Timber
 import java.io.File
 import java.io.FileInputStream
 
-class ShopInfoRepository(context: Context) {
+class ShopInfoRepository(context: Context) : ShopRepositoryContract {
 
-    private val shopDB: CollectionReference
-    private val storage = FirebaseStorage.getInstance("gs://schoolfoodnavigator.appspot.com")
 
-    init {
-        val id = CompanyData.getCompanyId(context)
-        shopDB = FirebaseFirestore.getInstance().collection("Team").document(id.toString())
-            .collection("Shops")
-    }
+    override fun getShops(): Flowable<List<ShopEntity>> =
+        Flowable.create({ emitter ->
+            val query = shopDB.orderBy("editedAt", Query.Direction.DESCENDING)
+            query.get()
+                .addOnSuccessListener { snapshot ->
+                    val shops = snapshot.documents.mapNotNull {
+                        val shop = it.toObject(ShopEntity::class.java)
+                        shop?.toEntity()
+                    }
+                    emitter.onNext(shops)
+                }
+                .addOnFailureListener { e ->
+                    emitter.tryOnError(e)
+                }
+        }, BackpressureStrategy.LATEST)
 
-    // お店の登録->結果としてショップIDを返す
-    fun registerShop(
+    override fun registerShop(
         shop: ShopEntity,
-        imageUri: Uri?,
+        imageUrl: Uri?,
         context: Context,
         handler: (Result<String>) -> Unit
     ) {
-
-        if (imageUri == null) {
-
-            val data = inverseMapping(shop, null)
-
-            shopDB.document(shop.id).set(data)
-                .addOnSuccessListener {
-                    handler(Result.success(shop.id))
-                }
-                .addOnFailureListener { error ->
-                    handler(Result.failure(error))
-                }
+        if (imageUrl == null) {
+            createNewShop(shop, null, handler)
         } else {
-
-            photoUpload(shop.id, imageUri, context) { photoResult ->
+            photoUpload(shop.id, imageUrl, context) { photoResult ->
                 if (photoResult.isSuccess) {
-
                     photoResult.getOrNull()?.let { filePath ->
-                        val data = inverseMapping(shop, filePath)
-
-                        shopDB.document(shop.id).set(data)
-                            .addOnSuccessListener {
-                                handler(Result.success(shop.id))
-                            }
-                            .addOnFailureListener { error ->
-                                handler(Result.failure(error))
-                            }
+                        createNewShop(shop, filePath, handler)
                     }
                 } else {
                     photoResult.exceptionOrNull()?.let { error ->
@@ -69,22 +63,43 @@ class ShopInfoRepository(context: Context) {
         }
     }
 
+    override fun shop(id: String): Flowable<ShopEntity> {
+        return shopEntity(id).map { it.toEntity() }
+    }
 
-    // IDから一つのショップ情報を取得する
-    fun loadShop(shopID: String): Single<ShopEntity> {
-        return Single.create { emitter ->
-            shopDB.document(shopID).get()
-                .addOnSuccessListener { snapshot ->
-                    val shop = snapshot.toObject(ShopEntity::class.java)
-                    shop?.toEntity()?.let {
-                        emitter.onSuccess(it)
-                    }
-                }
-                .addOnFailureListener { e ->
-                    emitter.tryOnError(e)
-                }
+    override fun assessments(id: String): Flowable<List<AssessmentEntity>> {
+        return assessments(id).map { reviews ->
+            reviews.map { review ->
+                review.toEntity()
+            }
         }
     }
+
+    override fun updateEditedDate(shopId: String) {
+        shopDB.document(shopId)
+            .update("editedAt", FieldValue.serverTimestamp())
+            .addOnFailureListener {
+                Timber.e(it)
+            }
+    }
+
+
+    private fun createNewShop(
+        shop: ShopEntity,
+        imagePath: String?,
+        handler: (Result<String>) -> Unit
+    ) {
+        val data = inverseMapping(shop, imagePath)
+
+        shopDB.document(shop.id).set(data)
+            .addOnSuccessListener {
+                handler(Result.success(shop.id))
+            }
+            .addOnFailureListener { error ->
+                handler(Result.failure(error))
+            }
+    }
+
 
     // お店情報の削除
     fun deleteShop(shopID: String) {
@@ -95,8 +110,62 @@ class ShopInfoRepository(context: Context) {
 
     }
 
-    fun updateEditedDate(shopId: String) {
-        shopDB.document(shopId).update("editedAt", FieldValue.serverTimestamp())
+
+    private val shopDB: CollectionReference
+    private val storage = FirebaseStorage.getInstance("gs://schoolfoodnavigator.appspot.com")
+
+    init {
+        val id = CompanyData.getCompanyId(context)
+        shopDB = FirebaseFirestore.getInstance().collection("Team").document(id.toString())
+            .collection("Shops")
+    }
+
+    private fun assessmentColRef(id: String) = shopDB.document(id).collection("comment")
+
+
+    private fun shopEntity(id: String): Flowable<ShopEntity> =
+        Flowable.create({ emitter ->
+            val ref = shopDB.document(id)
+            val reg = ref.addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    Timber.e(error, ref.path)
+                    return@addSnapshotListener
+                }
+
+                if (snapshot == null) {
+                    Timber.w("%s is missing", ref.path)
+                    return@addSnapshotListener
+                }
+
+                val shop = snapshot.toObject(ShopEntity::class.java)
+                if (shop == null) {
+                    Timber.w("%s is missing", ref.path)
+                    return@addSnapshotListener
+                }
+
+                emitter.onNext(shop)
+            }
+            emitter.setCancellable { reg.remove() }
+        }, BackpressureStrategy.LATEST)
+
+    private fun assessment(id: String): Flowable<List<AssessmentEntity>> {
+
+        return Flowable.create({ emitter ->
+            val reg = assessmentColRef(id).addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    return@addSnapshotListener
+                }
+
+                if (snapshot == null) {
+                    return@addSnapshotListener
+                }
+
+                val shopAssessment = snapshot.toObjects(AssessmentEntity::class.java)
+
+                emitter.onNext(shopAssessment)
+            }
+            emitter.setCancellable { reg.remove() }
+        }, BackpressureStrategy.LATEST)
     }
 
     private fun photoUpload(
@@ -110,8 +179,7 @@ class ShopInfoRepository(context: Context) {
         val filePath = "${companyID}/Shops/${shopID}/${fileName}"
         val shopImageRef = storage.reference.child(filePath)
 
-        // TODO - ここの強制unwrapよくない
-        val path = imageUri.path?: return
+        val path = imageUri.path ?: return
         val stream = FileInputStream(File(path))
         val uploadTask = shopImageRef.putStream(stream)
         uploadTask.addOnFailureListener { error ->

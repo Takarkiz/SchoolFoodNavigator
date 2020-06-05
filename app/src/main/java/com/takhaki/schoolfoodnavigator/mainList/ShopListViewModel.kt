@@ -92,7 +92,7 @@ class ShopListViewModel(
     private fun getShopAssessments(shop: ShopEntity) {
 
         val repository = AssessmentRepository(shop.id, appContext)
-        repository.fetchAllAssesment()
+        repository.fetchAllAssessment()
             .observeOn(Schedulers.computation())
             .subscribeBy(
                 onSuccess = { assessments ->

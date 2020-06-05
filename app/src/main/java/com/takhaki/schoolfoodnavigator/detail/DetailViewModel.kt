@@ -71,7 +71,7 @@ class DetailViewModel(
     private fun loadShopDetail() {
         val auth = UserAuth(getApplication())
         val repository = AssessmentRepository(shopId, getApplication())
-        repository.fetchAllAssesment()
+        repository.fetchAllAssessment()
             .subscribeBy(onSuccess = { results ->
                 results.forEach { result ->
                     if (result.user == auth.currentUser?.uid) _hasCurrentUserComment.value = true
@@ -104,22 +104,20 @@ class DetailViewModel(
     }
 
     private fun createComment(gAve: Float, dAve: Float, cAve: Float) {
-        shopRepository.loadShop(shopId)
-            .subscribeBy(
-                onSuccess = { shop ->
-                    val shopDetailModel = AboutShopDetailModel(
-                        id = shop.id,
-                        name = shop.name,
-                        genre = shop.genre,
-                        goodScore = gAve,
-                        distance = dAve,
-                        cheep = cAve,
-                        score = (gAve + dAve + cAve) / 3,
-                        imageUrl = if (shop.images.isNotEmpty()) shop.images[0] else null
-                    )
-                    _shopDetail.value = shopDetailModel
-                }
-            ).addTo(disposable)
+        shopRepository.shop(shopId)
+            .subscribe { shop ->
+                val shopDetailModel = AboutShopDetailModel(
+                    id = shop.id,
+                    name = shop.name,
+                    genre = shop.genre,
+                    goodScore = gAve,
+                    distance = dAve,
+                    cheep = cAve,
+                    score = (gAve + dAve + cAve) / 3,
+                    imageUrl = if (shop.images.isNotEmpty()) shop.images[0] else null
+                )
+                _shopDetail.value = shopDetailModel
+            }.addTo(disposable)
     }
 
 

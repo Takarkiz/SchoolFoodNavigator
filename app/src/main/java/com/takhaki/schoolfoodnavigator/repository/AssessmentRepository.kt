@@ -18,7 +18,7 @@ class AssessmentRepository(shopId: String, context: Context) {
             .collection("comment")
     }
 
-    fun fetchAllAssesment(): Single<List<AssessmentEntity>> {
+    fun fetchAllAssessment(): Single<List<AssessmentEntity>> {
         return Single.create { emitter ->
             collectionRef.get()
                 .addOnSuccessListener { snapshot ->

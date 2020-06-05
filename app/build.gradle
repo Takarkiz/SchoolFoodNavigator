@@ -115,6 +115,9 @@ dependencies {
 
     implementation 'com.tapadoo.android:alerter:1.0.6'
 
+    // Timber
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+
     // Koin
     def koin_version = "2.1.5"
     implementation "org.koin:koin-core:$koin_version"
