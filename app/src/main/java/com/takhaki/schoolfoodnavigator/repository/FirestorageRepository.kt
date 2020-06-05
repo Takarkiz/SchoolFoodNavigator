@@ -9,45 +9,54 @@ import com.takhaki.schoolfoodnavigator.Utility.getFileName
 import java.io.File
 import java.io.FileInputStream
 
-class FirestorageRepository(private val filePathScheme: StorageTypes) {
+class FirestorageRepository {
 
-    private val storageUrl = "gs://schoolfoodnavigator.appspot.com"
-    private val storage = FirebaseStorage.getInstance(storageUrl)
+    companion object {
+        private val storageUrl = "gs://schoolfoodnavigator.appspot.com"
+        private val storage = FirebaseStorage.getInstance(storageUrl)
+
+        fun getGSReference(url: String): StorageReference {
+            return if (url.contains("appspot.com")) {
+                storage.getReferenceFromUrl(url)
+            } else {
+                // 前のバージョンの対応
+                storage.getReferenceFromUrl("$storageUrl/$url")
+            }
+        }
+    }
 
     /**
      * ユーザーアイコンをFirestorageにアップロードする
      * @param id       ユーザーを識別するID
-     * @param iconUri   端末内の画像の参照を示すUri
+     * @param imageUri   端末内の画像の参照を示すUri
      * @param handler   Firestorage上の画像URLを返す
      */
     fun uploadUserPhoto(
         id: String,
-        iconUri: Uri,
+        imageUri: Uri,
+        filePathScheme: StorageTypes,
         context: Context,
         handler: (Result<String>) -> Unit
     ) {
 
         val companyID = CompanyData.getCompanyId(context).toString()
-        val fileName = iconUri.getFileName(context) ?: ""
+        val fileName = imageUri.getFileName(context) ?: ""
         val filePath = "${companyID}/${filePathScheme.path}/${id}/${fileName}"
         val shopImageRef = storage.reference.child(filePath)
 
-        val stream = FileInputStream(File(iconUri.path!!))
+        val stream = FileInputStream(File(imageUri.path!!))
         val uploadTask = shopImageRef.putStream(stream)
         uploadTask.addOnFailureListener { error ->
             handler(Result.failure(error))
-
         }.addOnSuccessListener {
-            handler(Result.success(filePath))
+            val url = "$storageUrl/$filePath"
+            handler(Result.success(url))
         }
     }
+}
 
-    fun getGSReference(urlPath: String): StorageReference {
-        return storage.getReferenceFromUrl("gs://schoolfoodnavigator.appspot.com/${urlPath}")
-    }
 
-    enum class StorageTypes(val path: String) {
-        SHOP("Shops"),
-        USER("User")
-    }
+enum class StorageTypes(val path: String) {
+    SHOP("Shops"),
+    USER("User")
 }

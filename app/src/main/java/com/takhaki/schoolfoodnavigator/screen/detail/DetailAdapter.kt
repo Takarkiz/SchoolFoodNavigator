@@ -19,7 +19,6 @@ class DetailAdapter(
     private val userIconClickListener: UserIconClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val repository = FirestorageRepository(FirestorageRepository.StorageTypes.SHOP)
     private val DETAIL_VIEW_TYPE = 0
     private val USER_VIEW_TYPE = 1
     private var isFavorite = false
@@ -72,7 +71,7 @@ class DetailAdapter(
             DETAIL_VIEW_TYPE -> {
                 val shopViewHolder = ShopDetailViewHolder(holder.itemView)
                 dataAboutShop.imageUrl?.let { url ->
-                    val imageRef = repository.getGSReference(url)
+                    val imageRef = FirestorageRepository.getGSReference(url)
                     Glide.with(holder.itemView)
                         .load(imageRef)
                         .placeholder(R.drawable.ic_add_shop_mall)
@@ -138,9 +137,8 @@ class DetailAdapter(
                 }
 
                 item.userIcon?.let { url ->
-                    val storage = FirestorageRepository(FirestorageRepository.StorageTypes.USER)
                     Glide.with(holder.itemView)
-                        .load(storage.getGSReference(url))
+                        .load(FirestorageRepository.getGSReference(url))
                         .placeholder(R.drawable.ic_default_user)
                         .into(commentHolder.iconImageView)
                 }

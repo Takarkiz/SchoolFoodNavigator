@@ -123,8 +123,7 @@ class UserAuth(context: Context) {
             if (task.isSuccessful) {
                 task.result?.let {
                     val path = it["iconUrl"].toString()
-                    val storage = FirestorageRepository(FirestorageRepository.StorageTypes.USER)
-                    handler(Result.success(storage.getGSReference(path)))
+                    handler(Result.success(FirestorageRepository.getGSReference(path)))
                 }
             }
         }.addOnFailureListener { e ->
@@ -204,10 +203,10 @@ class UserAuth(context: Context) {
         context: Context,
         handler: (Result<String>) -> Unit
     ) {
-        val repository = FirestorageRepository(FirestorageRepository.StorageTypes.USER)
+        val repository = FirestorageRepository()
 
         iconUri?.let { uri ->
-            repository.uploadUserPhoto(uid, uri, context) { result ->
+            repository.uploadUserPhoto(uid, uri, StorageTypes.USER, context) { result ->
                 if (result.isFailure) {
                     result.exceptionOrNull()?.let {
                         handler(Result.failure(it))

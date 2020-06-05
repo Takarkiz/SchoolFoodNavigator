@@ -13,7 +13,6 @@ import me.zhanghai.android.materialratingbar.MaterialRatingBar
 
 class ShopListAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
 
-    private val repository = FirestorageRepository(FirestorageRepository.StorageTypes.SHOP)
     private lateinit var listener: OnItemClickListener
     var data = listOf<ShopListItemModel>()
         set(value) {
@@ -42,7 +41,7 @@ class ShopListAdapter : RecyclerView.Adapter<ShopItemViewHolder>() {
         holder.scoreTextView.text = String.format("%1$.1f", item.score)
         item.imageUrl?.let { url ->
             Glide.with(holder.itemView)
-                .load(repository.getGSReference(url))
+                .load(FirestorageRepository.getGSReference(url))
                 .placeholder(R.drawable.ic_add_shop_mall)
                 .into(holder.shopImageView)
         }

@@ -10,8 +10,9 @@ import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.takhaki.schoolfoodnavigator.R
-import com.takhaki.schoolfoodnavigator.repository.FirestorageRepository
 import com.takhaki.schoolfoodnavigator.databinding.ActivityProfileBinding
+import com.takhaki.schoolfoodnavigator.repository.FirestorageRepository
+import com.takhaki.schoolfoodnavigator.repository.StorageTypes
 import kotlinx.android.synthetic.main.activity_profile.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -49,9 +50,8 @@ class ProfileActivity : AppCompatActivity() {
         lifecycle.addObserver(viewModel)
 
         viewModel.userImageUrl.observe(this, Observer {
-            val storage = FirestorageRepository(FirestorageRepository.StorageTypes.USER)
             Glide.with(this)
-                .load(storage.getGSReference(it))
+                .load(FirestorageRepository.getGSReference(it))
                 .placeholder(R.drawable.ic_default_user)
                 .into(iconImageView)
         })

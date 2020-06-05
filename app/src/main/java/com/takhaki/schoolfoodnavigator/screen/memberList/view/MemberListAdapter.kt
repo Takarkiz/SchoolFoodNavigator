@@ -45,8 +45,7 @@ class MemberListAdapter :
             )
 
             item.iconUrl?.let { imagePath ->
-                val repository = FirestorageRepository(FirestorageRepository.StorageTypes.USER)
-                val storageUrl = repository.getGSReference(imagePath)
+                val storageUrl = FirestorageRepository.getGSReference(imagePath)
                 Glide.with(itemView)
                     .load(storageUrl)
                     .placeholder(R.drawable.default_person)
