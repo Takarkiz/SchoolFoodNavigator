@@ -3,14 +3,16 @@ package com.takhaki.schoolfoodnavigator.screen.addShop
 import android.app.Application
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.takhaki.schoolfoodnavigator.Model.ShopEntity
+import com.takhaki.schoolfoodnavigator.repository.FirestorageRepository
 import com.takhaki.schoolfoodnavigator.repository.ShopInfoRepository
+import com.takhaki.schoolfoodnavigator.repository.StorageTypes
 import com.takhaki.schoolfoodnavigator.repository.UserAuth
+import timber.log.Timber
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -60,22 +62,34 @@ class AddShopViewModel(
             images = listOf()
         )
 
-        val shopInfoRepository = ShopInfoRepository(getApplication())
-        shopInfoRepository.registerShop(shop, shopImageUri.value, appContext) { result ->
-            if (result.isSuccess) {
-                result.getOrNull()?.let { id ->
-                    shopId = id
-                    auth.addPointShop()
+        val shopRepository = ShopInfoRepository(getApplication())
+        val storage = FirestorageRepository()
+        shopImageUri.value?.let { resourceUri ->
+            storage.uploadImage(
+                id = shop.id,
+                imageUri = resourceUri,
+                filePathScheme = StorageTypes.SHOP,
+                context = appContext
+            ) { imageResult ->
+                if (imageResult.isSuccess) {
+                    shopRepository.registerShop(shop, imageResult.getOrNull()) { registerResult ->
+                        if (registerResult.isSuccess) {
+                            registerResult.getOrNull()?.let {
+                                shopId = id
+                                auth.addPointShop()
+                            }
+                        } else {
+                            Timber.e(registerResult.exceptionOrNull())
+                        }
+                        _isVisibleLoading.value = false
+                    }
                 }
-            } else {
-                Log.e("Firebase", "失敗", result.exceptionOrNull())
             }
-            _isVisibleLoading.value = false
         }
     }
 
     override fun willMoveToAssessment() {
-        navigator.toAssessment(shopId, shopName.value?: "")
+        navigator.toAssessment(shopId, shopName.value ?: "")
     }
 
     override fun backToShopList() {

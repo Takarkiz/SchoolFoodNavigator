@@ -1,22 +1,17 @@
 package com.takhaki.schoolfoodnavigator.repository
 
 import android.content.Context
-import android.net.Uri
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.storage.FirebaseStorage
 import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
 import com.takhaki.schoolfoodnavigator.Model.CompanyData
 import com.takhaki.schoolfoodnavigator.Model.ShopEntity
-import com.takhaki.schoolfoodnavigator.Utility.getFileName
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Single
 import timber.log.Timber
-import java.io.File
-import java.io.FileInputStream
 
 class ShopInfoRepository(context: Context) : ShopRepositoryContract {
 
@@ -39,25 +34,18 @@ class ShopInfoRepository(context: Context) : ShopRepositoryContract {
 
     override fun registerShop(
         shop: ShopEntity,
-        imageUrl: Uri?,
-        context: Context,
+        imageUrl: String?,
         handler: (Result<String>) -> Unit
     ) {
-        if (imageUrl == null) {
-            createNewShop(shop, null, handler)
-        } else {
-            photoUpload(shop.id, imageUrl, context) { photoResult ->
-                if (photoResult.isSuccess) {
-                    photoResult.getOrNull()?.let { filePath ->
-                        createNewShop(shop, filePath, handler)
-                    }
-                } else {
-                    photoResult.exceptionOrNull()?.let { error ->
-                        handler(Result.failure(error))
-                    }
-                }
+        val data = inverseMapping(shop, imageUrl)
+
+        shopDB.document(shop.id).set(data)
+            .addOnSuccessListener {
+                handler(Result.success(shop.id))
             }
-        }
+            .addOnFailureListener { error ->
+                handler(Result.failure(error))
+            }
     }
 
     override fun shop(id: String): Flowable<ShopEntity> {
@@ -81,23 +69,6 @@ class ShopInfoRepository(context: Context) : ShopRepositoryContract {
     }
 
 
-    private fun createNewShop(
-        shop: ShopEntity,
-        imagePath: String?,
-        handler: (Result<String>) -> Unit
-    ) {
-        val data = inverseMapping(shop, imagePath)
-
-        shopDB.document(shop.id).set(data)
-            .addOnSuccessListener {
-                handler(Result.success(shop.id))
-            }
-            .addOnFailureListener { error ->
-                handler(Result.failure(error))
-            }
-    }
-
-
     // お店情報の削除
     fun deleteShop(shopID: String) {
 
@@ -109,7 +80,6 @@ class ShopInfoRepository(context: Context) : ShopRepositoryContract {
 
 
     private val shopDB: CollectionReference
-    private val storage = FirebaseStorage.getInstance("gs://schoolfoodnavigator.appspot.com")
 
     init {
         val id = CompanyData.getCompanyId(context)
@@ -163,29 +133,6 @@ class ShopInfoRepository(context: Context) : ShopRepositoryContract {
             }
             emitter.setCancellable { reg.remove() }
         }, BackpressureStrategy.LATEST)
-    }
-
-    private fun photoUpload(
-        shopID: String,
-        imageUri: Uri,
-        context: Context,
-        handler: (Result<String>) -> Unit
-    ) {
-        val fileName = imageUri.getFileName(context) ?: ""
-        val companyID = CompanyData.getCompanyId(context)
-        val filePath = "${companyID}/Shops/${shopID}/${fileName}"
-        val shopImageRef = storage.reference.child(filePath)
-
-        val path = imageUri.path ?: return
-        val stream = FileInputStream(File(path))
-        val uploadTask = shopImageRef.putStream(stream)
-        uploadTask.addOnFailureListener { error ->
-            handler(Result.failure(error))
-
-        }.addOnSuccessListener {
-            handler(Result.success(filePath))
-        }
-
     }
 
     fun fetchAllShops(): Single<List<ShopEntity>> {

@@ -206,7 +206,7 @@ class UserAuth(context: Context) {
         val repository = FirestorageRepository()
 
         iconUri?.let { uri ->
-            repository.uploadUserPhoto(uid, uri, StorageTypes.USER, context) { result ->
+            repository.uploadImage(uid, uri, StorageTypes.USER, context) { result ->
                 if (result.isFailure) {
                     result.exceptionOrNull()?.let {
                         handler(Result.failure(it))

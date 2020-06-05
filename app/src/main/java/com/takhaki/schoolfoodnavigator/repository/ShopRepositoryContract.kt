@@ -19,8 +19,7 @@ interface ShopRepositoryContract {
      */
     fun registerShop(
         shop: ShopEntity,
-        imageUrl: Uri?,
-        context: Context,
+        imageUrl: String?,
         handler: (Result<String>) -> Unit
     )
 

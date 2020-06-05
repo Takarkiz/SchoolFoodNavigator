@@ -31,7 +31,7 @@ class FirestorageRepository {
      * @param imageUri   端末内の画像の参照を示すUri
      * @param handler   Firestorage上の画像URLを返す
      */
-    fun uploadUserPhoto(
+    fun uploadImage(
         id: String,
         imageUri: Uri,
         filePathScheme: StorageTypes,
