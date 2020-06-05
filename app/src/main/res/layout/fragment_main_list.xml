@@ -7,12 +7,12 @@
     <data>
         <variable
             name="listViewModel"
-            type="com.takhaki.schoolfoodnavigator.mainList.ShopListViewModel" />
+            type="com.takhaki.schoolfoodnavigator.screen.mainList.ShopListViewModel" />
     </data>
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".mainList.MainListFragment">
+        tools:context=".screen.mainList.MainListFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/shopList"

@@ -8,13 +8,13 @@
 
         <variable
             name="assesmentViewModel"
-            type="com.takhaki.schoolfoodnavigator.assesment.AssessmentViewModel" />
+            type="com.takhaki.schoolfoodnavigator.screen.assesment.AssessmentViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".assesment.AssessmentActivity">
+        tools:context=".screen.assesment.AssessmentActivity">
 
         <ScrollView
             android:layout_width="match_parent"

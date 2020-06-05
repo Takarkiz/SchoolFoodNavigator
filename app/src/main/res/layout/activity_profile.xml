@@ -8,13 +8,13 @@
 
         <variable
             name="profileViewModel"
-            type="com.takhaki.schoolfoodnavigator.profile.ProfileViewModel" />
+            type="com.takhaki.schoolfoodnavigator.screen.profile.ProfileViewModel" />
     </data>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".profile.ProfileActivity">
+        tools:context=".screen.profile.ProfileActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

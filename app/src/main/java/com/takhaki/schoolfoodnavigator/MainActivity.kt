@@ -8,8 +8,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
 import com.takhaki.schoolfoodnavigator.repository.UserAuth
-import com.takhaki.schoolfoodnavigator.mainList.MainListFragment
-import com.takhaki.schoolfoodnavigator.mainList.ShopListViewModelBase
+import com.takhaki.schoolfoodnavigator.screen.mainList.MainListFragment
+import com.takhaki.schoolfoodnavigator.screen.mainList.ShopListViewModelBase
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
          * 繊維用のインテントを作る
          */
 
-        fun makeIntent(activity: AppCompatActivity) : Intent {
+        fun makeIntent(activity: AppCompatActivity): Intent {
             return Intent(activity, MainActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
             }
@@ -41,8 +41,8 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount(): Int = tabLayoutTitle.size
 
-            override fun createFragment(position: Int): Fragment
-                = MainListFragment.newInstance(position)
+            override fun createFragment(position: Int): Fragment =
+                MainListFragment.newInstance(position)
         }
 
         TabLayoutMediator(

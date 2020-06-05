@@ -8,14 +8,14 @@
 
         <variable
             name="detailViewModel"
-            type="com.takhaki.schoolfoodnavigator.detail.DetailViewModel" />
+            type="com.takhaki.schoolfoodnavigator.screen.detail.DetailViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/detailContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".detail.DetailActivity">
+        tools:context=".screen.detail.DetailActivity">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/scoreListView"

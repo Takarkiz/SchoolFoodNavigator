@@ -1,19 +1,19 @@
 package com.takhaki.schoolfoodnavigator.module
 
-import com.takhaki.schoolfoodnavigator.addShop.AddShopNavigator
-import com.takhaki.schoolfoodnavigator.addShop.AddShopNavigatorAbstract
-import com.takhaki.schoolfoodnavigator.assesment.AssessmentNavigator
-import com.takhaki.schoolfoodnavigator.assesment.AssessmentNavigatorAbstract
-import com.takhaki.schoolfoodnavigator.detail.DetailNavigator
-import com.takhaki.schoolfoodnavigator.detail.DetailNavigatorAbstract
-import com.takhaki.schoolfoodnavigator.mainList.ShopListNavigator
-import com.takhaki.schoolfoodnavigator.mainList.ShopListNavigatorAbstract
-import com.takhaki.schoolfoodnavigator.memberList.MemberListNavigatorAbstract
-import com.takhaki.schoolfoodnavigator.memberList.navigator.MemberListNavigator
-import com.takhaki.schoolfoodnavigator.profile.ProfileNavigator
-import com.takhaki.schoolfoodnavigator.profile.ProfileNavigatorAbstract
-import com.takhaki.schoolfoodnavigator.qrcode.QRCodeNavigatorAbstract
-import com.takhaki.schoolfoodnavigator.qrcode.navigator.QRCodeNavigator
+import com.takhaki.schoolfoodnavigator.screen.addShop.AddShopNavigator
+import com.takhaki.schoolfoodnavigator.screen.addShop.AddShopNavigatorAbstract
+import com.takhaki.schoolfoodnavigator.screen.assesment.AssessmentNavigator
+import com.takhaki.schoolfoodnavigator.screen.assesment.AssessmentNavigatorAbstract
+import com.takhaki.schoolfoodnavigator.screen.detail.DetailNavigator
+import com.takhaki.schoolfoodnavigator.screen.detail.DetailNavigatorAbstract
+import com.takhaki.schoolfoodnavigator.screen.mainList.ShopListNavigator
+import com.takhaki.schoolfoodnavigator.screen.mainList.ShopListNavigatorAbstract
+import com.takhaki.schoolfoodnavigator.screen.memberList.MemberListNavigatorAbstract
+import com.takhaki.schoolfoodnavigator.screen.memberList.navigator.MemberListNavigator
+import com.takhaki.schoolfoodnavigator.screen.profile.ProfileNavigator
+import com.takhaki.schoolfoodnavigator.screen.profile.ProfileNavigatorAbstract
+import com.takhaki.schoolfoodnavigator.screen.qrcode.QRCodeNavigatorAbstract
+import com.takhaki.schoolfoodnavigator.screen.qrcode.navigator.QRCodeNavigator
 import org.koin.dsl.module
 
 val navigatorModule = module(override = true) {

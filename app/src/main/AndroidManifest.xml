@@ -21,27 +21,27 @@
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation" />
-        <activity android:name=".qrcode.view.QRCodeActivity">
+        <activity android:name="com.takhaki.schoolfoodnavigator.screen.qrcode.view.QRCodeActivity">
         </activity>
-        <activity android:name=".memberList.view.MemberListActivity">
+        <activity android:name="com.takhaki.schoolfoodnavigator.screen.memberList.view.MemberListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".detailReward.view.DetailRewardActivity"
-            android:parentActivityName=".profile.ProfileActivity">
+            android:name="com.takhaki.schoolfoodnavigator.screen.detailReward.view.DetailRewardActivity"
+            android:parentActivityName="com.takhaki.schoolfoodnavigator.screen.profile.ProfileActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".profile.ProfileActivity" />
+                android:value="com.takhaki.schoolfoodnavigator.screen.profile.ProfileActivity" />
         </activity>
-        <activity android:name=".detail.DetailActivity">
+        <activity android:name="com.takhaki.schoolfoodnavigator.screen.detail.DetailActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".register.RegisterUserActivity"
+            android:name=".screen.register.RegisterUserActivity"
             android:theme="@style/NoActionBarTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -50,12 +50,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".profile.ProfileActivity">
+        <activity android:name="com.takhaki.schoolfoodnavigator.screen.profile.ProfileActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".assesment.AssessmentActivity">
+        <activity android:name="com.takhaki.schoolfoodnavigator.screen.assesment.AssessmentActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
@@ -64,7 +64,7 @@
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="unspecified"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".addShop.AddShopActivity">
+        <activity android:name="com.takhaki.schoolfoodnavigator.screen.addShop.AddShopActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />

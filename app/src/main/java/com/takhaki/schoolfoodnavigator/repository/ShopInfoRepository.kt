@@ -11,12 +11,9 @@ import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
 import com.takhaki.schoolfoodnavigator.Model.CompanyData
 import com.takhaki.schoolfoodnavigator.Model.ShopEntity
 import com.takhaki.schoolfoodnavigator.Utility.getFileName
-import com.takhaki.schoolfoodnavigator.detail.AboutShopDetailModel
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Single
-import io.reactivex.rxkotlin.Flowables
-import io.reactivex.rxkotlin.subscribeBy
 import timber.log.Timber
 import java.io.File
 import java.io.FileInputStream

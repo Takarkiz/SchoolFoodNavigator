@@ -3,9 +3,7 @@ package com.takhaki.schoolfoodnavigator.repository
 import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
 import com.takhaki.schoolfoodnavigator.Model.ShopEntity
 import com.takhaki.schoolfoodnavigator.Model.UserEntity
-import com.takhaki.schoolfoodnavigator.detail.AboutShopDetailModel
-import com.takhaki.schoolfoodnavigator.detail.CommentDetailModel
-import org.w3c.dom.Comment
+import com.takhaki.schoolfoodnavigator.screen.detail.AboutShopDetailModel
 
 fun ShopEntity.toEntity(): ShopEntity {
     return ShopEntity(
