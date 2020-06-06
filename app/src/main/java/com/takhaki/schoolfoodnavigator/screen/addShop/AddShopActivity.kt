@@ -6,7 +6,6 @@ import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.MenuItem
@@ -48,9 +47,7 @@ class AddShopActivity : AppCompatActivity() {
         if (ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE)
             != PackageManager.PERMISSION_GRANTED
         ) {
-            if (Build.VERSION.SDK_INT > 23) {
-                requestPermissions(arrayOf(WRITE_EXTERNAL_STORAGE), REQUEST_EXTERNAL_STORAGE)
-            }
+            requestPermissions(arrayOf(WRITE_EXTERNAL_STORAGE), REQUEST_EXTERNAL_STORAGE)
         } else {
             addNewPhoto()
         }

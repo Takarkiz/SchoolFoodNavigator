@@ -39,6 +39,15 @@ class DetailViewModel(
         }
     }
 
+    override fun didTapDeleteShop(handler: (Result<String>) -> Unit) {
+        val repository = ShopInfoRepository(getApplication())
+        _shopDetail.value?.let {
+            repository.deleteShop(it.id) { result ->
+                handler(result)
+            }
+        }
+    }
+
     // DetailAdapter.UserIconClickListener
 
     override fun onClickIcon(userId: String) {
@@ -86,7 +95,6 @@ class DetailViewModel(
                                 cScore = result.cheep,
                                 comment = result.comment
                             )
-
                             scores.add(comment)
                         }
                     }

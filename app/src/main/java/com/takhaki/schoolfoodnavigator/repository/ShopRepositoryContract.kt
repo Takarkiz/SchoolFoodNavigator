@@ -46,4 +46,11 @@ interface ShopRepositoryContract {
      * 日時を更新する
      */
     fun updateEditedDate(shopId: String)
+
+    /**
+     * お店を削除する
+     *
+     * @param id: ショップID
+     */
+    fun deleteShop(id: String, handler: (Result<String>) -> Unit)
 }

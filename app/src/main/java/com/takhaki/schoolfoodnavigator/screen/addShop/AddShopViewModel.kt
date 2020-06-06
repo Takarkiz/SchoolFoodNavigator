@@ -28,8 +28,7 @@ class AddShopViewModel(
     val isVisibleDeleteButton = MediatorLiveData<Boolean>().apply { value = false }
     override val shopImageUri = MediatorLiveData<Uri>().apply { value = null }
 
-    override val isVisibleLoading: MutableLiveData<Boolean>
-        get() = _isVisibleLoading
+    override val isVisibleLoading: MutableLiveData<Boolean> get() = _isVisibleLoading
 
     override fun activity(activity: AppCompatActivity) {
         navigator.weakActivity = WeakReference(activity)
@@ -47,6 +46,7 @@ class AddShopViewModel(
 
 
     override fun uploadShopInfo() {
+        _isVisibleLoading.postValue(true)
 
         val auth = UserAuth(getApplication())
         val userID = auth.currentUser?.uid ?: return
@@ -81,7 +81,7 @@ class AddShopViewModel(
                         } else {
                             Timber.e(registerResult.exceptionOrNull())
                         }
-                        _isVisibleLoading.value = false
+                        _isVisibleLoading.postValue(false)
                     }
                 }
             }

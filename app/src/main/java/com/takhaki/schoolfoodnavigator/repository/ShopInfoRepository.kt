@@ -70,8 +70,14 @@ class ShopInfoRepository(context: Context) : ShopRepositoryContract {
 
 
     // お店情報の削除
-    fun deleteShop(shopID: String) {
-
+    override fun deleteShop(id: String, handler: (Result<String>) -> Unit) {
+        shopDB.document(id)
+            .delete()
+            .addOnSuccessListener { handler(Result.success("Success")) }
+            .addOnFailureListener {
+                Timber.e(it)
+                handler(Result.failure(it))
+            }
     }
 
     fun updateShop() {

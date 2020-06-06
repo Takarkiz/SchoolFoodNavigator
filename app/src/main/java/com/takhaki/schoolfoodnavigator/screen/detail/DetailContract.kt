@@ -40,6 +40,11 @@ interface DetailViewModelContract {
      * 新規評価ボタンをタップした時
      */
     fun didTapAddFab()
+
+    /**
+     * 削除ボタンをタップした時
+     */
+    fun didTapDeleteShop(handler: (Result<String>) -> Unit)
 }
 
 abstract class DetailNavigatorAbstract : BaseNavigator() {

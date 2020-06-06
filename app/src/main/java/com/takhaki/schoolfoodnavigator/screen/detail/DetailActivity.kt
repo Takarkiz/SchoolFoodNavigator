@@ -2,6 +2,7 @@ package com.takhaki.schoolfoodnavigator.screen.detail
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -9,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.databinding.ActivityDetailBinding
 import kotlinx.android.synthetic.main.activity_detail.*
@@ -96,8 +98,24 @@ class DetailActivity : AppCompatActivity() {
                 true
             }
 
+            R.id.menu_delete_shop -> {
+                viewModel.didTapDeleteShop {
+                    if (it.isSuccess) {
+                        Snackbar.make(detailContent, "削除に成功", Snackbar.LENGTH_SHORT).show()
+                        finish()
+                    }
+                }
+
+                true
+            }
+
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_detail_shop, menu)
+        return super.onCreateOptionsMenu(menu)
     }
 
     private val scrollListener = object : RecyclerView.OnScrollListener() {
