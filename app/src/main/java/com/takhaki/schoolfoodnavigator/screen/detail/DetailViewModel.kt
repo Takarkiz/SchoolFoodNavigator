@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.OnLifecycleEvent
 import com.takhaki.schoolfoodnavigator.repository.AssessmentRepository
+import com.takhaki.schoolfoodnavigator.repository.FirestorageRepository
 import com.takhaki.schoolfoodnavigator.repository.ShopInfoRepository
 import com.takhaki.schoolfoodnavigator.repository.UserAuth
 import io.reactivex.disposables.CompositeDisposable
@@ -41,9 +42,16 @@ class DetailViewModel(
 
     override fun didTapDeleteShop(handler: (Result<String>) -> Unit) {
         val repository = ShopInfoRepository(getApplication())
+        val storage = FirestorageRepository()
         _shopDetail.value?.let {
             repository.deleteShop(it.id) { result ->
-                handler(result)
+                it.imageUrl?.let { url ->
+                    storage.deleteFile(url) { imageResult ->
+                        handler(imageResult)
+                    }
+                } ?: run {
+                    handler(result)
+                }
             }
         }
     }

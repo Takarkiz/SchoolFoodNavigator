@@ -53,6 +53,15 @@ class FirestorageRepository {
             handler(Result.success(url))
         }
     }
+
+    fun deleteFile(url: String, handler: (Result<String>) -> Unit) {
+        val gsRef = getGSReference(url)
+        gsRef.delete().addOnSuccessListener {
+            handler(Result.success("Success delete File"))
+        }.addOnFailureListener {
+            handler(Result.failure(it))
+        }
+    }
 }
 
 

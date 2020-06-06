@@ -1,7 +1,5 @@
 package com.takhaki.schoolfoodnavigator.repository
 
-import android.content.Context
-import android.net.Uri
 import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
 import com.takhaki.schoolfoodnavigator.Model.ShopEntity
 import io.reactivex.Flowable
