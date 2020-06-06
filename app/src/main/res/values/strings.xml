@@ -19,7 +19,7 @@
     <string name="add_shop_register_dialog_negative_text">いいえ</string>
 
     <string name="assessment_text_assessment">お店の評価</string>
-    <string name="assessment_category_good">おいしさ</string>
+    <string name="assessment_category_good">味　</string>
     <string name="assessment_category_near">近さ</string>
     <string name="assessment_category_cheep">安さ</string>
     <string name="assessment_text_comment">コメント</string>

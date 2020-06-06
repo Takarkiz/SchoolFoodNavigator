@@ -76,8 +76,6 @@ class DetailActivity : AppCompatActivity() {
         })
 
         scoreListView.adapter = adapter
-        val itemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-        scoreListView.addItemDecoration(itemDecoration)
         scoreListView.clearOnScrollListeners()
         scoreListView.addOnScrollListener(scrollListener)
 

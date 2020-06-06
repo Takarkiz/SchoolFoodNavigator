@@ -13,5 +13,7 @@
     <color name="baseTextColor">#808080</color>
     <color name="darkerGrayColor">#696969</color>
 
+    <color name="listBackgroundColor">#33D1AEA2</color>
+
     <color name="white">#FFFFFF</color>
 </resources>
