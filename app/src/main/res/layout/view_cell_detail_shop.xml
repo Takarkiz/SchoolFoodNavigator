@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:text="お店の名前"
         android:textColor="@android:color/black"
-        android:textSize="32sp"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/shopImage"
