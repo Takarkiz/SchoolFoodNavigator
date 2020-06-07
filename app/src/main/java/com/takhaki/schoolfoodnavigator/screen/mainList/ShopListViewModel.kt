@@ -16,6 +16,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 import java.lang.ref.WeakReference
 
 class ShopListViewModel(
@@ -96,9 +97,10 @@ class ShopListViewModel(
             .observeOn(Schedulers.computation())
             .subscribeBy(
                 onSuccess = { assessments ->
-                    val totalScore = assessments.map { assessment ->
-                        (assessment.good + assessment.cheep + assessment.distance) / 3
-                    }.average()
+                    val totalScore =
+                        if (assessments.isNotEmpty()) assessments.map { assessment ->
+                            (assessment.good + assessment.cheep + assessment.distance) / 3
+                        }.average() else 0.0
                     val auth = UserAuth(appContext)
                     auth.checkFavoriteShop(shop.id) { isFavorite ->
                         val shopItem = ShopListItemModel(
@@ -124,7 +126,7 @@ class ShopListViewModel(
                     }
                 },
                 onError = {
-
+                    Timber.w("失敗")
                 }
             ).addTo(disposable)
     }
