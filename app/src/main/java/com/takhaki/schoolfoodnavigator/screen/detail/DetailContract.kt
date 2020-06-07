@@ -6,6 +6,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LiveData
 import com.takhaki.schoolfoodnavigator.BaseNavigator
+import com.takhaki.schoolfoodnavigator.screen.detail.model.AboutShopDetailModel
+import com.takhaki.schoolfoodnavigator.screen.detail.model.CommentDetailModel
+import com.takhaki.schoolfoodnavigator.screen.detail.view.DetailAdapter
 
 abstract class DetailViewModelBase(
     application: Application

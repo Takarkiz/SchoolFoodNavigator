@@ -30,18 +30,18 @@
         </activity>
         <activity
             android:name="com.takhaki.schoolfoodnavigator.screen.detailReward.view.DetailRewardActivity"
-            android:parentActivityName="com.takhaki.schoolfoodnavigator.screen.profile.ProfileActivity">
+            android:parentActivityName="com.takhaki.schoolfoodnavigator.screen.profile.view.ProfileActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.takhaki.schoolfoodnavigator.screen.profile.ProfileActivity" />
+                android:value="com.takhaki.schoolfoodnavigator.screen.profile.view.ProfileActivity" />
         </activity>
-        <activity android:name="com.takhaki.schoolfoodnavigator.screen.detail.DetailActivity">
+        <activity android:name="com.takhaki.schoolfoodnavigator.screen.detail.view.DetailActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".screen.register.RegisterUserActivity"
+            android:name=".screen.register.view.RegisterUserActivity"
             android:theme="@style/NoActionBarTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -50,12 +50,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.takhaki.schoolfoodnavigator.screen.profile.ProfileActivity">
+        <activity android:name="com.takhaki.schoolfoodnavigator.screen.profile.view.ProfileActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name="com.takhaki.schoolfoodnavigator.screen.assesment.AssessmentActivity">
+        <activity android:name="com.takhaki.schoolfoodnavigator.screen.assesment.activity.AssessmentActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
@@ -64,7 +64,7 @@
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="unspecified"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name="com.takhaki.schoolfoodnavigator.screen.addShop.AddShopActivity">
+        <activity android:name="com.takhaki.schoolfoodnavigator.screen.addShop.view.AddShopActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />

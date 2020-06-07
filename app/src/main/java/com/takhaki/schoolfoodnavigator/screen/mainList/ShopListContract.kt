@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LiveData
 import com.takhaki.schoolfoodnavigator.BaseNavigator
+import com.takhaki.schoolfoodnavigator.screen.mainList.model.ShopListItemModel
 
 /**
  * ショップリスト ViewModel-Base

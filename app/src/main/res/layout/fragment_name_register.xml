@@ -8,14 +8,14 @@
 
         <variable
             name="nameRegisterViewModel"
-            type="com.takhaki.schoolfoodnavigator.screen.register.NameRegisterViewModel" />
+            type="com.takhaki.schoolfoodnavigator.screen.register.view_model.NameRegisterViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorPrimary"
-        tools:context=".screen.register.NameRegisterFragment">
+        tools:context=".screen.register.view.NameRegisterFragment">
 
         <TextView
             android:layout_width="wrap_content"

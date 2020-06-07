@@ -1,7 +1,7 @@
 package com.takhaki.schoolfoodnavigator.screen.memberList.navigator
 
 import com.takhaki.schoolfoodnavigator.screen.memberList.MemberListNavigatorAbstract
-import com.takhaki.schoolfoodnavigator.screen.profile.ProfileActivity
+import com.takhaki.schoolfoodnavigator.screen.profile.view.ProfileActivity
 import com.takhaki.schoolfoodnavigator.screen.qrcode.view.QRCodeActivity
 
 class MemberListNavigator : MemberListNavigatorAbstract() {

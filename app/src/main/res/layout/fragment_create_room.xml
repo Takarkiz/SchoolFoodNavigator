@@ -8,7 +8,7 @@
 
         <variable
             name="createRoomViewModel"
-            type="com.takhaki.schoolfoodnavigator.screen.register.CreateRoomViewModel" />
+            type="com.takhaki.schoolfoodnavigator.screen.register.view_model.CreateRoomViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorPrimary"
-        tools:context=".screen.register.CreateRoomFragment">
+        tools:context=".screen.register.view.CreateRoomFragment">
 
         <TextView
             android:layout_width="wrap_content"

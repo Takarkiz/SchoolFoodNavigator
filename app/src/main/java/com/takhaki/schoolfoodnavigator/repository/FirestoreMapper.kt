@@ -3,7 +3,7 @@ package com.takhaki.schoolfoodnavigator.repository
 import com.takhaki.schoolfoodnavigator.model.AssessmentEntity
 import com.takhaki.schoolfoodnavigator.model.ShopEntity
 import com.takhaki.schoolfoodnavigator.model.UserEntity
-import com.takhaki.schoolfoodnavigator.screen.detail.AboutShopDetailModel
+import com.takhaki.schoolfoodnavigator.screen.detail.model.AboutShopDetailModel
 
 fun ShopEntity.toEntity(): ShopEntity {
     return ShopEntity(
@@ -42,7 +42,7 @@ fun ShopEntity.toEntity(assessments: List<AssessmentEntity>): AboutShopDetailMod
         id = id,
         name = name,
         genre = genre,
-        score = assessments.map{ (it.good + it.cheep + it.distance)/3 }.average().toFloat(),
+        score = assessments.map { (it.good + it.cheep + it.distance) / 3 }.average().toFloat(),
         goodScore = assessments.map { it.good }.average().toFloat(),
         distance = assessments.map { it.distance }.average().toFloat(),
         cheep = assessments.map { it.cheep }.average().toFloat(),

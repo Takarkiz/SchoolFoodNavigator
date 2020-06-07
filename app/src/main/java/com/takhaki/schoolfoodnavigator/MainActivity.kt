@@ -8,7 +8,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
 import com.takhaki.schoolfoodnavigator.repository.UserAuth
-import com.takhaki.schoolfoodnavigator.screen.mainList.MainListFragment
+import com.takhaki.schoolfoodnavigator.screen.mainList.view.MainListFragment
 import com.takhaki.schoolfoodnavigator.screen.mainList.ShopListViewModelBase
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
