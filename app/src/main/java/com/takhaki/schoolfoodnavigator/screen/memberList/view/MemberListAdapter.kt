@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.takhaki.schoolfoodnavigator.Model.UserEntity
+import com.takhaki.schoolfoodnavigator.model.UserEntity
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.repository.FirestorageRepository
 

@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.takhaki.schoolfoodnavigator.Model.ShopEntity
+import com.takhaki.schoolfoodnavigator.model.ShopEntity
 import com.takhaki.schoolfoodnavigator.repository.FirestorageRepository
 import com.takhaki.schoolfoodnavigator.repository.ShopInfoRepository
 import com.takhaki.schoolfoodnavigator.repository.StorageTypes

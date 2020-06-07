@@ -6,7 +6,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.OnLifecycleEvent
-import com.takhaki.schoolfoodnavigator.Model.CompanyData
+import com.takhaki.schoolfoodnavigator.model.CompanyData
 import com.takhaki.schoolfoodnavigator.screen.qrcode.QRCodeNavigatorAbstract
 import com.takhaki.schoolfoodnavigator.screen.qrcode.QRCodeViewModelBase
 import java.lang.ref.WeakReference

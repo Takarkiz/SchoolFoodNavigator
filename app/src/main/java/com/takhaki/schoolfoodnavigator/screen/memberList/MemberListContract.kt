@@ -6,7 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LiveData
 import com.takhaki.schoolfoodnavigator.BaseNavigator
-import com.takhaki.schoolfoodnavigator.Model.UserEntity
+import com.takhaki.schoolfoodnavigator.model.UserEntity
 import com.takhaki.schoolfoodnavigator.screen.memberList.view.MemberListAdapter
 
 

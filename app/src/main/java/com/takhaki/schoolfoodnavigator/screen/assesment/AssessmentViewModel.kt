@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
+import com.takhaki.schoolfoodnavigator.model.AssessmentEntity
 import com.takhaki.schoolfoodnavigator.repository.AssessmentRepository
 import com.takhaki.schoolfoodnavigator.repository.ShopInfoRepository
 import com.takhaki.schoolfoodnavigator.repository.UserAuth

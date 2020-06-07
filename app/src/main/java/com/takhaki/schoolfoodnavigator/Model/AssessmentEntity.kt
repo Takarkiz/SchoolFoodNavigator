@@ -1,4 +1,4 @@
-package com.takhaki.schoolfoodnavigator.Model
+package com.takhaki.schoolfoodnavigator.model
 
 data class AssessmentEntity(
     val user: String = "",

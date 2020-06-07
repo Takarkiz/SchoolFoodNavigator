@@ -9,8 +9,8 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.StorageReference
-import com.takhaki.schoolfoodnavigator.Model.CompanyData
-import com.takhaki.schoolfoodnavigator.Model.UserEntity
+import com.takhaki.schoolfoodnavigator.model.CompanyData
+import com.takhaki.schoolfoodnavigator.model.UserEntity
 import io.reactivex.Single
 
 class UserAuth(context: Context) {

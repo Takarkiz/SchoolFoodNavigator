@@ -1,8 +1,8 @@
 package com.takhaki.schoolfoodnavigator.repository
 
-import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
-import com.takhaki.schoolfoodnavigator.Model.ShopEntity
-import com.takhaki.schoolfoodnavigator.Model.UserEntity
+import com.takhaki.schoolfoodnavigator.model.AssessmentEntity
+import com.takhaki.schoolfoodnavigator.model.ShopEntity
+import com.takhaki.schoolfoodnavigator.model.UserEntity
 import com.takhaki.schoolfoodnavigator.screen.detail.AboutShopDetailModel
 
 fun ShopEntity.toEntity(): ShopEntity {

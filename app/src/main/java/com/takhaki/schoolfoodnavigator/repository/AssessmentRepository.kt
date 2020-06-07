@@ -3,8 +3,8 @@ package com.takhaki.schoolfoodnavigator.repository
 import android.content.Context
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
-import com.takhaki.schoolfoodnavigator.Model.CompanyData
+import com.takhaki.schoolfoodnavigator.model.AssessmentEntity
+import com.takhaki.schoolfoodnavigator.model.CompanyData
 import io.reactivex.Single
 
 class AssessmentRepository(shopId: String, context: Context) {

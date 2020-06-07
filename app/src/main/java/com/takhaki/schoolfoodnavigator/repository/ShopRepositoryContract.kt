@@ -1,7 +1,7 @@
 package com.takhaki.schoolfoodnavigator.repository
 
-import com.takhaki.schoolfoodnavigator.Model.AssessmentEntity
-import com.takhaki.schoolfoodnavigator.Model.ShopEntity
+import com.takhaki.schoolfoodnavigator.model.AssessmentEntity
+import com.takhaki.schoolfoodnavigator.model.ShopEntity
 import io.reactivex.Flowable
 
 interface ShopRepositoryContract {
