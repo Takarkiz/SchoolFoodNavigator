@@ -52,7 +52,7 @@ class ProfileActivity : AppCompatActivity() {
         viewModel.userImageUrl.observe(this, Observer {
             Glide.with(this)
                 .load(FirestorageRepository.getGSReference(it))
-                .placeholder(R.drawable.ic_default_user)
+                .placeholder(R.drawable.ic_person_big)
                 .into(iconImageView)
         })
 
