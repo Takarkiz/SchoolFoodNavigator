@@ -17,6 +17,7 @@ import com.takhaki.schoolfoodnavigator.screen.detail.model.CommentDetailModel
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
+import timber.log.Timber
 import java.lang.ref.WeakReference
 
 class DetailViewModel(
@@ -93,35 +94,38 @@ class DetailViewModel(
         val auth = UserAuth(getApplication())
         val repository = AssessmentRepository(shopId, getApplication())
         repository.fetchAllAssessment()
-            .subscribeBy(onSuccess = { results ->
-                results.forEach { result ->
-                    if (result.user == auth.currentUser?.uid) _hasCurrentUserComment.value = true
-                    auth.userNameAndIconPath(result.user) {
-                        it.getOrNull()?.let { pair ->
-                            val comment =
-                                CommentDetailModel(
-                                    id = result.user,
-                                    name = pair.first,
-                                    userIcon = pair.second,
-                                    gScore = result.good,
-                                    dScore = result.distance,
-                                    cScore = result.cheep,
-                                    comment = result.comment,
-                                    date = result.createdDate
-                                )
-                            scores.add(comment)
+            .subscribeBy(
+                onSuccess = { results ->
+                    results.forEach { result ->
+                        if (result.user == auth.currentUser?.uid) _hasCurrentUserComment.postValue(
+                            true
+                        )
+                        auth.userNameAndIconPath(result.user) {
+                            it.getOrNull()?.let { pair ->
+                                val comment =
+                                    CommentDetailModel(
+                                        id = result.user,
+                                        name = pair.first,
+                                        userIcon = pair.second,
+                                        gScore = result.good,
+                                        dScore = result.distance,
+                                        cScore = result.cheep,
+                                        comment = result.comment,
+                                        date = result.createdDate
+                                    )
+                                scores.add(comment)
+                                _scoreList.postValue(scores)
+                            }
                         }
                     }
-                }
-
-                _scoreList.postValue(scores)
-                val goodAverage = results.map { it.good }.average().toFloat()
-                val distanceAverage = results.map { it.distance }.average().toFloat()
-                val cheepAverage = results.map { it.cheep }.average().toFloat()
-                generateCommentModel(goodAverage, distanceAverage, cheepAverage)
-            },
+                    
+                    val goodAverage = results.map { it.good }.average().toFloat()
+                    val distanceAverage = results.map { it.distance }.average().toFloat()
+                    val cheepAverage = results.map { it.cheep }.average().toFloat()
+                    generateCommentModel(goodAverage, distanceAverage, cheepAverage)
+                },
                 onError = {
-
+                    Timber.e(it)
                 }).addTo(disposable)
     }
 
