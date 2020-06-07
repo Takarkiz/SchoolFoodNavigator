@@ -6,6 +6,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.takhaki.schoolfoodnavigator.Model.CompanyData
 import com.takhaki.schoolfoodnavigator.Utility.getFileName
+import timber.log.Timber
 import java.io.File
 import java.io.FileInputStream
 
@@ -44,7 +45,13 @@ class FirestorageRepository {
         val filePath = "${companyID}/${filePathScheme.path}/${id}/${fileName}"
         val shopImageRef = storage.reference.child(filePath)
 
-        val stream = FileInputStream(File(imageUri.path!!))
+        val stream = try {
+            FileInputStream(File(imageUri.path!!))
+        } catch (error: Error) {
+            Timber.e(error)
+            handler(Result.failure(error))
+            return
+        }
         val uploadTask = shopImageRef.putStream(stream)
         uploadTask.addOnFailureListener { error ->
             handler(Result.failure(error))

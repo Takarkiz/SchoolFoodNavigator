@@ -13,14 +13,13 @@ class IconRegisterViewModel(application: Application) : AndroidViewModel(applica
     private val context = getApplication<Application>().applicationContext
 
     private val _iconImageUri = MutableLiveData<Uri>().apply { value = null }
-    val iconImageUri: LiveData<Uri>
-        get() = _iconImageUri
+    val iconImageUri: LiveData<Uri> get() = _iconImageUri
 
     private val _isCompletedUserData = MutableLiveData<Boolean>().apply { value = false }
     val isCompletedUserData: LiveData<Boolean>
         get() = _isCompletedUserData
 
-    val finishButtonTitle = MediatorLiveData<String>().apply { value = "アイコン設定をスキップ" }
+    private val finishButtonTitle = MediatorLiveData<String>().apply { value = "アイコン設定をスキップ" }
 
     init {
         val iconUriObserver = Observer<Uri> {
@@ -33,11 +32,11 @@ class IconRegisterViewModel(application: Application) : AndroidViewModel(applica
     }
 
     fun putUserName(userName: String) {
-        _userName.value = userName
+        _userName.postValue(userName)
     }
 
     fun putIconImage(imageUri: Uri) {
-        _iconImageUri.value = imageUri
+        _iconImageUri.postValue(imageUri)
     }
 
     fun createUser() {
@@ -47,7 +46,7 @@ class IconRegisterViewModel(application: Application) : AndroidViewModel(applica
 
         auth.createUser(name, iconUri, context) { result ->
             if (result.isSuccess) {
-                _isCompletedUserData.value = true
+                _isCompletedUserData.postValue(true)
             }
             // TODO: - エラーハンドリングする
         }

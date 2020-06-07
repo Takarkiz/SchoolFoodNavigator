@@ -7,7 +7,6 @@ import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
@@ -68,7 +67,7 @@ class IconRegisterFragment : Fragment() {
             finishRegisterButton.isEnabled = false
         }
 
-        viewModel.isCompletedUserData.observe(this, Observer { complete ->
+        viewModel.isCompletedUserData.observe(viewLifecycleOwner, Observer { complete ->
             if (complete) {
                 loadingAnimationView.visibility = View.GONE
                 loadingAnimationView.pauseAnimation()
@@ -117,7 +116,7 @@ class IconRegisterFragment : Fragment() {
         }
     }
 
-    fun didTapSelectUserPhoto() {
+    private fun didTapSelectUserPhoto() {
         context?.let { context ->
 
             if (ContextCompat.checkSelfPermission(
@@ -126,12 +125,10 @@ class IconRegisterFragment : Fragment() {
                 )
                 != PackageManager.PERMISSION_GRANTED
             ) {
-                if (Build.VERSION.SDK_INT > 23) {
-                    requestPermissions(
-                        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                        REQUEST_EXTERNAL_STORAGE
-                    )
-                }
+                requestPermissions(
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    REQUEST_EXTERNAL_STORAGE
+                )
             } else {
                 addNewPhoto()
             }
@@ -167,7 +164,12 @@ class IconRegisterFragment : Fragment() {
     private fun startCrop(uri: Uri): Uri? {
 
         val options = UCrop.Options()
-        options.setCircleDimmedLayer(true)
+        options.apply {
+            setToolbarColor(resources.getColor(R.color.colorPrimary))
+            setStatusBarColor(resources.getColor(R.color.colorPrimaryDark))
+            setToolbarTitle(resources.getString(R.string.start_register_user_icon))
+            setToolbarWidgetColor(resources.getColor(R.color.white))
+        }
 
         context?.let { context ->
             val fileName = uri.getFileName(context)
