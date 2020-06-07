@@ -5,10 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="listViewModel"
             type="com.takhaki.schoolfoodnavigator.screen.mainList.ShopListViewModel" />
     </data>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
