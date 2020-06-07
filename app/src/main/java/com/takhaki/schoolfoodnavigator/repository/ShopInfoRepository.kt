@@ -5,9 +5,9 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.takhaki.schoolfoodnavigator.model.AssessmentEntity
-import com.takhaki.schoolfoodnavigator.model.CompanyData
-import com.takhaki.schoolfoodnavigator.model.ShopEntity
+import com.takhaki.schoolfoodnavigator.entity.AssessmentEntity
+import com.takhaki.schoolfoodnavigator.entity.CompanyData
+import com.takhaki.schoolfoodnavigator.entity.ShopEntity
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Single

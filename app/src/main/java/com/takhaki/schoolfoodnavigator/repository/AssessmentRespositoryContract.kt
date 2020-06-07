@@ -1,6 +1,6 @@
 package com.takhaki.schoolfoodnavigator.repository
 
-import com.takhaki.schoolfoodnavigator.model.AssessmentEntity
+import com.takhaki.schoolfoodnavigator.entity.AssessmentEntity
 import io.reactivex.Single
 
 /**

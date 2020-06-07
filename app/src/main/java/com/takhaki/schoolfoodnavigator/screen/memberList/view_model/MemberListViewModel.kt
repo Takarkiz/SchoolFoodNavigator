@@ -6,7 +6,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.OnLifecycleEvent
-import com.takhaki.schoolfoodnavigator.model.UserEntity
+import com.takhaki.schoolfoodnavigator.entity.UserEntity
 import com.takhaki.schoolfoodnavigator.repository.UserAuth
 import com.takhaki.schoolfoodnavigator.screen.memberList.MemberListNavigatorAbstract
 import com.takhaki.schoolfoodnavigator.screen.memberList.MemberListViewModelBase

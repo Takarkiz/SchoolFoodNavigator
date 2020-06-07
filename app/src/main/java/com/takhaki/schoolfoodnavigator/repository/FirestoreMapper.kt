@@ -1,8 +1,8 @@
 package com.takhaki.schoolfoodnavigator.repository
 
-import com.takhaki.schoolfoodnavigator.model.AssessmentEntity
-import com.takhaki.schoolfoodnavigator.model.ShopEntity
-import com.takhaki.schoolfoodnavigator.model.UserEntity
+import com.takhaki.schoolfoodnavigator.entity.AssessmentEntity
+import com.takhaki.schoolfoodnavigator.entity.ShopEntity
+import com.takhaki.schoolfoodnavigator.entity.UserEntity
 import com.takhaki.schoolfoodnavigator.screen.detail.model.AboutShopDetailModel
 
 fun ShopEntity.toEntity(): ShopEntity {
@@ -23,7 +23,8 @@ fun AssessmentEntity.toEntity(): AssessmentEntity {
         good = good,
         distance = distance,
         cheep = cheep,
-        comment = comment
+        comment = comment,
+        createdDate = createdDate
     )
 }
 

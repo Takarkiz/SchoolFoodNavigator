@@ -3,7 +3,7 @@ package com.takhaki.schoolfoodnavigator.repository
 import android.content.Context
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.takhaki.schoolfoodnavigator.model.CompanyData
+import com.takhaki.schoolfoodnavigator.entity.CompanyData
 
 class CompanyRepository(private val context: Context) {
 

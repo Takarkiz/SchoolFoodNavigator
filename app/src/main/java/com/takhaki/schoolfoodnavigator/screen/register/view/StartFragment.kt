@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.takhaki.schoolfoodnavigator.MainActivity
-import com.takhaki.schoolfoodnavigator.model.CompanyData
+import com.takhaki.schoolfoodnavigator.entity.CompanyData
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.repository.UserAuth
 import kotlinx.android.synthetic.main.fragment_start.*

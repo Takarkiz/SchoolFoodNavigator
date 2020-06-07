@@ -1,4 +1,4 @@
-package com.takhaki.schoolfoodnavigator.model
+package com.takhaki.schoolfoodnavigator.entity
 
 import android.content.Context
 import androidx.core.content.edit

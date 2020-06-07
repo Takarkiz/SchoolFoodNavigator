@@ -4,13 +4,14 @@ import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.takhaki.schoolfoodnavigator.model.AssessmentEntity
+import com.takhaki.schoolfoodnavigator.entity.AssessmentEntity
 import com.takhaki.schoolfoodnavigator.repository.AssessmentRepository
 import com.takhaki.schoolfoodnavigator.repository.ShopInfoRepository
 import com.takhaki.schoolfoodnavigator.repository.UserAuth
 import com.takhaki.schoolfoodnavigator.screen.assesment.AssessmentNavigatorAbstract
 import com.takhaki.schoolfoodnavigator.screen.assesment.AssessmentViewModelBase
 import java.lang.ref.WeakReference
+import java.util.*
 
 class AssessmentViewModel(
     application: Application,
@@ -62,7 +63,8 @@ class AssessmentViewModel(
             good = good,
             distance = distance,
             cheep = cheep,
-            comment = commentText.value ?: ""
+            comment = commentText.value ?: "",
+            createdDate = Date()
         )
 
         val shopRepository = ShopInfoRepository(getApplication())

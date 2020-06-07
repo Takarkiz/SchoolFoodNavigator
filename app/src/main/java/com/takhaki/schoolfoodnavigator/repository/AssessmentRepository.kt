@@ -3,9 +3,10 @@ package com.takhaki.schoolfoodnavigator.repository
 import android.content.Context
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.takhaki.schoolfoodnavigator.model.AssessmentEntity
-import com.takhaki.schoolfoodnavigator.model.CompanyData
+import com.takhaki.schoolfoodnavigator.entity.AssessmentEntity
+import com.takhaki.schoolfoodnavigator.entity.CompanyData
 import io.reactivex.Single
+import java.util.*
 
 class AssessmentRepository(shopId: String, context: Context) {
 
@@ -52,7 +53,8 @@ class AssessmentRepository(shopId: String, context: Context) {
             "good" to assessment.good,
             "distance" to assessment.distance,
             "cheep" to assessment.cheep,
-            "comment" to assessment.comment
+            "comment" to assessment.comment,
+            "createdDate" to assessment.createdDate
         )
     }
 }

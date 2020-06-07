@@ -4,7 +4,7 @@ import android.content.Context
 import android.net.Uri
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.takhaki.schoolfoodnavigator.model.CompanyData
+import com.takhaki.schoolfoodnavigator.entity.CompanyData
 import com.takhaki.schoolfoodnavigator.Utility.getFileName
 import timber.log.Timber
 import java.io.File

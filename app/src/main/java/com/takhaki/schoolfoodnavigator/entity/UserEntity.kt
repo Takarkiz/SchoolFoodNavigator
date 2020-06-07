@@ -1,4 +1,4 @@
-package com.takhaki.schoolfoodnavigator.model
+package com.takhaki.schoolfoodnavigator.entity
 
 data class UserEntity(
     val id: String = "",
