@@ -1,5 +1,7 @@
 package com.takhaki.schoolfoodnavigator.screen.detail.model
 
+import java.util.*
+
 data class AboutShopDetailModel(
     val id: String = "",
     val name: String = "",
@@ -19,5 +21,6 @@ data class CommentDetailModel(
     val gScore: Float = 0f,
     val dScore: Float = 0f,
     val cScore: Float = 0f,
-    val comment: String = ""
+    val comment: String = "",
+    val date: Date? = null
 )

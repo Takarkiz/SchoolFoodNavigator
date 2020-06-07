@@ -48,13 +48,18 @@ class AssessmentRepository(shopId: String, context: Context) {
 
     private fun assesmentToMap(assessment: AssessmentEntity): Map<String, Any> {
 
+        val date = Calendar.getInstance().run {
+            add(Calendar.MONTH, -3)
+            assessment.createdDate ?: time
+        }
+
         return mapOf(
             "user" to assessment.user,
             "good" to assessment.good,
             "distance" to assessment.distance,
             "cheep" to assessment.cheep,
             "comment" to assessment.comment,
-            "createdDate" to assessment.createdDate
+            "createdDate" to date
         )
     }
 }

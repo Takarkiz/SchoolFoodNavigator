@@ -8,5 +8,5 @@ data class AssessmentEntity(
     val distance: Float = 0f,
     val cheep: Float = 0f,
     val comment: String = "",
-    val createdDate: Date = Date()
+    val createdDate: Date? = null
 )

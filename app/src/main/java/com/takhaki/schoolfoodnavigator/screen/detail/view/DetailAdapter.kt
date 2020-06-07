@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.takhaki.schoolfoodnavigator.R
+import com.takhaki.schoolfoodnavigator.Utility.extension.normalize
 import com.takhaki.schoolfoodnavigator.repository.FirestorageRepository
 import com.takhaki.schoolfoodnavigator.repository.UserAuth
 import com.takhaki.schoolfoodnavigator.screen.detail.model.AboutShopDetailModel
@@ -148,6 +149,8 @@ class DetailAdapter(
                 commentHolder.iconImageView.setOnClickListener {
                     userIconClickListener.onClickIcon(item.id)
                 }
+                commentHolder.commentedDateTextView.text = item.date?.normalize()
+
 
                 item.userIcon?.let { url ->
                     Glide.with(holder.itemView)
@@ -183,6 +186,7 @@ class DetailAdapter(
         val cRatingBar: MaterialRatingBar = resultItemView.findViewById(R.id.crate)
         val commentTextView: TextView = resultItemView.findViewById(R.id.commentContentTextView)
         val totalRatingSampleBar: MaterialRatingBar = resultItemView.findViewById(R.id.totalRating)
+        val commentedDateTextView: TextView = resultItemView.findViewById(R.id.dateTextView)
     }
 
     interface UserIconClickListener {

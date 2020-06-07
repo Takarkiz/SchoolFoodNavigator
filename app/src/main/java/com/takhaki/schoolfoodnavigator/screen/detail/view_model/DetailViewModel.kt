@@ -106,25 +106,26 @@ class DetailViewModel(
                                     gScore = result.good,
                                     dScore = result.distance,
                                     cScore = result.cheep,
-                                    comment = result.comment
+                                    comment = result.comment,
+                                    date = result.createdDate
                                 )
                             scores.add(comment)
                         }
                     }
                 }
 
-                _scoreList.value = scores
+                _scoreList.postValue(scores)
                 val goodAverage = results.map { it.good }.average().toFloat()
                 val distanceAverage = results.map { it.distance }.average().toFloat()
                 val cheepAverage = results.map { it.cheep }.average().toFloat()
-                createComment(goodAverage, distanceAverage, cheepAverage)
+                generateCommentModel(goodAverage, distanceAverage, cheepAverage)
             },
                 onError = {
 
                 }).addTo(disposable)
     }
 
-    private fun createComment(gAve: Float, dAve: Float, cAve: Float) {
+    private fun generateCommentModel(gAve: Float, dAve: Float, cAve: Float) {
         shopRepository.shop(shopId)
             .subscribe { shop ->
                 val shopDetailModel =
