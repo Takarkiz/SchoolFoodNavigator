@@ -46,9 +46,9 @@
             android:id="@+id/dateTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/userName"
-            tools:text="作成日"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="作成日" />
 
         <TextView
             android:id="@+id/totalRateTextView"
@@ -162,11 +162,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:text="コメントはここ"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:textColor="@android:color/black"
-            android:textSize="20sp"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/commentTextView" />
+            app:layout_constraintTop_toBottomOf="@id/commentTextView"
+            tools:text="コメントはここ" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
