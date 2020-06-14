@@ -7,8 +7,6 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.storage.StorageReference
-import com.takhaki.schoolfoodnavigator.entity.CompanyData
 import com.takhaki.schoolfoodnavigator.entity.UserEntity
 import io.reactivex.Single
 
@@ -18,7 +16,8 @@ class UserRepository(context: Context) : UserRepositoryContract {
     private val userDB: CollectionReference
 
     init {
-        val companyID = CompanyData.getCompanyId(context)
+        val companyRepository = CompanyRepository(context)
+        val companyID = companyRepository.companyId
         userDB = FirebaseFirestore.getInstance().collection("Team").document(companyID.toString())
             .collection("User")
 

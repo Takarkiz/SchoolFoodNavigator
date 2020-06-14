@@ -8,10 +8,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.takhaki.schoolfoodnavigator.entity.ShopEntity
-import com.takhaki.schoolfoodnavigator.repository.FirestorageRepository
-import com.takhaki.schoolfoodnavigator.repository.ShopRepository
-import com.takhaki.schoolfoodnavigator.repository.StorageTypes
-import com.takhaki.schoolfoodnavigator.repository.UserRepository
+import com.takhaki.schoolfoodnavigator.repository.*
 import com.takhaki.schoolfoodnavigator.screen.addShop.AddShopNavigatorAbstract
 import com.takhaki.schoolfoodnavigator.screen.addShop.AddShopViewModelBase
 import timber.log.Timber
@@ -20,6 +17,8 @@ import java.util.*
 
 class AddShopViewModel(
     application: Application,
+    private val shopRepository: ShopRepositoryContract,
+    private val userRepository: UserRepositoryContract,
     private val navigator: AddShopNavigatorAbstract
 ) : AddShopViewModelBase(application) {
 
@@ -50,8 +49,7 @@ class AddShopViewModel(
     override fun uploadShopInfo() {
         _isVisibleLoading.postValue(true)
 
-        val auth = UserRepository(getApplication())
-        val userID = auth.currentUser?.uid ?: return
+        val userID = userRepository.currentUser?.uid ?: return
         val id = UUID.randomUUID().toString()
 
         val shop = ShopEntity(
@@ -64,7 +62,6 @@ class AddShopViewModel(
             images = listOf()
         )
 
-        val shopRepository = ShopRepository(getApplication())
         val storage = FirestorageRepository()
         shopImageUri.value?.let { resourceUri ->
             storage.uploadImage(
@@ -78,7 +75,7 @@ class AddShopViewModel(
                         if (registerResult.isSuccess) {
                             registerResult.getOrNull()?.let {
                                 shopId = id
-                                auth.addPointShop()
+                                userRepository.addPointShop()
                             }
                         } else {
                             Timber.e(registerResult.exceptionOrNull())

@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.takhaki.schoolfoodnavigator.MainActivity
-import com.takhaki.schoolfoodnavigator.entity.CompanyData
 import com.takhaki.schoolfoodnavigator.R
+import com.takhaki.schoolfoodnavigator.repository.CompanyRepository
 import com.takhaki.schoolfoodnavigator.repository.UserRepository
 import kotlinx.android.synthetic.main.fragment_start.*
 
@@ -44,7 +44,8 @@ class StartFragment : Fragment() {
             findNavController().navigate(action)
         }
         context?.let { context ->
-            val companyID = CompanyData.getCompanyId(context)
+            val companyRepository = CompanyRepository(context)
+            val companyID = companyRepository.companyId
 
             // 既にログインしている かつ カンパニーIDが端末に保存済の場合はメインメニューに移動
             if (checkLoginUser() && companyID != 0) {

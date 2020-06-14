@@ -4,22 +4,22 @@ import android.content.Context
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.takhaki.schoolfoodnavigator.entity.AssessmentEntity
-import com.takhaki.schoolfoodnavigator.entity.CompanyData
 import io.reactivex.Single
 import java.util.*
 
-class AssessmentRepository(shopId: String, context: Context) {
+class AssessmentRepository(shopId: String, context: Context): AssessmentRespositoryContract {
 
     private val collectionRef: CollectionReference
 
     init {
-        val id = CompanyData.getCompanyId(context)
+        val companyRepository = CompanyRepository(context)
+        val id = companyRepository.companyId
         collectionRef = FirebaseFirestore.getInstance().collection("Team").document(id.toString())
             .collection("Shops").document(shopId)
             .collection("comment")
     }
 
-    fun fetchAllAssessment(): Single<List<AssessmentEntity>> {
+    override fun fetchAllAssessment(): Single<List<AssessmentEntity>> {
         return Single.create { emitter ->
             collectionRef.get()
                 .addOnSuccessListener { snapshot ->
@@ -35,7 +35,7 @@ class AssessmentRepository(shopId: String, context: Context) {
         }
     }
 
-    fun addAssessment(assessment: AssessmentEntity, handler: (Result<String>) -> Unit) {
+    override fun addAssessment(assessment: AssessmentEntity, handler: (Result<String>) -> Unit) {
 
         collectionRef
             .add(assesmentToMap(assessment))

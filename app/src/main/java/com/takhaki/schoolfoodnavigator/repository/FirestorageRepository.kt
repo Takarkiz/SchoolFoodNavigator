@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.Uri
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.takhaki.schoolfoodnavigator.entity.CompanyData
 import com.takhaki.schoolfoodnavigator.Utility.getFileName
 import timber.log.Timber
 import java.io.File
@@ -39,8 +38,8 @@ class FirestorageRepository {
         context: Context,
         handler: (Result<String>) -> Unit
     ) {
-
-        val companyID = CompanyData.getCompanyId(context).toString()
+        val companyRepository = CompanyRepository(context)
+        val companyID = companyRepository.companyId.toString()
         val fileName = imageUri.getFileName(context) ?: ""
         val filePath = "${companyID}/${filePathScheme.path}/${id}/${fileName}"
         val shopImageRef = storage.reference.child(filePath)

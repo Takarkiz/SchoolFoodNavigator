@@ -14,6 +14,7 @@ import com.takhaki.schoolfoodnavigator.screen.register.view_model.IconRegisterVi
 import com.takhaki.schoolfoodnavigator.screen.register.view_model.NameRegisterViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.viewmodel.dsl.viewModel
+import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 
 val viewModelModule = module(override = true) {
@@ -21,14 +22,18 @@ val viewModelModule = module(override = true) {
     viewModel<ShopListViewModelBase> {
         ShopListViewModel(
             androidApplication(),
-            get()
+            get(),
+            get { parametersOf(null) },
+            get { parametersOf(null) }
         )
     }
 
     viewModel {
         AddShopViewModel(
             androidApplication(),
-            get()
+            get(),
+            get { parametersOf(null) },
+            get { parametersOf(null) }
         )
     }
 

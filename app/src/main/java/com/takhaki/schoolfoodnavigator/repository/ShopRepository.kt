@@ -6,11 +6,9 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.takhaki.schoolfoodnavigator.entity.AssessmentEntity
-import com.takhaki.schoolfoodnavigator.entity.CompanyData
 import com.takhaki.schoolfoodnavigator.entity.ShopEntity
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
-import io.reactivex.Single
 import timber.log.Timber
 
 class ShopRepository(context: Context) : ShopRepositoryContract {
@@ -88,7 +86,8 @@ class ShopRepository(context: Context) : ShopRepositoryContract {
     private val shopDB: CollectionReference
 
     init {
-        val id = CompanyData.getCompanyId(context)
+        val companyRepository = CompanyRepository(context)
+        val id = companyRepository.companyId
         shopDB = FirebaseFirestore.getInstance().collection("Team").document(id.toString())
             .collection("Shops")
     }
@@ -139,24 +138,6 @@ class ShopRepository(context: Context) : ShopRepositoryContract {
             }
             emitter.setCancellable { reg.remove() }
         }, BackpressureStrategy.LATEST)
-    }
-
-    fun fetchAllShops(): Single<List<ShopEntity>> {
-
-        return Single.create { emitter ->
-            val query = shopDB.orderBy("editedAt", Query.Direction.DESCENDING)
-            query.get()
-                .addOnSuccessListener { snapshot ->
-                    val shops = snapshot.documents.mapNotNull {
-                        val shop = it.toObject(ShopEntity::class.java)
-                        shop?.toEntity()
-                    }
-                    emitter.onSuccess(shops)
-                }
-                .addOnFailureListener { e ->
-                    emitter.tryOnError(e)
-                }
-        }
     }
 
     private fun inverseMapping(shop: ShopEntity, shopImagePath: String?): Map<String, Any> {

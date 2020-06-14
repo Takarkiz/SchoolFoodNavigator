@@ -62,37 +62,50 @@ class CreateRoomViewModel(application: Application) : AndroidViewModel(applicati
     fun createRoom(handler: (Int) -> Unit) {
         val repository = CompanyRepository(getApplication())
         val auth = UserRepository(getApplication())
-        val uid = auth.currentUser?.uid?.let { it } ?: return
+        val uid = auth.currentUser?.uid ?: return
 
         contentEditText.value?.let { name ->
-            repository.createCompany(name) { result ->
-                if (result.isSuccess) {
-                    result.getOrNull()?.let { teamId ->
-                        repository.joinMember(uid, teamId)
-                        handler(teamId)
-                    }
-                }
-            }
+            repository.createCompanyRoom(name)
+                .subscribeBy(
+                    onSuccess = { teamId ->
+                        repository.joinTeam(uid).subscribeBy(
+                            onSuccess = {
+                                handler(teamId)
+                            }, onError = {
+                                Timber.e(it)
+                            }).addTo(disposable)
+                    },
+                    onError = {
+                        Timber.d(it)
+                    }).addTo(disposable)
         }
     }
+
 
     // チームID検索
     fun searchTeam(id: Int, handler: (Result<Boolean>) -> Unit) {
         val auth = UserRepository(getApplication())
         val uid = auth.currentUser?.uid?.let { it } ?: return
         val repository = CompanyRepository(getApplication())
-        repository.searchCompany(id) {
-            if (it.isSuccess) {
-                it.getOrNull()?.let { result ->
-                    if (result) {
-                        repository.joinMember(uid, id)
-                    }
+        repository.searchCompany(id)
+            .subscribeBy(onSuccess = { result ->
+                if (result) {
+                    repository.joinTeam(uid).subscribeBy(
+                        onSuccess = {
+                            handler(Result.success(true))
+                        },
+                        onError = { error ->
+                            Timber.e(error)
+                            handler(Result.failure(error))
+                        }
+                    )
                 }
-
-            }
-            handler(it)
-        }
+            },
+                onError = {
+                    handler(Result.failure(it))
+                }).addTo(disposable)
     }
 
     private val disposable: CompositeDisposable = CompositeDisposable()
+
 }

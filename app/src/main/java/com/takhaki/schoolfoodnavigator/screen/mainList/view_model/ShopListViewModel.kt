@@ -9,9 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.OnLifecycleEvent
 import com.takhaki.schoolfoodnavigator.DefaultSetting
 import com.takhaki.schoolfoodnavigator.entity.ShopEntity
-import com.takhaki.schoolfoodnavigator.repository.AssessmentRepository
-import com.takhaki.schoolfoodnavigator.repository.ShopRepository
-import com.takhaki.schoolfoodnavigator.repository.UserRepository
+import com.takhaki.schoolfoodnavigator.repository.*
 import com.takhaki.schoolfoodnavigator.screen.mainList.ShopListNavigatorAbstract
 import com.takhaki.schoolfoodnavigator.screen.mainList.ShopListViewModelBase
 import com.takhaki.schoolfoodnavigator.screen.mainList.model.ShopListItemModel
@@ -24,6 +22,8 @@ import java.lang.ref.WeakReference
 
 class ShopListViewModel(
     application: Application,
+    private val shopRepository: ShopRepositoryContract,
+    private val userRepository: UserRepositoryContract,
     private val navigator: ShopListNavigatorAbstract
 ) : ShopListViewModelBase(application) {
 
@@ -41,7 +41,6 @@ class ShopListViewModel(
     }
 
     override fun didTapOwnProfileIcon() {
-        val userRepository = UserRepository(getApplication())
         userRepository.currentUser?.uid?.let { id ->
             navigator.toProfilePage(id)
         }
@@ -84,10 +83,9 @@ class ShopListViewModel(
     private val disposable: CompositeDisposable = CompositeDisposable()
 
     private fun subscribeShopList() {
-        val repository = ShopRepository(appContext)
-        repository.fetchAllShops()
-            .subscribeBy(
-                onSuccess = {
+        shopRepository.getShops()
+            .subscribeBy (
+                onNext = {
                     it.forEach { shop ->
                         getShopAssessments(shop)
                     }
@@ -99,9 +97,8 @@ class ShopListViewModel(
     }
 
     private fun subscribeCurrentUser() {
-        val repository = UserRepository(getApplication())
-        repository.currentUser?.uid?.let {
-            repository.fetchUser(it)
+        userRepository.currentUser?.uid?.let {
+            userRepository.fetchUser(it)
                 .subscribeBy(
                     onSuccess = { user ->
                         _userIconUrl.postValue(user.iconUrl)

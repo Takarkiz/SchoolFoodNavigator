@@ -1,6 +1,7 @@
 package com.takhaki.schoolfoodnavigator.repository
 
 import com.takhaki.schoolfoodnavigator.entity.AssessmentEntity
+import com.takhaki.schoolfoodnavigator.entity.Company
 import com.takhaki.schoolfoodnavigator.entity.ShopEntity
 import com.takhaki.schoolfoodnavigator.entity.UserEntity
 import com.takhaki.schoolfoodnavigator.screen.detail.model.AboutShopDetailModel
@@ -35,6 +36,14 @@ fun UserEntity.toEntity():  UserEntity {
         iconUrl = iconUrl,
         score = score,
         favList = favList
+    )
+}
+
+fun Company.toEntity(): Company {
+    return Company(
+        id = id,
+        name = name,
+        members = members
     )
 }
 

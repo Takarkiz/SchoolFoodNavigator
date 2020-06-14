@@ -6,8 +6,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.OnLifecycleEvent
-import com.takhaki.schoolfoodnavigator.Utility.RewardUtil.Companion.calculateUserRank
-import com.takhaki.schoolfoodnavigator.entity.CompanyData
 import com.takhaki.schoolfoodnavigator.entity.UserEntity
 import com.takhaki.schoolfoodnavigator.repository.CompanyRepository
 import com.takhaki.schoolfoodnavigator.repository.UserRepository
@@ -41,7 +39,8 @@ class ProfileViewModel(
     }
 
     override fun didTapDeleteUser() {
-        CompanyData.deleteCompanyId(getApplication())
+        val companyRepository = CompanyRepository(getApplication())
+        companyRepository.deleteCompanyIdCache()
         navigator.toFirstView()
     }
 
@@ -70,15 +69,16 @@ class ProfileViewModel(
     }
 
     private fun getUserTeamName() {
-        val companyID = CompanyData.getCompanyId(getApplication()).toString()
         val repository = CompanyRepository(getApplication())
-        repository.fetchCompanyName { result ->
-            if (result.isSuccess) {
-                result.getOrNull()?.let { name ->
-                    _teamName.value = "${name}(ID: ${companyID})"
-                }
+        val companyID = repository.companyId.toString()
+        repository.company.subscribeBy(
+            onSuccess = {
+                _teamName.value = "${it.name}(ID: ${companyID})"
+            },
+            onError = {
+                Timber.e(it)
             }
-        }
+        ).addTo(disposable)
     }
 
     private fun getUser() {

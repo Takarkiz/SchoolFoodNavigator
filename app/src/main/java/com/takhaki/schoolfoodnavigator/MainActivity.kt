@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
+import com.takhaki.schoolfoodnavigator.repository.FirestorageRepository
 import com.takhaki.schoolfoodnavigator.screen.mainList.ShopListViewModelBase
 import com.takhaki.schoolfoodnavigator.screen.mainList.view.MainListFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -60,7 +61,7 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.userIconUrl.observe({ lifecycle }, { url ->
             Glide.with(this)
-                .load(url)
+                .load(FirestorageRepository.getGSReference(url))
                 .placeholder(R.drawable.ic_nav_icon_mypage)
                 .into(iconImage)
         })

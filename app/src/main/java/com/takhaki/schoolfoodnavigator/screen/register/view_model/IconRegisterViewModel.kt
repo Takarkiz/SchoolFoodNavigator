@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.*
-import com.takhaki.schoolfoodnavigator.entity.CompanyData
+import com.takhaki.schoolfoodnavigator.repository.CompanyRepository
 import com.takhaki.schoolfoodnavigator.repository.FirestorageRepository
 import com.takhaki.schoolfoodnavigator.repository.StorageTypes
 import com.takhaki.schoolfoodnavigator.repository.UserRepository
@@ -72,7 +72,8 @@ class IconRegisterViewModel(application: Application) : AndroidViewModel(applica
     }
 
     fun saveCompanyID(id: Int, context: Context) {
-        CompanyData.saveCompanyId(id, context)
+        val companyRepository = CompanyRepository(context)
+        companyRepository.setCompanyId(id)
     }
 
     private fun registerUser(repository: UserRepository, name: String, url: String?) {
