@@ -8,8 +8,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.OnLifecycleEvent
 import com.takhaki.schoolfoodnavigator.repository.AssessmentRepository
 import com.takhaki.schoolfoodnavigator.repository.FirestorageRepository
-import com.takhaki.schoolfoodnavigator.repository.ShopInfoRepository
-import com.takhaki.schoolfoodnavigator.repository.UserAuth
+import com.takhaki.schoolfoodnavigator.repository.ShopRepository
+import com.takhaki.schoolfoodnavigator.repository.UserRepository
 import com.takhaki.schoolfoodnavigator.screen.detail.DetailNavigatorAbstract
 import com.takhaki.schoolfoodnavigator.screen.detail.DetailViewModelBase
 import com.takhaki.schoolfoodnavigator.screen.detail.model.AboutShopDetailModel
@@ -46,7 +46,7 @@ class DetailViewModel(
     }
 
     override fun didTapDeleteShop(handler: (Result<String>) -> Unit) {
-        val repository = ShopInfoRepository(getApplication())
+        val repository = ShopRepository(getApplication())
         val storage = FirestorageRepository()
         _shopDetail.value?.let {
             repository.deleteShop(it.id) { result ->
@@ -82,7 +82,7 @@ class DetailViewModel(
     // Private
 
     private val disposable: CompositeDisposable = CompositeDisposable()
-    private val shopRepository = ShopInfoRepository(getApplication())
+    private val shopRepository = ShopRepository(getApplication())
     private val scores = mutableListOf<CommentDetailModel>()
 
     private val _shopDetail = MutableLiveData<AboutShopDetailModel>()
@@ -91,7 +91,7 @@ class DetailViewModel(
 
 
     private fun loadShopDetail() {
-        val auth = UserAuth(getApplication())
+        val auth = UserRepository(getApplication())
         val repository = AssessmentRepository(shopId, getApplication())
         repository.fetchAllAssessment()
             .subscribeBy(
@@ -100,25 +100,29 @@ class DetailViewModel(
                         if (result.user == auth.currentUser?.uid) _hasCurrentUserComment.postValue(
                             true
                         )
-                        auth.userNameAndIconPath(result.user) {
-                            it.getOrNull()?.let { pair ->
-                                val comment =
-                                    CommentDetailModel(
-                                        id = result.user,
-                                        name = pair.first,
-                                        userIcon = pair.second,
-                                        gScore = result.good,
-                                        dScore = result.distance,
-                                        cScore = result.cheep,
-                                        comment = result.comment,
-                                        date = result.createdDate
-                                    )
-                                scores.add(comment)
-                                _scoreList.postValue(scores)
-                            }
-                        }
+                        auth.fetchUser(result.user)
+                            .subscribeBy(
+                                onSuccess = {
+                                    val comment =
+                                        CommentDetailModel(
+                                            id = result.user,
+                                            name = it.name,
+                                            userIcon = it.iconUrl,
+                                            gScore = result.good,
+                                            dScore = result.distance,
+                                            cScore = result.cheep,
+                                            comment = result.comment,
+                                            date = result.createdDate
+                                        )
+                                    scores.add(comment)
+                                    _scoreList.postValue(scores)
+                                },
+                                onError = {
+                                    Timber.d(it)
+                                }
+                            ).addTo(disposable)
                     }
-                    
+
                     val goodAverage = results.map { it.good }.average().toFloat()
                     val distanceAverage = results.map { it.distance }.average().toFloat()
                     val cheepAverage = results.map { it.cheep }.average().toFloat()

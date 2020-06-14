@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.takhaki.schoolfoodnavigator.MainActivity
 import com.takhaki.schoolfoodnavigator.entity.CompanyData
 import com.takhaki.schoolfoodnavigator.R
-import com.takhaki.schoolfoodnavigator.repository.UserAuth
+import com.takhaki.schoolfoodnavigator.repository.UserRepository
 import kotlinx.android.synthetic.main.fragment_start.*
 
 
@@ -58,7 +58,7 @@ class StartFragment : Fragment() {
 
     private fun checkLoginUser(): Boolean {
         val context = requireContext()
-        val auth = UserAuth(context)
+        val auth = UserRepository(context)
         return auth.currentUser != null
     }
 

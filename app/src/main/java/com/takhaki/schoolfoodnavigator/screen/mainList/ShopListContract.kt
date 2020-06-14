@@ -29,6 +29,11 @@ interface ShopListViewModelContract {
     val shopItemLists: LiveData<List<List<ShopListItemModel>>>
 
     /**
+     * 現在のユーザーのアイコンURL
+     */
+    val userIconUrl: LiveData<String>
+
+    /**
      * ショップリストのアクティビティ
      */
     fun activity(activity: AppCompatActivity)
@@ -41,7 +46,7 @@ interface ShopListViewModelContract {
     /**
      * 自分のプロフアイコンをタップした時
      */
-    fun didTapOwnProfileIcon(id: String)
+    fun didTapOwnProfileIcon()
 
     /**
      * ショップをタップした時

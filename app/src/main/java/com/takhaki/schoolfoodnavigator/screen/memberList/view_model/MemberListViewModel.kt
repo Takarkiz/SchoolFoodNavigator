@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.OnLifecycleEvent
 import com.takhaki.schoolfoodnavigator.entity.UserEntity
-import com.takhaki.schoolfoodnavigator.repository.UserAuth
+import com.takhaki.schoolfoodnavigator.repository.UserRepository
 import com.takhaki.schoolfoodnavigator.screen.memberList.MemberListNavigatorAbstract
 import com.takhaki.schoolfoodnavigator.screen.memberList.MemberListViewModelBase
 import io.reactivex.disposables.CompositeDisposable
@@ -59,7 +59,7 @@ class MemberListViewModel(
     private val disposable: CompositeDisposable = CompositeDisposable()
 
     private fun fetchUsers() {
-        val auth = UserAuth(getApplication())
+        val auth = UserRepository(getApplication())
         auth.fetchAllUser()
             .subscribeBy(
                 onSuccess = { result ->

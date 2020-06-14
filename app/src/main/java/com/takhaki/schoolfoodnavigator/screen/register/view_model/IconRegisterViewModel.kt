@@ -5,7 +5,13 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.*
 import com.takhaki.schoolfoodnavigator.entity.CompanyData
-import com.takhaki.schoolfoodnavigator.repository.UserAuth
+import com.takhaki.schoolfoodnavigator.repository.FirestorageRepository
+import com.takhaki.schoolfoodnavigator.repository.StorageTypes
+import com.takhaki.schoolfoodnavigator.repository.UserRepository
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.subscribeBy
+import timber.log.Timber
 
 class IconRegisterViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -21,6 +27,8 @@ class IconRegisterViewModel(application: Application) : AndroidViewModel(applica
 
     private val finishButtonTitle = MediatorLiveData<String>().apply { value = "アイコン設定をスキップ" }
 
+    private val disposable = CompositeDisposable()
+
     init {
         val iconUriObserver = Observer<Uri> {
             val uri = _iconImageUri.value
@@ -29,6 +37,11 @@ class IconRegisterViewModel(application: Application) : AndroidViewModel(applica
             }
         }
         finishButtonTitle.addSource(_iconImageUri, iconUriObserver)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        disposable.dispose()
     }
 
     fun putUserName(userName: String) {
@@ -40,19 +53,37 @@ class IconRegisterViewModel(application: Application) : AndroidViewModel(applica
     }
 
     fun createUser() {
-        val auth = UserAuth(getApplication())
+        val auth = UserRepository(getApplication())
         val name = _userName.value ?: return
-        val iconUri = _iconImageUri.value
-
-        auth.createUser(name, iconUri, context) { result ->
-            if (result.isSuccess) {
-                _isCompletedUserData.postValue(true)
+        val uid = auth.currentUser?.uid ?: return
+        val storage = FirestorageRepository()
+        _iconImageUri.value?.let { uri ->
+            storage.uploadImage(uid, uri, StorageTypes.USER, getApplication()) { result ->
+                if (result.isSuccess) {
+                    val url = result.getOrNull()
+                    registerUser(auth, name, url)
+                } else {
+                    Timber.e(result.exceptionOrNull())
+                }
             }
-            // TODO: - エラーハンドリングする
+        } ?: run {
+            registerUser(auth, name, null)
         }
     }
 
     fun saveCompanyID(id: Int, context: Context) {
         CompanyData.saveCompanyId(id, context)
+    }
+
+    private fun registerUser(repository: UserRepository, name: String, url: String?) {
+        repository.createUser(name, url)
+            .subscribeBy(
+                onSuccess = {
+                    _isCompletedUserData.postValue(true)
+                },
+                onError = {
+                    _isCompletedUserData.postValue(false)
+                }
+            ).addTo(disposable)
     }
 }

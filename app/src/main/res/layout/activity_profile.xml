@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="profileViewModel"
             type="com.takhaki.schoolfoodnavigator.screen.profile.view_model.ProfileViewModel" />
@@ -28,7 +27,6 @@
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
-                android:text="@{profileViewModel.teamName}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="チーム名" />
@@ -50,7 +48,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@{profileViewModel.userName}"
                 android:textColor="@android:color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
@@ -90,7 +87,6 @@
                 <TextView
                     android:id="@+id/pointText"
                     style="@style/profile_big_content"
-                    android:text="@{@string/nav_point_format(profileViewModel.userPoint.toString())}"
                     tools:text="ポイント" />
             </LinearLayout>
 
@@ -126,7 +122,6 @@
                     android:id="@+id/shogoTextView"
                     style="@style/profile_big_content"
                     android:gravity="center"
-                    android:text="@{profileViewModel.userGradeTitle}"
                     tools:text="称号" />
             </LinearLayout>
 

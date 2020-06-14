@@ -12,10 +12,14 @@ import com.google.android.material.snackbar.Snackbar
 import com.takhaki.schoolfoodnavigator.R
 import com.takhaki.schoolfoodnavigator.Utility.extension.normalize
 import com.takhaki.schoolfoodnavigator.repository.FirestorageRepository
-import com.takhaki.schoolfoodnavigator.repository.UserAuth
+import com.takhaki.schoolfoodnavigator.repository.UserRepository
 import com.takhaki.schoolfoodnavigator.screen.detail.model.AboutShopDetailModel
 import com.takhaki.schoolfoodnavigator.screen.detail.model.CommentDetailModel
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.subscribeBy
 import me.zhanghai.android.materialratingbar.MaterialRatingBar
+import timber.log.Timber
 
 class DetailAdapter(
     val context: Context,
@@ -25,6 +29,7 @@ class DetailAdapter(
     private val DETAIL_VIEW_TYPE = 0
     private val USER_VIEW_TYPE = 1
     private var isFavorite = false
+    private val disposable = CompositeDisposable()
 
     var shopId: String = ""
 
@@ -101,7 +106,7 @@ class DetailAdapter(
                 shopViewHolder.cheepRatingStar.rating = dataAboutShop.cheep
                 shopViewHolder.cheepRatingStar.isEnabled = false
 
-                val auth = UserAuth(context)
+                val auth = UserRepository(context)
                 auth.checkFavoriteShop(shopId) { containFav ->
                     isFavorite = containFav
                     if (containFav) {
@@ -113,18 +118,29 @@ class DetailAdapter(
 
                 shopViewHolder.favoriteIconImageView.setOnClickListener { view ->
                     if (isFavorite) {
-                        auth.deleteFavoriteShop(shopId) {
-                            Snackbar.make(view, "お気に入りから削除しました", Snackbar.LENGTH_SHORT).show()
-                            shopViewHolder.favoriteIconImageView.setImageResource(R.drawable.ic_nav_favorite)
-                            isFavorite = false
-                        }
+                        auth.removeFavoriteShop(shopId)
+                            .subscribeBy(
+                                onSuccess = {
+                                    Snackbar.make(view, "お気に入りから削除しました", Snackbar.LENGTH_SHORT).show()
+                                    shopViewHolder.favoriteIconImageView.setImageResource(R.drawable.ic_nav_favorite)
+                                    isFavorite = false
+                                },
+                                onError = {
+                                    Timber.d(it)
+                                }).addTo(disposable)
                     } else {
-                        auth.addFavoriteShop(shopId) {
-                            // お気に入りリストに追加成功
-                            Snackbar.make(view, "お気に入りに追加しました", Snackbar.LENGTH_SHORT).show()
-                            shopViewHolder.favoriteIconImageView.setImageResource(R.drawable.ic_nav_fill_favorite)
-                            isFavorite = true
-                        }
+                        auth.addFavoriteShop(shopId)
+                            .subscribeBy(
+                                onSuccess = {
+                                    // お気に入りリストに追加成功
+                                    Snackbar.make(view, "お気に入りに追加しました", Snackbar.LENGTH_SHORT)
+                                        .show()
+                                    shopViewHolder.favoriteIconImageView.setImageResource(R.drawable.ic_nav_fill_favorite)
+                                    isFavorite = true
+                                },
+                                onError = {
+                                    Timber.e(it)
+                                }).addTo(disposable)
                     }
                 }
             }

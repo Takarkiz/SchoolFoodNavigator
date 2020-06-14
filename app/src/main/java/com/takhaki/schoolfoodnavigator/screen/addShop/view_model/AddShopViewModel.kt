@@ -9,9 +9,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.takhaki.schoolfoodnavigator.entity.ShopEntity
 import com.takhaki.schoolfoodnavigator.repository.FirestorageRepository
-import com.takhaki.schoolfoodnavigator.repository.ShopInfoRepository
+import com.takhaki.schoolfoodnavigator.repository.ShopRepository
 import com.takhaki.schoolfoodnavigator.repository.StorageTypes
-import com.takhaki.schoolfoodnavigator.repository.UserAuth
+import com.takhaki.schoolfoodnavigator.repository.UserRepository
 import com.takhaki.schoolfoodnavigator.screen.addShop.AddShopNavigatorAbstract
 import com.takhaki.schoolfoodnavigator.screen.addShop.AddShopViewModelBase
 import timber.log.Timber
@@ -50,7 +50,7 @@ class AddShopViewModel(
     override fun uploadShopInfo() {
         _isVisibleLoading.postValue(true)
 
-        val auth = UserAuth(getApplication())
+        val auth = UserRepository(getApplication())
         val userID = auth.currentUser?.uid ?: return
         val id = UUID.randomUUID().toString()
 
@@ -64,7 +64,7 @@ class AddShopViewModel(
             images = listOf()
         )
 
-        val shopRepository = ShopInfoRepository(getApplication())
+        val shopRepository = ShopRepository(getApplication())
         val storage = FirestorageRepository()
         shopImageUri.value?.let { resourceUri ->
             storage.uploadImage(

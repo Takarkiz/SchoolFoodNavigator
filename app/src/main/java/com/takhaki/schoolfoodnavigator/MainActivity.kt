@@ -7,9 +7,8 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
-import com.takhaki.schoolfoodnavigator.repository.UserAuth
-import com.takhaki.schoolfoodnavigator.screen.mainList.view.MainListFragment
 import com.takhaki.schoolfoodnavigator.screen.mainList.ShopListViewModelBase
+import com.takhaki.schoolfoodnavigator.screen.mainList.view.MainListFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -56,27 +55,19 @@ class MainActivity : AppCompatActivity() {
             viewModel.didTapAddFabIcon()
         }
 
-        val auth = UserAuth(this)
-        val uid = auth.currentUser?.uid
-        auth.currentUserIconUrl { result ->
-            if (result.isSuccess) {
-                result.getOrNull()?.let { url ->
-                    Glide.with(this)
-                        .load(url)
-                        .placeholder(R.drawable.ic_nav_icon_mypage)
-                        .into(iconImage)
-                }
-            }
-        }
-
-        iconImage.setOnClickListener {
-            uid?.let {
-                viewModel.didTapOwnProfileIcon(it)
-            }
-        }
-
         lifecycle.addObserver(viewModel)
         viewModel.activity(this)
+
+        viewModel.userIconUrl.observe({ lifecycle }, { url ->
+            Glide.with(this)
+                .load(url)
+                .placeholder(R.drawable.ic_nav_icon_mypage)
+                .into(iconImage)
+        })
+
+        iconImage.setOnClickListener {
+            viewModel.didTapOwnProfileIcon()
+        }
     }
 
     override fun onBackPressed() {

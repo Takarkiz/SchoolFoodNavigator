@@ -10,11 +10,11 @@ import androidx.lifecycle.OnLifecycleEvent
 import com.takhaki.schoolfoodnavigator.DefaultSetting
 import com.takhaki.schoolfoodnavigator.entity.ShopEntity
 import com.takhaki.schoolfoodnavigator.repository.AssessmentRepository
-import com.takhaki.schoolfoodnavigator.repository.ShopInfoRepository
-import com.takhaki.schoolfoodnavigator.repository.UserAuth
-import com.takhaki.schoolfoodnavigator.screen.mainList.model.ShopListItemModel
+import com.takhaki.schoolfoodnavigator.repository.ShopRepository
+import com.takhaki.schoolfoodnavigator.repository.UserRepository
 import com.takhaki.schoolfoodnavigator.screen.mainList.ShopListNavigatorAbstract
 import com.takhaki.schoolfoodnavigator.screen.mainList.ShopListViewModelBase
+import com.takhaki.schoolfoodnavigator.screen.mainList.model.ShopListItemModel
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
@@ -29,8 +29,8 @@ class ShopListViewModel(
 
     // ShopListViewModelContract
 
-    override val shopItemLists: LiveData<List<List<ShopListItemModel>>>
-        get() = _shopItems
+    override val shopItemLists: LiveData<List<List<ShopListItemModel>>> get() = _shopItems
+    override val userIconUrl: LiveData<String> get() = _userIconUrl
 
     override fun activity(activity: AppCompatActivity) {
         navigator.weakActivity = WeakReference(activity)
@@ -40,8 +40,11 @@ class ShopListViewModel(
         navigator.toAddShopView()
     }
 
-    override fun didTapOwnProfileIcon(id: String) {
-        navigator.toProfilePage(id)
+    override fun didTapOwnProfileIcon() {
+        val userRepository = UserRepository(getApplication())
+        userRepository.currentUser?.uid?.let { id ->
+            navigator.toProfilePage(id)
+        }
     }
 
     override fun didTapShopItem(id: String, name: String) {
@@ -57,6 +60,7 @@ class ShopListViewModel(
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun onCreate() {
         subscribeShopList()
+        subscribeCurrentUser()
     }
 
     // AndroidViewModel
@@ -70,6 +74,7 @@ class ShopListViewModel(
     private var number: Int = 0
     private var appContext: Context = getApplication<DefaultSetting>()
     private val _shopItems = MutableLiveData<List<List<ShopListItemModel>>>()
+    private val _userIconUrl = MutableLiveData<String>()
 
     // 内部のみで保持しているshopItems
     private val shopItemsByDate = mutableListOf<ShopListItemModel>()
@@ -79,7 +84,7 @@ class ShopListViewModel(
     private val disposable: CompositeDisposable = CompositeDisposable()
 
     private fun subscribeShopList() {
-        val repository = ShopInfoRepository(appContext)
+        val repository = ShopRepository(appContext)
         repository.fetchAllShops()
             .subscribeBy(
                 onSuccess = {
@@ -93,6 +98,21 @@ class ShopListViewModel(
             ).addTo(disposable)
     }
 
+    private fun subscribeCurrentUser() {
+        val repository = UserRepository(getApplication())
+        repository.currentUser?.uid?.let {
+            repository.fetchUser(it)
+                .subscribeBy(
+                    onSuccess = { user ->
+                        _userIconUrl.postValue(user.iconUrl)
+                    }, onError = { e ->
+                        Timber.e(e)
+                    }
+                ).addTo(disposable)
+        }
+
+    }
+
     private fun getShopAssessments(shop: ShopEntity) {
 
         val repository = AssessmentRepository(shop.id, appContext)
@@ -104,7 +124,7 @@ class ShopListViewModel(
                         if (assessments.isNotEmpty()) assessments.map { assessment ->
                             (assessment.good + assessment.cheep + assessment.distance) / 3
                         }.average() else 0.0
-                    val auth = UserAuth(appContext)
+                    val auth = UserRepository(appContext)
                     auth.checkFavoriteShop(shop.id) { isFavorite ->
                         val shopItem =
                             ShopListItemModel(

@@ -13,7 +13,7 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 import timber.log.Timber
 
-class ShopInfoRepository(context: Context) : ShopRepositoryContract {
+class ShopRepository(context: Context) : ShopRepositoryContract {
 
 
     override fun getShops(): Flowable<List<ShopEntity>> =

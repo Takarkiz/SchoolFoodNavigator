@@ -6,8 +6,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.takhaki.schoolfoodnavigator.entity.AssessmentEntity
 import com.takhaki.schoolfoodnavigator.repository.AssessmentRepository
-import com.takhaki.schoolfoodnavigator.repository.ShopInfoRepository
-import com.takhaki.schoolfoodnavigator.repository.UserAuth
+import com.takhaki.schoolfoodnavigator.repository.ShopRepository
+import com.takhaki.schoolfoodnavigator.repository.UserRepository
 import com.takhaki.schoolfoodnavigator.screen.assesment.AssessmentNavigatorAbstract
 import com.takhaki.schoolfoodnavigator.screen.assesment.AssessmentViewModelBase
 import java.lang.ref.WeakReference
@@ -50,7 +50,7 @@ class AssessmentViewModel(
     }
 
     override fun uploadAssessment(finishUploadHandler: (Result<String>) -> Unit) {
-        val auth = UserAuth(getApplication())
+        val auth = UserRepository(getApplication())
         val userId = auth.currentUser?.uid ?: return
 
         val good = goodValue.value ?: 3f
@@ -67,7 +67,7 @@ class AssessmentViewModel(
             createdDate = Date()
         )
 
-        val shopRepository = ShopInfoRepository(getApplication())
+        val shopRepository = ShopRepository(getApplication())
 
         repository.addAssessment(assessment) { result ->
             if (result.isSuccess) {

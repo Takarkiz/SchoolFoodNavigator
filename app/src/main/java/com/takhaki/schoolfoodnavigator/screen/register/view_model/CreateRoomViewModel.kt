@@ -6,7 +6,11 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.takhaki.schoolfoodnavigator.repository.CompanyRepository
-import com.takhaki.schoolfoodnavigator.repository.UserAuth
+import com.takhaki.schoolfoodnavigator.repository.UserRepository
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.subscribeBy
+import timber.log.Timber
 
 class CreateRoomViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -24,6 +28,11 @@ class CreateRoomViewModel(application: Application) : AndroidViewModel(applicati
         isShowFinishButton.addSource(contentEditText, inputTextObserver)
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        disposable.dispose()
+    }
+
     fun putJoin(isJoin: Boolean) {
         if (isJoin) {
             titleText.value = "チームIDを入力してください"
@@ -36,21 +45,23 @@ class CreateRoomViewModel(application: Application) : AndroidViewModel(applicati
 
     // サインインを行う
     fun signInAuth() {
-        val auth = UserAuth(getApplication())
+        val auth = UserRepository(getApplication())
         if (auth.currentUser != null) return
-        auth.signInUser { result ->
-            if (result.isSuccess) {
-                result.getOrNull()?.let { uid ->
-
+        auth.signInUser()
+            .subscribeBy(
+                onSuccess = {
+                    Timber.d("登録完了！uid: $it")
+                },
+                onError = {
+                    Timber.e(it)
                 }
-            }
-        }
+            ).addTo(disposable)
     }
 
     // チームを作成する
     fun createRoom(handler: (Int) -> Unit) {
         val repository = CompanyRepository(getApplication())
-        val auth = UserAuth(getApplication())
+        val auth = UserRepository(getApplication())
         val uid = auth.currentUser?.uid?.let { it } ?: return
 
         contentEditText.value?.let { name ->
@@ -67,7 +78,7 @@ class CreateRoomViewModel(application: Application) : AndroidViewModel(applicati
 
     // チームID検索
     fun searchTeam(id: Int, handler: (Result<Boolean>) -> Unit) {
-        val auth = UserAuth(getApplication())
+        val auth = UserRepository(getApplication())
         val uid = auth.currentUser?.uid?.let { it } ?: return
         val repository = CompanyRepository(getApplication())
         repository.searchCompany(id) {
@@ -82,4 +93,6 @@ class CreateRoomViewModel(application: Application) : AndroidViewModel(applicati
             handler(it)
         }
     }
+
+    private val disposable: CompositeDisposable = CompositeDisposable()
 }

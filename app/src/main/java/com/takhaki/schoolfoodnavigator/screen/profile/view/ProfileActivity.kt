@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.takhaki.schoolfoodnavigator.R
+import com.takhaki.schoolfoodnavigator.Utility.RewardUtil
 import com.takhaki.schoolfoodnavigator.databinding.ActivityProfileBinding
 import com.takhaki.schoolfoodnavigator.repository.FirestorageRepository
 import com.takhaki.schoolfoodnavigator.screen.profile.view_model.ProfileViewModel
@@ -49,11 +50,21 @@ class ProfileActivity : AppCompatActivity() {
         viewModel.activity(this)
         lifecycle.addObserver(viewModel)
 
-        viewModel.userImageUrl.observe(this, Observer {
-            Glide.with(this)
-                .load(FirestorageRepository.getGSReference(it))
-                .placeholder(R.drawable.ic_person_big)
-                .into(iconImageView)
+        viewModel.user.observe(this, Observer { user ->
+            userNameTextView.text = user.name
+            pointText.text = user.score.toString()
+            shogoTextView.text = RewardUtil.calculateUserRank(user.score).text
+
+            user.iconUrl?.let { url ->
+                Glide.with(this)
+                    .load(FirestorageRepository.getGSReference(url))
+                    .placeholder(R.drawable.ic_person_big)
+                    .into(iconImageView)
+            }
+        })
+
+        viewModel.teamName.observe(this, Observer {
+            companyTextView.text = it
         })
 
         aboutRewardText.setOnClickListener {

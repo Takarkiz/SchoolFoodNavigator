@@ -6,13 +6,17 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.OnLifecycleEvent
+import com.takhaki.schoolfoodnavigator.Utility.RewardUtil.Companion.calculateUserRank
 import com.takhaki.schoolfoodnavigator.entity.CompanyData
 import com.takhaki.schoolfoodnavigator.entity.UserEntity
 import com.takhaki.schoolfoodnavigator.repository.CompanyRepository
-import com.takhaki.schoolfoodnavigator.repository.UserAuth
-import com.takhaki.schoolfoodnavigator.Utility.RewardUtil.Companion.calculateUserRank
+import com.takhaki.schoolfoodnavigator.repository.UserRepository
 import com.takhaki.schoolfoodnavigator.screen.profile.ProfileNavigatorAbstract
 import com.takhaki.schoolfoodnavigator.screen.profile.ProfileViewModelBase
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.subscribeBy
+import timber.log.Timber
 import java.lang.ref.WeakReference
 
 class ProfileViewModel(
@@ -25,17 +29,8 @@ class ProfileViewModel(
         navigator.weakActivity = WeakReference(activity)
     }
 
-    override val userImageUrl: LiveData<String>
-        get() = _userImageUrl
-
-    override val userName: LiveData<String>
-        get() = _userName
-    override val userPoint: LiveData<Int>
-        get() = _userPoint
-    override val userGradeTitle: LiveData<String>
-        get() = _userGradeTitle
-    override val teamName: LiveData<String>
-        get() = _teamName
+    override val teamName: LiveData<String> get() = _teamName
+    override val user: LiveData<UserEntity> get() = _user
 
     override fun didTapShowRewardDetail() {
         navigator.toRewardDetail()
@@ -57,20 +52,19 @@ class ProfileViewModel(
         updateUserProfile()
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        disposable.dispose()
+    }
+
     // Private
-    private val _userImageUrl = MutableLiveData<String>()
-    private val _userName = MutableLiveData<String>().apply { value = "ユーザー名" }
-    private val _userPoint = MutableLiveData<Int>().apply { value = 0 }
-    private val _userGradeTitle = MutableLiveData<String>().apply { value = "--" }
     private val _teamName = MutableLiveData<String>().apply { value = "" }
+    private val _user = MutableLiveData<UserEntity>()
+
+    private val disposable = CompositeDisposable()
 
     private fun updateUserProfile() {
-        getUser { user ->
-            _userName.value = user.name
-            _userPoint.value = user.score
-            _userImageUrl.value = user.iconUrl
-            _userGradeTitle.value = calculateUserRank(user.score).text
-        }
+        getUser()
 
         getUserTeamName()
     }
@@ -87,14 +81,16 @@ class ProfileViewModel(
         }
     }
 
-    private fun getUser(handler: (UserEntity) -> Unit) {
-        val auth = UserAuth(getApplication())
-        auth.fetchUser(userId) { result ->
-            if (result.isSuccess) {
-                result.getOrNull()?.let { user ->
-                    handler(user)
+    private fun getUser() {
+        val auth = UserRepository(getApplication())
+        auth.fetchUser(userId)
+            .subscribeBy(
+                onSuccess = {
+                    _user.postValue(it)
+                },
+                onError = {
+                    Timber.e(it)
                 }
-            }
-        }
+            ).addTo(disposable)
     }
 }

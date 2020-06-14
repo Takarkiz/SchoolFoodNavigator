@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LiveData
 import com.takhaki.schoolfoodnavigator.BaseNavigator
+import com.takhaki.schoolfoodnavigator.entity.UserEntity
 
 /**
  * プロフィール ViewModel-Base
@@ -27,29 +28,14 @@ interface ProfileViewModelContract {
     fun activity(activity: AppCompatActivity)
 
     /**
-     * プロフィール画像のURL
-     */
-    val userImageUrl: LiveData<String>
-
-    /**
-     * ユーザー名
-     */
-    val userName: LiveData<String>
-
-    /**
-     * ユーザーの文字しているポイント
-     */
-    val userPoint: LiveData<Int>
-
-    /**
-     * ユーザーの称号名
-     */
-    val userGradeTitle: LiveData<String>
-
-    /**
      * 所属組織名
      */
     val teamName: LiveData<String>
+
+    /**
+     * ユーザー情報
+     */
+    val user: LiveData<UserEntity>
 
     /**
      * 称号の詳細ページに遷移
