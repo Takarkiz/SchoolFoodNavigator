@@ -3,6 +3,7 @@ package com.takhaki.schoolfoodnavigator.repository
 import com.takhaki.schoolfoodnavigator.entity.AssessmentEntity
 import com.takhaki.schoolfoodnavigator.entity.ShopEntity
 import io.reactivex.Flowable
+import io.reactivex.Single
 
 interface ShopRepositoryContract {
 
@@ -17,9 +18,8 @@ interface ShopRepositoryContract {
      */
     fun registerShop(
         shop: ShopEntity,
-        imageUrl: String?,
-        handler: (Result<String>) -> Unit
-    )
+        imageUrl: String?
+    ): Single<Unit>
 
 
     // 取得

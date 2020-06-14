@@ -9,6 +9,7 @@ import com.takhaki.schoolfoodnavigator.entity.AssessmentEntity
 import com.takhaki.schoolfoodnavigator.entity.ShopEntity
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
+import io.reactivex.Single
 import timber.log.Timber
 
 class ShopRepository(context: Context) : ShopRepositoryContract {
@@ -32,18 +33,21 @@ class ShopRepository(context: Context) : ShopRepositoryContract {
 
     override fun registerShop(
         shop: ShopEntity,
-        imageUrl: String?,
-        handler: (Result<String>) -> Unit
-    ) {
-        val data = inverseMapping(shop, imageUrl)
+        imageUrl: String?
+    ): Single<Unit> {
+        return Single.create { emitter ->
+            val data = inverseMapping(shop, imageUrl)
 
-        shopDB.document(shop.id).set(data)
-            .addOnSuccessListener {
-                handler(Result.success(shop.id))
-            }
-            .addOnFailureListener { error ->
-                handler(Result.failure(error))
-            }
+            shopDB.document(shop.id).set(data)
+                .addOnSuccessListener {
+//                    handler(Result.success(shop.id))
+                    emitter.onSuccess(Unit)
+                }
+                .addOnFailureListener { error ->
+                    emitter.onError(error)
+                }
+        }
+
     }
 
     override fun shop(id: String): Flowable<ShopEntity> {
@@ -92,7 +96,7 @@ class ShopRepository(context: Context) : ShopRepositoryContract {
             .collection("Shops")
     }
 
-    private fun assessmentColRef(id: String) = shopDB.document(id).collection("comment")
+    //private fun assessmentColRef(id: String) = shopDB.document(id).collection("comment")
 
 
     private fun shopEntity(id: String): Flowable<ShopEntity> =
@@ -119,26 +123,26 @@ class ShopRepository(context: Context) : ShopRepositoryContract {
             }
             emitter.setCancellable { reg.remove() }
         }, BackpressureStrategy.LATEST)
-
-    private fun assessment(id: String): Flowable<List<AssessmentEntity>> {
-
-        return Flowable.create({ emitter ->
-            val reg = assessmentColRef(id).addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    return@addSnapshotListener
-                }
-
-                if (snapshot == null) {
-                    return@addSnapshotListener
-                }
-
-                val shopAssessment = snapshot.toObjects(AssessmentEntity::class.java)
-
-                emitter.onNext(shopAssessment)
-            }
-            emitter.setCancellable { reg.remove() }
-        }, BackpressureStrategy.LATEST)
-    }
+//
+//    private fun assessment(id: String): Flowable<List<AssessmentEntity>> {
+//
+//        return Flowable.create({ emitter ->
+//            val reg = assessmentColRef(id).addSnapshotListener { snapshot, error ->
+//                if (error != null) {
+//                    return@addSnapshotListener
+//                }
+//
+//                if (snapshot == null) {
+//                    return@addSnapshotListener
+//                }
+//
+//                val shopAssessment = snapshot.toObjects(AssessmentEntity::class.java)
+//
+//                emitter.onNext(shopAssessment)
+//            }
+//            emitter.setCancellable { reg.remove() }
+//        }, BackpressureStrategy.LATEST)
+//    }
 
     private fun inverseMapping(shop: ShopEntity, shopImagePath: String?): Map<String, Any> {
 
