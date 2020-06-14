@@ -56,7 +56,7 @@ interface AssessmentViewModelContract {
     /**
      * 評価のアップロード
      */
-    fun uploadAssessment(finishUploadHandler: (Result<String>) -> Unit)
+    fun uploadAssessment(finishUploadHandler: (Result<Unit>) -> Unit)
 
     /**
      * 評価のアップロード終了

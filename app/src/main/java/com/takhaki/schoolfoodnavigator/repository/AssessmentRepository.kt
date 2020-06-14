@@ -4,10 +4,12 @@ import android.content.Context
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.takhaki.schoolfoodnavigator.entity.AssessmentEntity
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
 import io.reactivex.Single
 import java.util.*
 
-class AssessmentRepository(shopId: String, context: Context): AssessmentRespositoryContract {
+class AssessmentRepository(shopId: String, context: Context) : AssessmentRepositoryContract {
 
     private val collectionRef: CollectionReference
 
@@ -19,31 +21,39 @@ class AssessmentRepository(shopId: String, context: Context): AssessmentResposit
             .collection("comment")
     }
 
-    override fun fetchAllAssessment(): Single<List<AssessmentEntity>> {
-        return Single.create { emitter ->
-            collectionRef.get()
-                .addOnSuccessListener { snapshot ->
-                    val assessments = snapshot.documents.mapNotNull {
-                        val assessment = it.toObject(AssessmentEntity::class.java)
-                        assessment?.toEntity()
-                    }
-                    emitter.onSuccess(assessments)
+    override fun fetchAllAssessment(): Flowable<List<AssessmentEntity>> {
+        return Flowable.create({ emitter ->
+            collectionRef.addSnapshotListener { snapshot, error ->
+
+                if (error != null) {
+                    emitter.onError(error)
+                    return@addSnapshotListener
                 }
-                .addOnFailureListener {
-                    emitter.tryOnError(it)
+
+                if (snapshot == null) {
+                    return@addSnapshotListener
                 }
-        }
+
+                val assessments = snapshot.documents.mapNotNull {
+                    val assessment = it.toObject(AssessmentEntity::class.java)
+                    assessment?.toEntity()
+                }
+                emitter.onNext(assessments)
+            }
+        }, BackpressureStrategy.BUFFER)
     }
 
-    override fun addAssessment(assessment: AssessmentEntity, handler: (Result<String>) -> Unit) {
+    override fun addAssessment(assessment: AssessmentEntity): Single<Unit> {
 
-        collectionRef
-            .add(assesmentToMap(assessment))
-            .addOnSuccessListener { doc ->
-                handler(Result.success(doc.id))
-            }.addOnFailureListener { e ->
-                handler(Result.failure(e))
-            }
+        return Single.create { emitter ->
+            collectionRef
+                .add(assesmentToMap(assessment))
+                .addOnSuccessListener { doc ->
+                    emitter.onSuccess(Unit)
+                }.addOnFailureListener { e ->
+                    emitter.onError(e)
+                }
+        }
     }
 
     private fun assesmentToMap(assessment: AssessmentEntity): Map<String, Any> {

@@ -100,7 +100,7 @@ class ShopListViewModel(
         userRepository.currentUser?.uid?.let {
             userRepository.fetchUser(it)
                 .subscribeBy(
-                    onSuccess = { user ->
+                    onNext = { user ->
                         _userIconUrl.postValue(user.iconUrl)
                     }, onError = { e ->
                         Timber.e(e)
@@ -116,7 +116,7 @@ class ShopListViewModel(
         repository.fetchAllAssessment()
             .observeOn(Schedulers.computation())
             .subscribeBy(
-                onSuccess = { assessments ->
+                onNext = { assessments ->
                     val totalScore =
                         if (assessments.isNotEmpty()) assessments.map { assessment ->
                             (assessment.good + assessment.cheep + assessment.distance) / 3

@@ -95,14 +95,14 @@ class DetailViewModel(
         val repository = AssessmentRepository(shopId, getApplication())
         repository.fetchAllAssessment()
             .subscribeBy(
-                onSuccess = { results ->
+                onNext = { results ->
                     results.forEach { result ->
                         if (result.user == auth.currentUser?.uid) _hasCurrentUserComment.postValue(
                             true
                         )
                         auth.fetchUser(result.user)
                             .subscribeBy(
-                                onSuccess = {
+                                onNext = {
                                     val comment =
                                         CommentDetailModel(
                                             id = result.user,

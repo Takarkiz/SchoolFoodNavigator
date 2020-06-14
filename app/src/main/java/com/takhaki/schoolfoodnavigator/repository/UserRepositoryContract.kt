@@ -2,6 +2,7 @@ package com.takhaki.schoolfoodnavigator.repository
 
 import com.google.firebase.auth.FirebaseUser
 import com.takhaki.schoolfoodnavigator.entity.UserEntity
+import io.reactivex.Flowable
 import io.reactivex.Single
 
 interface UserRepositoryContract {
@@ -31,7 +32,7 @@ interface UserRepositoryContract {
     /**
      * 全てのユーザーの取得
      */
-    fun fetchAllUser(): Single<List<UserEntity>>
+    fun fetchAllUser(): Flowable<List<UserEntity>>
 
 
     /**
@@ -39,7 +40,7 @@ interface UserRepositoryContract {
      *
      * @param uid   ユーザーID
      */
-    fun fetchUser(uid: String): Single<UserEntity>
+    fun fetchUser(uid: String): Flowable<UserEntity>
 
 
     /**

@@ -10,6 +10,9 @@ import com.takhaki.schoolfoodnavigator.repository.ShopRepository
 import com.takhaki.schoolfoodnavigator.repository.UserRepository
 import com.takhaki.schoolfoodnavigator.screen.assesment.AssessmentNavigatorAbstract
 import com.takhaki.schoolfoodnavigator.screen.assesment.AssessmentViewModelBase
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.subscribeBy
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -49,7 +52,7 @@ class AssessmentViewModel(
         _cheepValue.value = rating
     }
 
-    override fun uploadAssessment(finishUploadHandler: (Result<String>) -> Unit) {
+    override fun uploadAssessment(finishUploadHandler: (Result<Unit>) -> Unit) {
         val auth = UserRepository(getApplication())
         val userId = auth.currentUser?.uid ?: return
 
@@ -69,26 +72,22 @@ class AssessmentViewModel(
 
         val shopRepository = ShopRepository(getApplication())
 
-        repository.addAssessment(assessment) { result ->
-            if (result.isSuccess) {
-                try {
-                    shopRepository.updateEditedDate(shopId)
-                    auth.addPointAssessment()
-                    finishUploadHandler(Result.success(result.getOrThrow()))
-                } catch (e: Error) {
-                    finishUploadHandler(Result.failure(e))
-                }
-            } else {
-                result.exceptionOrNull()?.let { e ->
-                    finishUploadHandler(Result.failure(e))
-                }
+        repository.addAssessment(assessment).subscribeBy(
+            onSuccess = {
+                shopRepository.updateEditedDate(shopId)
+                auth.addPointAssessment()
+                finishUploadHandler(Result.success(Unit))
+            },
+            onError = { e ->
+                finishUploadHandler(Result.failure(e))
             }
-        }
-
+        ).addTo(disposable)
     }
 
     override fun finishUpload() {
         navigator.backToHome()
     }
+
+    private val disposable = CompositeDisposable()
 
 }

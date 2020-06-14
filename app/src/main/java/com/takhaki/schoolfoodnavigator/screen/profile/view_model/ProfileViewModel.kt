@@ -72,7 +72,7 @@ class ProfileViewModel(
         val repository = CompanyRepository(getApplication())
         val companyID = repository.companyId.toString()
         repository.company.subscribeBy(
-            onSuccess = {
+            onNext = {
                 _teamName.value = "${it.name}(ID: ${companyID})"
             },
             onError = {
@@ -85,7 +85,7 @@ class ProfileViewModel(
         val auth = UserRepository(getApplication())
         auth.fetchUser(userId)
             .subscribeBy(
-                onSuccess = {
+                onNext = {
                     _user.postValue(it)
                 },
                 onError = {

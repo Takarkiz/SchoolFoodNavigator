@@ -8,7 +8,7 @@ val repositoryModule = module {
 
     factory<ShopRepositoryContract> { ShopRepository(androidContext()) }
 
-    factory<AssessmentRespositoryContract> { AssessmentRepository(get(), androidContext()) }
+    factory<AssessmentRepositoryContract> { AssessmentRepository(get(), androidContext()) }
 
     factory<UserRepositoryContract> { UserRepository(androidContext()) }
 }

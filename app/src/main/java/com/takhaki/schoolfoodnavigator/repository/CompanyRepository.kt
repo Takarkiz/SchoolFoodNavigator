@@ -5,6 +5,8 @@ import androidx.core.content.edit
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.takhaki.schoolfoodnavigator.entity.Company
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
 import io.reactivex.Single
 
 class CompanyRepository(private val context: Context) : CompanyRepositoryContract {
@@ -15,7 +17,7 @@ class CompanyRepository(private val context: Context) : CompanyRepositoryContrac
             return pref.getInt("ID", 0)
         }
 
-    override val company: Single<Company>
+    override val company: Flowable<Company>
         get() = fetchCompany()
 
     override fun joinTeam(memberId: String): Single<Unit> {
@@ -70,18 +72,6 @@ class CompanyRepository(private val context: Context) : CompanyRepositoryContrac
         }
     }
 
-    private fun fetchCompany(): Single<Company> {
-        return Single.create { emitter ->
-            companyDB.document(companyId.toString()).get()
-                .addOnSuccessListener { snapshot ->
-                    snapshot.toObject(Company::class.java)?.let { company ->
-                        emitter.onSuccess(company)
-                    }
-                }.addOnFailureListener { e ->
-                    emitter.onError(e)
-                }
-        }
-    }
 
     override fun setCompanyId(id: Int) {
         val sharedPreference = context.getSharedPreferences("Company", Context.MODE_PRIVATE)
@@ -92,4 +82,17 @@ class CompanyRepository(private val context: Context) : CompanyRepositoryContrac
     }
 
     private val companyDB = FirebaseFirestore.getInstance().collection("Team")
+
+    private fun fetchCompany(): Flowable<Company> {
+        return Flowable.create( { emitter ->
+            companyDB.document(companyId.toString()).get()
+                .addOnSuccessListener { snapshot ->
+                    snapshot.toObject(Company::class.java)?.let { company ->
+                        emitter.onNext(company)
+                    }
+                }.addOnFailureListener { e ->
+                    emitter.onError(e)
+                }
+        }, BackpressureStrategy.LATEST)
+    }
 }

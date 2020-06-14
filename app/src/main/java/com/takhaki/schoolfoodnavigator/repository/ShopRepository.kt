@@ -18,18 +18,25 @@ class ShopRepository(context: Context) : ShopRepositoryContract {
     override fun getShops(): Flowable<List<ShopEntity>> =
         Flowable.create({ emitter ->
             val query = shopDB.orderBy("editedAt", Query.Direction.DESCENDING)
-            query.get()
-                .addOnSuccessListener { snapshot ->
-                    val shops = snapshot.documents.mapNotNull {
-                        val shop = it.toObject(ShopEntity::class.java)
-                        shop?.toEntity()
-                    }
-                    emitter.onNext(shops)
+            query.addSnapshotListener { snapshot, error ->
+
+                if (error != null) {
+                    Timber.e(error, "Observe Shops")
+                    emitter.tryOnError(error)
+                    return@addSnapshotListener
                 }
-                .addOnFailureListener { e ->
-                    emitter.tryOnError(e)
+
+                if (snapshot == null) {
+                    return@addSnapshotListener
                 }
-        }, BackpressureStrategy.LATEST)
+
+                val shops = snapshot.documents.mapNotNull {
+                    val shop = it.toObject(ShopEntity::class.java)
+                    shop?.toEntity()
+                }
+                emitter.onNext(shops)
+            }
+        }, BackpressureStrategy.BUFFER)
 
     override fun registerShop(
         shop: ShopEntity,
@@ -40,7 +47,6 @@ class ShopRepository(context: Context) : ShopRepositoryContract {
 
             shopDB.document(shop.id).set(data)
                 .addOnSuccessListener {
-//                    handler(Result.success(shop.id))
                     emitter.onSuccess(Unit)
                 }
                 .addOnFailureListener { error ->
@@ -123,26 +129,6 @@ class ShopRepository(context: Context) : ShopRepositoryContract {
             }
             emitter.setCancellable { reg.remove() }
         }, BackpressureStrategy.LATEST)
-//
-//    private fun assessment(id: String): Flowable<List<AssessmentEntity>> {
-//
-//        return Flowable.create({ emitter ->
-//            val reg = assessmentColRef(id).addSnapshotListener { snapshot, error ->
-//                if (error != null) {
-//                    return@addSnapshotListener
-//                }
-//
-//                if (snapshot == null) {
-//                    return@addSnapshotListener
-//                }
-//
-//                val shopAssessment = snapshot.toObjects(AssessmentEntity::class.java)
-//
-//                emitter.onNext(shopAssessment)
-//            }
-//            emitter.setCancellable { reg.remove() }
-//        }, BackpressureStrategy.LATEST)
-//    }
 
     private fun inverseMapping(shop: ShopEntity, shopImagePath: String?): Map<String, Any> {
 

@@ -49,7 +49,7 @@ class DetailRewardViewModel(
         auth.currentUser?.uid?.let { uid ->
             auth.fetchUser(uid)
                 .subscribeBy(
-                    onSuccess = { user ->
+                    onNext = { user ->
                         val point = user.score
                         _userGrade.postValue(RewardUtil.calculateUserRank(point))
 

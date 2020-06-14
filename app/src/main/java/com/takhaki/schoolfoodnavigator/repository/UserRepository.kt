@@ -8,6 +8,8 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.takhaki.schoolfoodnavigator.entity.UserEntity
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
 import io.reactivex.Single
 
 class UserRepository(context: Context) : UserRepositoryContract {
@@ -69,44 +71,48 @@ class UserRepository(context: Context) : UserRepositoryContract {
         }
     }
 
-    override fun fetchAllUser(): Single<List<UserEntity>> {
-        return Single.create { emitter ->
+    override fun fetchAllUser(): Flowable<List<UserEntity>> {
+        return Flowable.create({ emitter ->
             val query = userDB.orderBy("score", Query.Direction.DESCENDING)
             query.addSnapshotListener { querySnapshot, error ->
-                querySnapshot?.documents?.mapNotNull {
-                    val member = it.toObject(UserEntity::class.java)
-                    member?.toEntity()
-                }?.let {
-                    emitter.onSuccess(it)
-                }
 
                 if (error != null) {
                     emitter.onError(error)
+                    return@addSnapshotListener
                 }
+
+                if (querySnapshot == null) {
+                    return@addSnapshotListener
+                }
+
+                val users = querySnapshot.documents.mapNotNull {
+                    val member = it.toObject(UserEntity::class.java)
+                    member?.toEntity()
+                }
+                emitter.onNext(users)
             }
-        }
+        }, BackpressureStrategy.BUFFER)
     }
 
-    override fun fetchUser(uid: String): Single<UserEntity> {
-        return Single.create { emitter ->
-            userDB.document(uid).get().addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    task.result?.let { result ->
-                        val user = UserEntity(
-                            id = result["id"].toString(),
-                            name = result["name"].toString(),
-                            iconUrl = result["iconUrl"].toString(),
-                            score = result["score"].toString().toLong().toInt(),
-                            favList = result["favList"] as List<String>
-                        )
+    override fun fetchUser(uid: String): Flowable<UserEntity> {
+        return Flowable.create({ emitter ->
+            userDB.document(uid).addSnapshotListener { snapshot, error ->
 
-                        emitter.onSuccess(user)
-                    }
+                if (error != null) {
+                    emitter.onError(error)
+                    return@addSnapshotListener
                 }
-            }.addOnFailureListener { e ->
-                emitter.onError(e)
+
+                if (snapshot == null) {
+                    return@addSnapshotListener
+                }
+
+                snapshot.toObject(UserEntity::class.java)?.let {
+                    emitter.onNext(it)
+                }
+
             }
-        }
+        }, BackpressureStrategy.LATEST)
     }
 
     override fun addFavoriteShop(id: String): Single<Unit> {

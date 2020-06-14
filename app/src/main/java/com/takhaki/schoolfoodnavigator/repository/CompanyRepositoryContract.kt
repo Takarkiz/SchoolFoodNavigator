@@ -1,6 +1,7 @@
 package com.takhaki.schoolfoodnavigator.repository
 
 import com.takhaki.schoolfoodnavigator.entity.Company
+import io.reactivex.Flowable
 import io.reactivex.Single
 
 interface CompanyRepositoryContract {
@@ -13,7 +14,7 @@ interface CompanyRepositoryContract {
     /**
      * チーム情報
      */
-    val company: Single<Company>
+    val company: Flowable<Company>
 
     /**
      * 端末にチームIDを登録する

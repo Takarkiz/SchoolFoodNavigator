@@ -62,7 +62,7 @@ class MemberListViewModel(
         val auth = UserRepository(getApplication())
         auth.fetchAllUser()
             .subscribeBy(
-                onSuccess = { result ->
+                onNext = { result ->
                     _memberList.postValue(result)
                 },
                 onError = {
