@@ -9,5 +9,6 @@ data class ShopEntity(
     val userID: String = "",
     val registerDate: Date = Date(),
     val lastEditedAt: Date = Date(),
+    val score: Float? = 0f,
     val images: List<String> = listOf()
 )

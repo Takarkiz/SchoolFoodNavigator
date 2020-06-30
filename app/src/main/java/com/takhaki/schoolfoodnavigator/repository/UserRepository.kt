@@ -8,9 +8,12 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.takhaki.schoolfoodnavigator.entity.UserEntity
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
 import io.reactivex.Single
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import timber.log.Timber
 
 class UserRepository(context: Context) : UserRepositoryContract {
 
@@ -71,48 +74,50 @@ class UserRepository(context: Context) : UserRepositoryContract {
         }
     }
 
-    override fun fetchAllUser(): Flowable<List<UserEntity>> {
-        return Flowable.create({ emitter ->
-            val query = userDB.orderBy("score", Query.Direction.DESCENDING)
-            query.addSnapshotListener { querySnapshot, error ->
+    @ExperimentalCoroutinesApi
+    override fun fetchAllUser(): Flow<List<UserEntity>> = callbackFlow {
 
-                if (error != null) {
-                    emitter.onError(error)
-                    return@addSnapshotListener
-                }
+        val query = userDB.orderBy("score", Query.Direction.DESCENDING)
+        val registration = query.addSnapshotListener { querySnapshot, error ->
 
-                if (querySnapshot == null) {
-                    return@addSnapshotListener
-                }
-
-                val users = querySnapshot.documents.mapNotNull {
-                    val member = it.toObject(UserEntity::class.java)
-                    member?.toEntity()
-                }
-                emitter.onNext(users)
+            if (error != null) {
+                Timber.e(error)
+                return@addSnapshotListener
             }
-        }, BackpressureStrategy.BUFFER)
+
+            if (querySnapshot == null) {
+                return@addSnapshotListener
+            }
+
+            val users = querySnapshot.documents.mapNotNull {
+                val member = it.toObject(UserEntity::class.java)
+                member?.toEntity()
+            }
+            offer(users)
+        }
+
+        awaitClose { registration.remove() }
     }
 
-    override fun fetchUser(uid: String): Flowable<UserEntity> {
-        return Flowable.create({ emitter ->
-            userDB.document(uid).addSnapshotListener { snapshot, error ->
+    @ExperimentalCoroutinesApi
+    override fun fetchUser(uid: String): Flow<UserEntity> = callbackFlow {
+        val registration = userDB.document(uid).addSnapshotListener { snapshot, error ->
 
-                if (error != null) {
-                    emitter.onError(error)
-                    return@addSnapshotListener
-                }
-
-                if (snapshot == null) {
-                    return@addSnapshotListener
-                }
-
-                snapshot.toObject(UserEntity::class.java)?.let {
-                    emitter.onNext(it)
-                }
-
+            if (error != null) {
+                Timber.e(error)
+                return@addSnapshotListener
             }
-        }, BackpressureStrategy.LATEST)
+
+            if (snapshot == null) {
+                return@addSnapshotListener
+            }
+
+            val shop = snapshot.toObject(UserEntity::class.java) ?: return@addSnapshotListener
+
+            offer(shop)
+        }
+
+        awaitClose { registration.remove() }
     }
 
     override fun addFavoriteShop(id: String): Single<Unit> {

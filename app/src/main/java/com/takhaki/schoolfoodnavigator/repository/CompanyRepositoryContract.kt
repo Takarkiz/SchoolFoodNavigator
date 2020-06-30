@@ -3,6 +3,7 @@ package com.takhaki.schoolfoodnavigator.repository
 import com.takhaki.schoolfoodnavigator.entity.Company
 import io.reactivex.Flowable
 import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 
 interface CompanyRepositoryContract {
 
@@ -14,7 +15,7 @@ interface CompanyRepositoryContract {
     /**
      * チーム情報
      */
-    val company: Flowable<Company>
+    val company: Flow<Result<Company>>
 
     /**
      * 端末にチームIDを登録する

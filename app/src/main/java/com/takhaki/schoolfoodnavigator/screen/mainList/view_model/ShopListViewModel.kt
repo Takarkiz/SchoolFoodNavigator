@@ -3,21 +3,20 @@ package com.takhaki.schoolfoodnavigator.screen.mainList.view_model
 import android.app.Application
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.*
 import com.takhaki.schoolfoodnavigator.DefaultSetting
 import com.takhaki.schoolfoodnavigator.entity.ShopEntity
-import com.takhaki.schoolfoodnavigator.repository.*
+import com.takhaki.schoolfoodnavigator.repository.AssessmentRepository
+import com.takhaki.schoolfoodnavigator.repository.ShopRepositoryContract
+import com.takhaki.schoolfoodnavigator.repository.UserRepository
+import com.takhaki.schoolfoodnavigator.repository.UserRepositoryContract
 import com.takhaki.schoolfoodnavigator.screen.mainList.ShopListNavigatorAbstract
 import com.takhaki.schoolfoodnavigator.screen.mainList.ShopListViewModelBase
 import com.takhaki.schoolfoodnavigator.screen.mainList.model.ShopListItemModel
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
-import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
 
 class ShopListViewModel(
@@ -83,73 +82,61 @@ class ShopListViewModel(
     private val disposable: CompositeDisposable = CompositeDisposable()
 
     private fun subscribeShopList() {
-        shopRepository.getShops()
-            .subscribeBy (
-                onNext = {
+        viewModelScope.launch(Dispatchers.Main) {
+            shopRepository.getShops()
+                .collect {
                     it.forEach { shop ->
                         getShopAssessments(shop)
                     }
-                },
-                onError = {
-
                 }
-            ).addTo(disposable)
+        }
     }
 
     private fun subscribeCurrentUser() {
-        userRepository.currentUser?.uid?.let {
-            userRepository.fetchUser(it)
-                .subscribeBy(
-                    onNext = { user ->
+        viewModelScope.launch(Dispatchers.Main) {
+            userRepository.currentUser?.uid?.let {
+                userRepository.fetchUser(it)
+                    .collect { user ->
                         _userIconUrl.postValue(user.iconUrl)
-                    }, onError = { e ->
-                        Timber.e(e)
                     }
-                ).addTo(disposable)
+            }
         }
-
     }
 
     private fun getShopAssessments(shop: ShopEntity) {
-
         val repository = AssessmentRepository(shop.id, appContext)
-        repository.fetchAllAssessment()
-            .observeOn(Schedulers.computation())
-            .subscribeBy(
-                onNext = { assessments ->
-                    val totalScore =
-                        if (assessments.isNotEmpty()) assessments.map { assessment ->
-                            (assessment.good + assessment.cheep + assessment.distance) / 3
-                        }.average() else 0.0
-                    val auth = UserRepository(appContext)
-                    auth.checkFavoriteShop(shop.id) { isFavorite ->
-                        val shopItem =
-                            ShopListItemModel(
-                                id = shop.id,
-                                name = shop.name,
-                                shopGenre = shop.genre,
-                                editedAt = shop.lastEditedAt,
-                                isFavorite = isFavorite,
-                                imageUrl = if (shop.images.isNotEmpty()) shop.images[0] else "",
-                                score = totalScore.toFloat()
-                            )
+        viewModelScope.launch(Dispatchers.Main) {
+            repository.fetchAllAssessment().collect { assessments ->
+                val totalScore =
+                    if (assessments.isNotEmpty()) assessments.map { assessment ->
+                        (assessment.good + assessment.cheep + assessment.distance) / 3
+                    }.average() else 0.0
+                val auth = UserRepository(appContext)
+                auth.checkFavoriteShop(shop.id) { isFavorite ->
+                    val shopItem =
+                        ShopListItemModel(
+                            id = shop.id,
+                            name = shop.name,
+                            shopGenre = shop.genre,
+                            editedAt = shop.lastEditedAt,
+                            isFavorite = isFavorite,
+                            imageUrl = if (shop.images.isNotEmpty()) shop.images[0] else "",
+                            score = totalScore.toFloat()
+                        )
 
-                        addShopItem(shopItem, index = 0)
-                        shopItemsByDate.sortBy { it.editedAt }
+                    addShopItem(shopItem, index = 0)
+                    shopItemsByDate.sortBy { it.editedAt }
 
-                        addShopItem(shopItem, index = 1)
-                        shopItemsByValue.sortByDescending { it.score }
+                    addShopItem(shopItem, index = 1)
+                    shopItemsByValue.sortByDescending { it.score }
 
-                        // お気に入りのみを表示
-                        if (shopItem.isFavorite) addShopItem(shopItem, index = 2)
-                        _shopItems.value =
-                            listOf(shopItemsByDate, shopItemsByValue, shopItemsByOnlyFav)
-                    }
-                },
-                onError = {
-                    Timber.w("失敗")
+                    // お気に入りのみを表示
+                    if (shopItem.isFavorite) addShopItem(shopItem, index = 2)
+                    _shopItems.value =
+                        listOf(shopItemsByDate, shopItemsByValue, shopItemsByOnlyFav)
                 }
-            ).addTo(disposable)
+            }
+        }
     }
 
     private fun addShopItem(shopItem: ShopListItemModel, index: Int) {

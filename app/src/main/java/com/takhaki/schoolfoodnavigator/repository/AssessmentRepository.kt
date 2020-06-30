@@ -4,9 +4,11 @@ import android.content.Context
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.takhaki.schoolfoodnavigator.entity.AssessmentEntity
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
 import io.reactivex.Single
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import java.util.*
 
 class AssessmentRepository(shopId: String, context: Context) : AssessmentRepositoryContract {
@@ -21,26 +23,27 @@ class AssessmentRepository(shopId: String, context: Context) : AssessmentReposit
             .collection("comment")
     }
 
-    override fun fetchAllAssessment(): Flowable<List<AssessmentEntity>> {
-        return Flowable.create({ emitter ->
-            collectionRef.addSnapshotListener { snapshot, error ->
+    @ExperimentalCoroutinesApi
+    override suspend fun fetchAllAssessment(): Flow<List<AssessmentEntity>> = callbackFlow {
 
-                if (error != null) {
-                    emitter.onError(error)
-                    return@addSnapshotListener
-                }
+        val task = collectionRef.addSnapshotListener { snapshot, error ->
 
-                if (snapshot == null) {
-                    return@addSnapshotListener
-                }
-
-                val assessments = snapshot.documents.mapNotNull {
-                    val assessment = it.toObject(AssessmentEntity::class.java)
-                    assessment?.toEntity()
-                }
-                emitter.onNext(assessments)
+            if (error != null) {
+                return@addSnapshotListener
             }
-        }, BackpressureStrategy.BUFFER)
+
+            if (snapshot == null) {
+                return@addSnapshotListener
+            }
+
+            val assessments = snapshot.documents.mapNotNull {
+                val assessment = it.toObject(AssessmentEntity::class.java)
+                assessment?.toEntity()
+            }
+            offer(assessments)
+        }
+
+        awaitClose { task.remove() }
     }
 
     override fun addAssessment(assessment: AssessmentEntity): Single<Unit> {

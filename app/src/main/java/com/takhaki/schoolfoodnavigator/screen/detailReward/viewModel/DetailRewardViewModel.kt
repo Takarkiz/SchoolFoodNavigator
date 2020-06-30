@@ -2,17 +2,15 @@ package com.takhaki.schoolfoodnavigator.screen.detailReward.viewModel
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.*
 import com.takhaki.schoolfoodnavigator.Utility.RewardUtil
 import com.takhaki.schoolfoodnavigator.repository.UserRepository
 import com.takhaki.schoolfoodnavigator.screen.detailReward.DetailRewardViewModelBase
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
-import io.reactivex.rxkotlin.subscribeBy
-import timber.log.Timber
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class DetailRewardViewModel(
     application: Application
@@ -27,6 +25,7 @@ class DetailRewardViewModel(
 
     // LifecycleObserver
 
+    @ExperimentalCoroutinesApi
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun onCreate() {
         subscribeUserPoint()
@@ -43,20 +42,18 @@ class DetailRewardViewModel(
 
     private val disposable = CompositeDisposable()
 
+    @ExperimentalCoroutinesApi
     private fun subscribeUserPoint() {
 
         val auth = UserRepository(getApplication())
-        auth.currentUser?.uid?.let { uid ->
-            auth.fetchUser(uid)
-                .subscribeBy(
-                    onNext = { user ->
+        viewModelScope.launch(Dispatchers.Main) {
+            auth.currentUser?.uid?.let { uid ->
+                auth.fetchUser(uid)
+                    .collectLatest { user ->
                         val point = user.score
                         _userGrade.postValue(RewardUtil.calculateUserRank(point))
-
-                    }, onError = {
-                        Timber.e(it)
                     }
-                ).addTo(disposable)
+            }
         }
     }
 }

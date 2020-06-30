@@ -2,17 +2,16 @@ package com.takhaki.schoolfoodnavigator.screen.memberList.view_model
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.*
 import com.takhaki.schoolfoodnavigator.entity.UserEntity
 import com.takhaki.schoolfoodnavigator.repository.UserRepository
 import com.takhaki.schoolfoodnavigator.screen.memberList.MemberListNavigatorAbstract
 import com.takhaki.schoolfoodnavigator.screen.memberList.MemberListViewModelBase
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
-import io.reactivex.rxkotlin.subscribeBy
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
 
 class MemberListViewModel(
@@ -48,6 +47,7 @@ class MemberListViewModel(
 
     // LifecycleObserver
 
+    @ExperimentalCoroutinesApi
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun onCreate() {
         fetchUsers()
@@ -58,15 +58,14 @@ class MemberListViewModel(
     private val _memberList: MutableLiveData<List<UserEntity>> = MutableLiveData()
     private val disposable: CompositeDisposable = CompositeDisposable()
 
+    @ExperimentalCoroutinesApi
     private fun fetchUsers() {
         val auth = UserRepository(getApplication())
-        auth.fetchAllUser()
-            .subscribeBy(
-                onNext = { result ->
-                    _memberList.postValue(result)
-                },
-                onError = {
-
-                }).addTo(disposable)
+        viewModelScope.launch(Dispatchers.Main) {
+            auth.fetchAllUser()
+                .collectLatest { users ->
+                    _memberList.postValue(users)
+                }
+        }
     }
 }

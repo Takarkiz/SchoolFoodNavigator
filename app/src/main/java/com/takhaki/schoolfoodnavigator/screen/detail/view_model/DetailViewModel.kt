@@ -2,10 +2,7 @@ package com.takhaki.schoolfoodnavigator.screen.detail.view_model
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.*
 import com.takhaki.schoolfoodnavigator.repository.AssessmentRepository
 import com.takhaki.schoolfoodnavigator.repository.FirestorageRepository
 import com.takhaki.schoolfoodnavigator.repository.ShopRepository
@@ -15,9 +12,10 @@ import com.takhaki.schoolfoodnavigator.screen.detail.DetailViewModelBase
 import com.takhaki.schoolfoodnavigator.screen.detail.model.AboutShopDetailModel
 import com.takhaki.schoolfoodnavigator.screen.detail.model.CommentDetailModel
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
-import io.reactivex.rxkotlin.subscribeBy
-import timber.log.Timber
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
 
 class DetailViewModel(
@@ -90,65 +88,59 @@ class DetailViewModel(
     private val _hasCurrentUserComment = MutableLiveData<Boolean>().apply { value = false }
 
 
+    @ExperimentalCoroutinesApi
     private fun loadShopDetail() {
         val auth = UserRepository(getApplication())
         val repository = AssessmentRepository(shopId, getApplication())
-        repository.fetchAllAssessment()
-            .subscribeBy(
-                onNext = { results ->
-                    results.forEach { result ->
-                        if (result.user == auth.currentUser?.uid) _hasCurrentUserComment.postValue(
-                            true
-                        )
-                        auth.fetchUser(result.user)
-                            .subscribeBy(
-                                onNext = {
-                                    val comment =
-                                        CommentDetailModel(
-                                            id = result.user,
-                                            name = it.name,
-                                            userIcon = it.iconUrl,
-                                            gScore = result.good,
-                                            dScore = result.distance,
-                                            cScore = result.cheep,
-                                            comment = result.comment,
-                                            date = result.createdDate
-                                        )
-                                    scores.add(comment)
-                                    _scoreList.postValue(scores)
-                                },
-                                onError = {
-                                    Timber.d(it)
-                                }
-                            ).addTo(disposable)
-                    }
-
-                    val goodAverage = results.map { it.good }.average().toFloat()
-                    val distanceAverage = results.map { it.distance }.average().toFloat()
-                    val cheepAverage = results.map { it.cheep }.average().toFloat()
-                    generateCommentModel(goodAverage, distanceAverage, cheepAverage)
-                },
-                onError = {
-                    Timber.e(it)
-                }).addTo(disposable)
+        viewModelScope.launch(Dispatchers.Main) {
+            repository.fetchAllAssessment().collect { values ->
+                values.forEach { value ->
+                    if (value.user == auth.currentUser?.uid) _hasCurrentUserComment.postValue(true)
+                    auth.fetchUser(value.user)
+                        .collect {
+                            val comment =
+                                CommentDetailModel(
+                                    id = value.user,
+                                    name = it.name,
+                                    userIcon = it.iconUrl,
+                                    gScore = value.good,
+                                    dScore = value.distance,
+                                    cScore = value.cheep,
+                                    comment = value.comment,
+                                    date = value.createdDate
+                                )
+                            scores.add(comment)
+                            _scoreList.postValue(scores)
+                        }
+                }
+                val goodAverage = values.map { it.good }.average().toFloat()
+                val distanceAverage = values.map { it.distance }.average().toFloat()
+                val cheepAverage = values.map { it.cheep }.average().toFloat()
+                generateCommentModel(goodAverage, distanceAverage, cheepAverage)
+            }
+        }
     }
 
+    @ExperimentalCoroutinesApi
     private fun generateCommentModel(gAve: Float, dAve: Float, cAve: Float) {
-        shopRepository.shop(shopId)
-            .subscribe { shop ->
-                val shopDetailModel =
-                    AboutShopDetailModel(
-                        id = shop.id,
-                        name = shop.name,
-                        genre = shop.genre,
-                        goodScore = gAve,
-                        distance = dAve,
-                        cheep = cAve,
-                        score = (gAve + dAve + cAve) / 3,
-                        imageUrl = if (shop.images.isNotEmpty()) shop.images[0] else null
-                    )
-                _shopDetail.value = shopDetailModel
-            }.addTo(disposable)
+        viewModelScope.launch(Dispatchers.Main) {
+            shopRepository
+                .shop(shopId)
+                .collect { shop ->
+                    val shopDetailModel =
+                        AboutShopDetailModel(
+                            id = shop.id,
+                            name = shop.name,
+                            genre = shop.genre,
+                            goodScore = gAve,
+                            distance = dAve,
+                            cheep = cAve,
+                            score = (gAve + dAve + cAve) / 3,
+                            imageUrl = if (shop.images.isNotEmpty()) shop.images[0] else null
+                        )
+                    _shopDetail.postValue(shopDetailModel)
+                }
+        }
     }
 
 

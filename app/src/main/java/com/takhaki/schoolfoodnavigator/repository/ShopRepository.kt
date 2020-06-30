@@ -5,38 +5,40 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.takhaki.schoolfoodnavigator.entity.AssessmentEntity
 import com.takhaki.schoolfoodnavigator.entity.ShopEntity
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
 import io.reactivex.Single
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import timber.log.Timber
 
 class ShopRepository(context: Context) : ShopRepositoryContract {
 
 
-    override fun getShops(): Flowable<List<ShopEntity>> =
-        Flowable.create({ emitter ->
-            val query = shopDB.orderBy("editedAt", Query.Direction.DESCENDING)
-            query.addSnapshotListener { snapshot, error ->
+    @ExperimentalCoroutinesApi
+    override fun getShops(): Flow<List<ShopEntity>> = callbackFlow {
+        val query = shopDB.orderBy("editedAt", Query.Direction.DESCENDING)
+        val task = query.addSnapshotListener { snapshot, error ->
 
-                if (error != null) {
-                    Timber.e(error, "Observe Shops")
-                    emitter.tryOnError(error)
-                    return@addSnapshotListener
-                }
-
-                if (snapshot == null) {
-                    return@addSnapshotListener
-                }
-
-                val shops = snapshot.documents.mapNotNull {
-                    val shop = it.toObject(ShopEntity::class.java)
-                    shop?.toEntity()
-                }
-                emitter.onNext(shops)
+            if (error != null) {
+                Timber.e(error, "Observe Shops")
+                return@addSnapshotListener
             }
-        }, BackpressureStrategy.BUFFER)
+
+            if (snapshot == null) {
+                return@addSnapshotListener
+            }
+
+            val shops = snapshot.documents.mapNotNull {
+                val shop = it.toObject(ShopEntity::class.java)
+                shop?.toEntity()
+            }
+            offer(shops)
+        }
+
+        awaitClose { task.remove() }
+    }
 
     override fun registerShop(
         shop: ShopEntity,
@@ -56,16 +58,26 @@ class ShopRepository(context: Context) : ShopRepositoryContract {
 
     }
 
-    override fun shop(id: String): Flowable<ShopEntity> {
-        return shopEntity(id).map { it.toEntity() }
-    }
+    @ExperimentalCoroutinesApi
+    override fun shop(id: String): Flow<ShopEntity> = callbackFlow {
 
-    override fun assessments(id: String): Flowable<List<AssessmentEntity>> {
-        return assessments(id).map { reviews ->
-            reviews.map { review ->
-                review.toEntity()
+        val ref = shopDB.document(id)
+        val reg = ref.addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                Timber.e(error, ref.path)
+                return@addSnapshotListener
             }
+
+            if (snapshot == null) {
+                Timber.w("%s is missing", ref.path)
+                return@addSnapshotListener
+            }
+
+            val shop = snapshot.toObject(ShopEntity::class.java)?: return@addSnapshotListener
+            offer(shop)
+
         }
+        awaitClose { reg.remove() }
     }
 
     override fun updateEditedDate(shopId: String) {
@@ -76,6 +88,9 @@ class ShopRepository(context: Context) : ShopRepositoryContract {
             }
     }
 
+    override fun updateScore(id: String, score: Float) {
+
+    }
 
     // お店情報の削除
     override fun deleteShop(id: String, handler: (Result<String>) -> Unit) {
@@ -104,31 +119,6 @@ class ShopRepository(context: Context) : ShopRepositoryContract {
 
     //private fun assessmentColRef(id: String) = shopDB.document(id).collection("comment")
 
-
-    private fun shopEntity(id: String): Flowable<ShopEntity> =
-        Flowable.create({ emitter ->
-            val ref = shopDB.document(id)
-            val reg = ref.addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    Timber.e(error, ref.path)
-                    return@addSnapshotListener
-                }
-
-                if (snapshot == null) {
-                    Timber.w("%s is missing", ref.path)
-                    return@addSnapshotListener
-                }
-
-                val shop = snapshot.toObject(ShopEntity::class.java)
-                if (shop == null) {
-                    Timber.w("%s is missing", ref.path)
-                    return@addSnapshotListener
-                }
-
-                emitter.onNext(shop)
-            }
-            emitter.setCancellable { reg.remove() }
-        }, BackpressureStrategy.LATEST)
 
     private fun inverseMapping(shop: ShopEntity, shopImagePath: String?): Map<String, Any> {
 

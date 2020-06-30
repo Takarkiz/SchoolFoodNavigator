@@ -2,18 +2,16 @@ package com.takhaki.schoolfoodnavigator.screen.profile.view_model
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.*
 import com.takhaki.schoolfoodnavigator.entity.UserEntity
 import com.takhaki.schoolfoodnavigator.repository.CompanyRepository
 import com.takhaki.schoolfoodnavigator.repository.UserRepository
 import com.takhaki.schoolfoodnavigator.screen.profile.ProfileNavigatorAbstract
 import com.takhaki.schoolfoodnavigator.screen.profile.ProfileViewModelBase
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
-import io.reactivex.rxkotlin.subscribeBy
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.lang.ref.WeakReference
 
@@ -63,34 +61,31 @@ class ProfileViewModel(
     private val disposable = CompositeDisposable()
 
     private fun updateUserProfile() {
-        getUser()
-
-        getUserTeamName()
+        viewModelScope.launch(Dispatchers.Main) {
+            getUser()
+            getUserTeamName()
+        }
     }
 
-    private fun getUserTeamName() {
+    private suspend fun getUserTeamName() {
         val repository = CompanyRepository(getApplication())
         val companyID = repository.companyId.toString()
-        repository.company.subscribeBy(
-            onNext = {
-                _teamName.value = "${it.name}(ID: ${companyID})"
-            },
-            onError = {
-                Timber.e(it)
+        repository.company.collect {
+            if (it.isSuccess) {
+                it.getOrNull()?.let { company ->
+                    _teamName.postValue("${company.name}(ID: ${companyID})")
+                }
+            } else {
+                Timber.e(it.exceptionOrNull())
             }
-        ).addTo(disposable)
+        }
     }
 
-    private fun getUser() {
+    private suspend fun getUser() {
         val auth = UserRepository(getApplication())
         auth.fetchUser(userId)
-            .subscribeBy(
-                onNext = {
-                    _user.postValue(it)
-                },
-                onError = {
-                    Timber.e(it)
-                }
-            ).addTo(disposable)
+            .collect {
+                _user.postValue(it)
+            }
     }
 }

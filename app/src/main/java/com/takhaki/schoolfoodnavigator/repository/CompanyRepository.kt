@@ -5,9 +5,11 @@ import androidx.core.content.edit
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.takhaki.schoolfoodnavigator.entity.Company
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
 import io.reactivex.Single
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 
 class CompanyRepository(private val context: Context) : CompanyRepositoryContract {
 
@@ -17,13 +19,13 @@ class CompanyRepository(private val context: Context) : CompanyRepositoryContrac
             return pref.getInt("ID", 0)
         }
 
-    override val company: Flowable<Company>
+    override val company: Flow<Result<Company>>
         get() = fetchCompany()
 
-    override fun joinTeam(memberId: String): Single<Unit> {
+    override fun joinTeam(userId: String): Single<Unit> {
         return Single.create { emitter ->
             companyDB.document(companyId.toString())
-                .update("members", FieldValue.arrayUnion(memberId))
+                .update("members", FieldValue.arrayUnion(userId))
                 .addOnSuccessListener {
                     emitter.onSuccess(Unit)
                 }
@@ -83,16 +85,26 @@ class CompanyRepository(private val context: Context) : CompanyRepositoryContrac
 
     private val companyDB = FirebaseFirestore.getInstance().collection("Team")
 
-    private fun fetchCompany(): Flowable<Company> {
-        return Flowable.create( { emitter ->
-            companyDB.document(companyId.toString()).get()
-                .addOnSuccessListener { snapshot ->
-                    snapshot.toObject(Company::class.java)?.let { company ->
-                        emitter.onNext(company)
-                    }
-                }.addOnFailureListener { e ->
-                    emitter.onError(e)
-                }
-        }, BackpressureStrategy.LATEST)
+    @ExperimentalCoroutinesApi
+    private fun fetchCompany(): Flow<Result<Company>> = callbackFlow {
+
+        val task = companyDB.document(companyId.toString()).addSnapshotListener { snapshot, error ->
+
+            if (error != null) {
+                return@addSnapshotListener
+            }
+
+            if (snapshot == null) {
+                return@addSnapshotListener
+            }
+
+            snapshot.toObject(Company::class.java)?.let { company ->
+                offer(Result.success(company))
+
+            }
+
+        }
+
+        awaitClose { task.remove() }
     }
 }
