@@ -11,7 +11,6 @@ import com.takhaki.schoolfoodnavigator.repository.ShopRepository
 import com.takhaki.schoolfoodnavigator.repository.UserRepository
 import com.takhaki.schoolfoodnavigator.screen.assesment.AssessmentNavigatorAbstract
 import com.takhaki.schoolfoodnavigator.screen.assesment.AssessmentViewModelBase
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

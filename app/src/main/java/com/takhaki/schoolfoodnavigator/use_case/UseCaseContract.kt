@@ -2,14 +2,13 @@ package com.takhaki.schoolfoodnavigator.use_case
 
 import com.takhaki.schoolfoodnavigator.entity.Company
 import com.takhaki.schoolfoodnavigator.entity.UserEntity
-import io.reactivex.Flowable
-import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 
 interface UseCaseContract {
 
     // Company
 
-    val company: Flowable<Company>
+    val company: Flow<Company>
 
     val companyId: Int
 
@@ -17,11 +16,11 @@ interface UseCaseContract {
 
     fun deleteCompanyId()
 
-    fun joinTeam(): Single<Unit>
+    fun joinTeam()
 
-    fun createCompanyRoom(name: String): Single<Int>
+    fun createCompanyRoom(name: String): Int
 
-    fun searchCompany(expectId: Int): Single<Boolean>
+    fun searchCompany(expectId: Int): Boolean
 
 
 
@@ -30,24 +29,24 @@ interface UseCaseContract {
     /**
      * 現在のユーザー
      */
-    val currentUser: Flowable<UserEntity>
+    val currentUser: Flow<UserEntity>
 
     /**
      * 全てのユーザー情報
      */
-    val users: Flowable<List<UserEntity>>
+    val users: Flow<List<UserEntity>>
 
     /**
      * 特定のIDのユーザー情報
      *
      * @param id ユーザーID
      */
-    fun user(id: String): Flowable<UserEntity>
+    fun user(id: String): Flow<UserEntity>
 
     /**
      * サインインする
      */
-    fun signInUser(): Single<Unit>
+    fun signInUser()
 
 
 }

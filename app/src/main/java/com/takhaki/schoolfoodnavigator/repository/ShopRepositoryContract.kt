@@ -1,7 +1,6 @@
 package com.takhaki.schoolfoodnavigator.repository
 
 import com.takhaki.schoolfoodnavigator.entity.ShopEntity
-import io.reactivex.Single
 import kotlinx.coroutines.flow.Flow
 
 interface ShopRepositoryContract {

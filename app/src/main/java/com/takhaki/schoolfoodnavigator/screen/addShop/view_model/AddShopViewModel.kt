@@ -15,7 +15,6 @@ import com.takhaki.schoolfoodnavigator.repository.StorageTypes
 import com.takhaki.schoolfoodnavigator.repository.UserRepositoryContract
 import com.takhaki.schoolfoodnavigator.screen.addShop.AddShopNavigatorAbstract
 import com.takhaki.schoolfoodnavigator.screen.addShop.AddShopViewModelBase
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

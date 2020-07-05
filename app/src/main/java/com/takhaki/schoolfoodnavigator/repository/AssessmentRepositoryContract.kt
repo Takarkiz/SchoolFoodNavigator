@@ -1,8 +1,6 @@
 package com.takhaki.schoolfoodnavigator.repository
 
 import com.takhaki.schoolfoodnavigator.entity.AssessmentEntity
-import io.reactivex.Flowable
-import io.reactivex.Single
 import kotlinx.coroutines.flow.Flow
 
 /**

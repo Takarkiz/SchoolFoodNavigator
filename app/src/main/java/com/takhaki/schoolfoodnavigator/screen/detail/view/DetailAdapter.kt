@@ -15,7 +15,6 @@ import com.takhaki.schoolfoodnavigator.repository.FirestorageRepository
 import com.takhaki.schoolfoodnavigator.repository.UserRepository
 import com.takhaki.schoolfoodnavigator.screen.detail.model.AboutShopDetailModel
 import com.takhaki.schoolfoodnavigator.screen.detail.model.CommentDetailModel
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,7 +30,6 @@ class DetailAdapter(
     private val DETAIL_VIEW_TYPE = 0
     private val USER_VIEW_TYPE = 1
     private var isFavorite = false
-    private val disposable = CompositeDisposable()
 
     var shopId: String = ""
 
