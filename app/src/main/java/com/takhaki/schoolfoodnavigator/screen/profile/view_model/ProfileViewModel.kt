@@ -53,31 +53,34 @@ class ProfileViewModel(
     private val _user = MutableLiveData<UserEntity>()
 
     private fun updateUserProfile() {
-        viewModelScope.launch(Dispatchers.Main) {
-            getUser()
-            getUserTeamName()
-        }
+        getUser()
+        getUserTeamName()
+
     }
 
-    private suspend fun getUserTeamName() {
-        val repository = CompanyRepository(getApplication())
-        val companyID = repository.companyId.toString()
-        repository.company.collect {
-            if (it.isSuccess) {
-                it.getOrNull()?.let { company ->
-                    _teamName.postValue("${company.name}(ID: ${companyID})")
+    private fun getUserTeamName() {
+        viewModelScope.launch(Dispatchers.Default) {
+            val repository = CompanyRepository(getApplication())
+            val companyID = repository.companyId.toString()
+            repository.company.collect {
+                if (it.isSuccess) {
+                    it.getOrNull()?.let { company ->
+                        _teamName.postValue("${company.name}(ID: ${companyID})")
+                    }
+                } else {
+                    Timber.e(it.exceptionOrNull())
                 }
-            } else {
-                Timber.e(it.exceptionOrNull())
             }
         }
     }
 
-    private suspend fun getUser() {
-        val auth = UserRepository(getApplication())
-        auth.fetchUser(userId)
-            .collect {
-                _user.postValue(it)
-            }
+    private fun getUser() {
+        viewModelScope.launch(Dispatchers.Default) {
+            val auth = UserRepository(getApplication())
+            auth.fetchUser(userId)
+                .collect {
+                    _user.postValue(it)
+                }
+        }
     }
 }
