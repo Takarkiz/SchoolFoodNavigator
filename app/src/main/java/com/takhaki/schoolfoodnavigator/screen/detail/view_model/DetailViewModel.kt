@@ -11,7 +11,6 @@ import com.takhaki.schoolfoodnavigator.screen.detail.DetailNavigatorAbstract
 import com.takhaki.schoolfoodnavigator.screen.detail.DetailViewModelBase
 import com.takhaki.schoolfoodnavigator.screen.detail.model.AboutShopDetailModel
 import com.takhaki.schoolfoodnavigator.screen.detail.model.CommentDetailModel
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
@@ -65,11 +64,6 @@ class DetailViewModel(
         navigator.toUserProfile(userId)
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        disposable.clear()
-    }
-
     // LifecycleObserver
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
@@ -79,7 +73,6 @@ class DetailViewModel(
 
     // Private
 
-    private val disposable: CompositeDisposable = CompositeDisposable()
     private val shopRepository = ShopRepository(getApplication())
     private val scores = mutableListOf<CommentDetailModel>()
 

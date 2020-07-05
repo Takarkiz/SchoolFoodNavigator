@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.takhaki.schoolfoodnavigator.entity.AssessmentEntity
 import com.takhaki.schoolfoodnavigator.repository.AssessmentRepository
 import com.takhaki.schoolfoodnavigator.repository.ShopRepository
@@ -11,8 +12,9 @@ import com.takhaki.schoolfoodnavigator.repository.UserRepository
 import com.takhaki.schoolfoodnavigator.screen.assesment.AssessmentNavigatorAbstract
 import com.takhaki.schoolfoodnavigator.screen.assesment.AssessmentViewModelBase
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
-import io.reactivex.rxkotlin.subscribeBy
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -72,22 +74,22 @@ class AssessmentViewModel(
 
         val shopRepository = ShopRepository(getApplication())
 
-        repository.addAssessment(assessment).subscribeBy(
-            onSuccess = {
+        viewModelScope.launch {
+            try {
+                withContext(Dispatchers.Default) {
+                    repository.addAssessment(assessment)
+                }
                 shopRepository.updateEditedDate(shopId)
                 auth.addPointAssessment()
                 finishUploadHandler(Result.success(Unit))
-            },
-            onError = { e ->
+            } catch (e: Throwable) {
                 finishUploadHandler(Result.failure(e))
             }
-        ).addTo(disposable)
+        }
     }
 
     override fun finishUpload() {
         navigator.backToHome()
     }
-
-    private val disposable = CompositeDisposable()
 
 }

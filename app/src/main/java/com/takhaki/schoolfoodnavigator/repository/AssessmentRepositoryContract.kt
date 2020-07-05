@@ -18,5 +18,5 @@ interface AssessmentRepositoryContract {
     /**
      * 新たな評価の追加
      */
-    fun addAssessment(assessment: AssessmentEntity): Single<Unit>
+    suspend fun addAssessment(assessment: AssessmentEntity)
 }

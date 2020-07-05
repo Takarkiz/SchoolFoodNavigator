@@ -7,7 +7,6 @@ import com.takhaki.schoolfoodnavigator.entity.UserEntity
 import com.takhaki.schoolfoodnavigator.repository.UserRepository
 import com.takhaki.schoolfoodnavigator.screen.memberList.MemberListNavigatorAbstract
 import com.takhaki.schoolfoodnavigator.screen.memberList.MemberListViewModelBase
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
@@ -38,12 +37,6 @@ class MemberListViewModel(
         navigator.toMemberProfile(userId)
     }
 
-    // ViewModel
-    override fun onCleared() {
-        super.onCleared()
-        disposable.clear()
-    }
-
 
     // LifecycleObserver
 
@@ -56,7 +49,6 @@ class MemberListViewModel(
     // Private
 
     private val _memberList: MutableLiveData<List<UserEntity>> = MutableLiveData()
-    private val disposable: CompositeDisposable = CompositeDisposable()
 
     @ExperimentalCoroutinesApi
     private fun fetchUsers() {

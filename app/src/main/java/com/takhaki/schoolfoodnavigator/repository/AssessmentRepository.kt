@@ -4,12 +4,14 @@ import android.content.Context
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.takhaki.schoolfoodnavigator.entity.AssessmentEntity
-import io.reactivex.Single
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import java.util.*
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class AssessmentRepository(shopId: String, context: Context) : AssessmentRepositoryContract {
 
@@ -46,17 +48,15 @@ class AssessmentRepository(shopId: String, context: Context) : AssessmentReposit
         awaitClose { task.remove() }
     }
 
-    override fun addAssessment(assessment: AssessmentEntity): Single<Unit> {
+    override suspend fun addAssessment(assessment: AssessmentEntity): Unit = suspendCoroutine { con ->
+        collectionRef
+            .add(assesmentToMap(assessment))
+            .addOnSuccessListener { doc ->
+                con.resume(Unit)
+            }.addOnFailureListener { e ->
+                con.resumeWithException(e)
+            }
 
-        return Single.create { emitter ->
-            collectionRef
-                .add(assesmentToMap(assessment))
-                .addOnSuccessListener { doc ->
-                    emitter.onSuccess(Unit)
-                }.addOnFailureListener { e ->
-                    emitter.onError(e)
-                }
-        }
     }
 
     private fun assesmentToMap(assessment: AssessmentEntity): Map<String, Any> {

@@ -6,7 +6,6 @@ import androidx.lifecycle.*
 import com.takhaki.schoolfoodnavigator.Utility.RewardUtil
 import com.takhaki.schoolfoodnavigator.repository.UserRepository
 import com.takhaki.schoolfoodnavigator.screen.detailReward.DetailRewardViewModelBase
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
@@ -31,16 +30,9 @@ class DetailRewardViewModel(
         subscribeUserPoint()
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        disposable.dispose()
-    }
-
     // Private
 
     private val _userGrade = MutableLiveData<RewardUtil.Grade>()
-
-    private val disposable = CompositeDisposable()
 
     @ExperimentalCoroutinesApi
     private fun subscribeUserPoint() {

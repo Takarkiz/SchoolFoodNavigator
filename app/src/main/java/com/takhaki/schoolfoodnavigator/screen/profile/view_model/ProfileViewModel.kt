@@ -8,7 +8,6 @@ import com.takhaki.schoolfoodnavigator.repository.CompanyRepository
 import com.takhaki.schoolfoodnavigator.repository.UserRepository
 import com.takhaki.schoolfoodnavigator.screen.profile.ProfileNavigatorAbstract
 import com.takhaki.schoolfoodnavigator.screen.profile.ProfileViewModelBase
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -49,16 +48,9 @@ class ProfileViewModel(
         updateUserProfile()
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        disposable.dispose()
-    }
-
     // Private
     private val _teamName = MutableLiveData<String>().apply { value = "" }
     private val _user = MutableLiveData<UserEntity>()
-
-    private val disposable = CompositeDisposable()
 
     private fun updateUserProfile() {
         viewModelScope.launch(Dispatchers.Main) {

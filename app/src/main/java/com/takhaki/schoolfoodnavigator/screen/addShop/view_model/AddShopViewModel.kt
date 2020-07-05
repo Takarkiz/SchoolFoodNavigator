@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
 import com.takhaki.schoolfoodnavigator.entity.ShopEntity
 import com.takhaki.schoolfoodnavigator.repository.FirestorageRepository
 import com.takhaki.schoolfoodnavigator.repository.ShopRepositoryContract
@@ -15,8 +16,9 @@ import com.takhaki.schoolfoodnavigator.repository.UserRepositoryContract
 import com.takhaki.schoolfoodnavigator.screen.addShop.AddShopNavigatorAbstract
 import com.takhaki.schoolfoodnavigator.screen.addShop.AddShopViewModelBase
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
-import io.reactivex.rxkotlin.subscribeBy
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.lang.ref.WeakReference
 import java.util.*
@@ -77,15 +79,18 @@ class AddShopViewModel(
                 context = appContext
             ) { imageResult ->
                 if (imageResult.isSuccess) {
-                    shopRepository.registerShop(shop, imageResult.getOrNull()).subscribeBy(
-                        onSuccess = {
+                    viewModelScope.launch {
+                        try {
+                            withContext(Dispatchers.Default) {
+                                shopRepository.registerShop(shop, imageResult.getOrNull())
+                            }
                             shopId = id
                             userRepository.addPointShop()
-                        },
-                        onError = {
-                            Timber.e(it)
+
+                        } catch (e: Throwable) {
+                            Timber.e(e)
                         }
-                    ).addTo(disposable)
+                    }
                     _isVisibleLoading.postValue(false)
                 }
             }
@@ -111,7 +116,5 @@ class AddShopViewModel(
     private val _isVisibleLoading = MutableLiveData<Boolean>().apply { value = false }
 
     private val appContext: Context get() = getApplication()
-
-    private val disposable = CompositeDisposable()
 
 }

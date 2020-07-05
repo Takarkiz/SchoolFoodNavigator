@@ -19,6 +19,8 @@ import com.takhaki.schoolfoodnavigator.databinding.FragmentCreateRoomBinding
 import com.takhaki.schoolfoodnavigator.screen.register.view_model.CreateRoomViewModel
 import kotlinx.android.synthetic.main.fragment_create_room.*
 import kotlinx.android.synthetic.main.fragment_create_room.view.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class CreateRoomFragment : Fragment() {
 
@@ -93,23 +95,25 @@ class CreateRoomFragment : Fragment() {
 
     private fun joinTeam(text: String) {
         // 成功した場合は入力したIDを送るようにする
-        viewModel.searchTeam(text.toInt()) { result ->
-            if (result.isSuccess) {
-                result.getOrNull()?.let { isSuccess ->
-                    if (isSuccess) {
-                        Snackbar.make(rootView, "チームに参加完了", Snackbar.LENGTH_SHORT).show()
-                        val action =
-                            CreateRoomFragmentDirections.actionCreateTeamFragmentToUserNameResigterFragment(
-                                text.toInt()
-                            )
-                        findNavController().navigate(action)
-                    } else {
-                        Snackbar.make(rootView, "存在しないチームです", Snackbar.LENGTH_SHORT).show()
+        GlobalScope.launch {
+            viewModel.searchTeam(text.toInt()) { result ->
+                if (result.isSuccess) {
+                    result.getOrNull()?.let { isSuccess ->
+                        if (isSuccess) {
+                            Snackbar.make(rootView, "チームに参加完了", Snackbar.LENGTH_SHORT).show()
+                            val action =
+                                CreateRoomFragmentDirections.actionCreateTeamFragmentToUserNameResigterFragment(
+                                    text.toInt()
+                                )
+                            findNavController().navigate(action)
+                        } else {
+                            Snackbar.make(rootView, "存在しないチームです", Snackbar.LENGTH_SHORT).show()
+                        }
                     }
-                }
 
-            } else {
-                Snackbar.make(rootView, "存在しないチームです", Snackbar.LENGTH_SHORT).show()
+                } else {
+                    Snackbar.make(rootView, "存在しないチームです", Snackbar.LENGTH_SHORT).show()
+                }
             }
         }
     }

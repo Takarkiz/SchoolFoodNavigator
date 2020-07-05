@@ -13,7 +13,6 @@ import com.takhaki.schoolfoodnavigator.repository.UserRepositoryContract
 import com.takhaki.schoolfoodnavigator.screen.mainList.ShopListNavigatorAbstract
 import com.takhaki.schoolfoodnavigator.screen.mainList.ShopListViewModelBase
 import com.takhaki.schoolfoodnavigator.screen.mainList.model.ShopListItemModel
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -61,12 +60,6 @@ class ShopListViewModel(
         subscribeCurrentUser()
     }
 
-    // AndroidViewModel
-    override fun onCleared() {
-        super.onCleared()
-        disposable.dispose()
-    }
-
     // Private
 
     private var number: Int = 0
@@ -78,8 +71,6 @@ class ShopListViewModel(
     private val shopItemsByDate = mutableListOf<ShopListItemModel>()
     private val shopItemsByValue = mutableListOf<ShopListItemModel>()
     private val shopItemsByOnlyFav = mutableListOf<ShopListItemModel>()
-
-    private val disposable: CompositeDisposable = CompositeDisposable()
 
     private fun subscribeShopList() {
         viewModelScope.launch(Dispatchers.Main) {

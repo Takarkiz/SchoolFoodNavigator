@@ -9,23 +9,23 @@ interface ShopRepositoryContract {
     /**
      * ショップリスト
      */
-    fun getShops(): Flow<List<ShopEntity>>
+    suspend fun getShops(): Flow<List<ShopEntity>>
 
 
     /**
      * お店の登録
      */
-    fun registerShop(
+    suspend fun registerShop(
         shop: ShopEntity,
         imageUrl: String?
-    ): Single<Unit>
+    )
 
     /**
      * 指定IDのショップ情報を取得
      *
      * @param id: ショップID
      */
-    fun shop(id: String): Flow<ShopEntity>
+    suspend fun shop(id: String): Flow<ShopEntity>
 
 
     /**

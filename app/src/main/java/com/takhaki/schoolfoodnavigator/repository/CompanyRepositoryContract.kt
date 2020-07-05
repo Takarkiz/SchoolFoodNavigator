@@ -3,6 +3,7 @@ package com.takhaki.schoolfoodnavigator.repository
 import com.takhaki.schoolfoodnavigator.entity.Company
 import io.reactivex.Flowable
 import io.reactivex.Single
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.flow.Flow
 
 interface CompanyRepositoryContract {
@@ -34,20 +35,20 @@ interface CompanyRepositoryContract {
      *
      * @param name  チーム名
      */
-    fun createCompanyRoom(name: String): Single<Int>
+    suspend fun createCompanyRoom(name: String): Int
 
     /**
      * メンバーを追加する
      *
      * @param userId メンバーID
      */
-    fun joinTeam(userId: String): Single<Unit>
+    suspend fun joinTeam(userId: String)
 
     /**
      * IDに対してチームが存在するかどうかを調べる
      *
      * @param expectId 調べるチームID
      */
-    fun searchCompany(expectId: Int): Single<Boolean>
+    suspend fun searchCompany(expectId: Int): Boolean
 
 }

@@ -8,12 +8,14 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.takhaki.schoolfoodnavigator.entity.UserEntity
-import io.reactivex.Single
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import timber.log.Timber
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class UserRepository(context: Context) : UserRepositoryContract {
 
@@ -31,23 +33,21 @@ class UserRepository(context: Context) : UserRepositoryContract {
     override val currentUser: FirebaseUser?
         get() = auth.currentUser
 
-    override fun signInUser(): Single<String> {
-        return Single.create { emitter ->
-            auth.signInAnonymously()
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        auth.uid?.let { uid ->
-                            emitter.onSuccess(uid)
-                        }
+    override suspend fun signInUser(): String = suspendCoroutine { con ->
+        auth.signInAnonymously()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    auth.uid?.let { uid ->
+                        con.resumeWith(Result.success(uid))
                     }
-                }.addOnFailureListener { e ->
-                    emitter.onError(e)
                 }
-        }
+            }.addOnFailureListener {
+                con.resumeWith(Result.failure(it))
+            }
     }
 
-    override fun createUser(name: String, iconUrl: String?): Single<String> {
-        return Single.create { emitter ->
+    override suspend fun createUser(name: String, iconUrl: String?): Unit =
+        suspendCoroutine { con ->
             currentUser?.uid?.let { uid ->
                 val user = UserEntity(
                     id = uid,
@@ -66,13 +66,13 @@ class UserRepository(context: Context) : UserRepositoryContract {
                         "favList" to user.favList
                     )
                 ).addOnSuccessListener {
-                    emitter.onSuccess("Success")
+                    con.resume(Unit)
                 }.addOnFailureListener { e ->
-                    emitter.onError(e)
+                    con.resumeWithException(e)
                 }
             }
+
         }
-    }
 
     @ExperimentalCoroutinesApi
     override fun fetchAllUser(): Flow<List<UserEntity>> = callbackFlow {
@@ -120,31 +120,28 @@ class UserRepository(context: Context) : UserRepositoryContract {
         awaitClose { registration.remove() }
     }
 
-    override fun addFavoriteShop(id: String): Single<Unit> {
-        return Single.create { emitter ->
-            currentUser?.uid?.let { uid ->
-                userDB.document(uid).update("favList", FieldValue.arrayUnion(id))
-                    .addOnCompleteListener {
-                        emitter.onSuccess(Unit)
-                    }
-                    .addOnFailureListener {
-                        emitter.onError(it)
-                    }
-            }
+    override suspend fun addFavoriteShop(id: String): Unit = suspendCoroutine { con ->
+        currentUser?.uid?.let { uid ->
+            userDB.document(uid).update("favList", FieldValue.arrayUnion(id))
+                .addOnCompleteListener {
+                    con.resume(Unit)
+                }
+                .addOnFailureListener {
+                    con.resumeWithException(it)
+                }
         }
+
     }
 
-    override fun removeFavoriteShop(id: String): Single<Unit> {
-        return Single.create { emitter ->
-            currentUser?.uid?.let { uid ->
-                userDB.document(uid).update("favList", FieldValue.arrayRemove(id))
-                    .addOnCompleteListener {
-                        emitter.onSuccess(Unit)
-                    }
-                    .addOnFailureListener {
-                        emitter.onError(it)
-                    }
-            }
+    override suspend fun removeFavoriteShop(id: String): Unit = suspendCoroutine { con ->
+        currentUser?.uid?.let { uid ->
+            userDB.document(uid).update("favList", FieldValue.arrayRemove(id))
+                .addOnCompleteListener {
+                    con.resume(Unit)
+                }
+                .addOnFailureListener {
+                    con.resumeWithException(it)
+                }
         }
     }
 

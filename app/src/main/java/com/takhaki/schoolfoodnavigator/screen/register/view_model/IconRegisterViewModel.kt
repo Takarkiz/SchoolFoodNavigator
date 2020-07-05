@@ -8,15 +8,14 @@ import com.takhaki.schoolfoodnavigator.repository.CompanyRepository
 import com.takhaki.schoolfoodnavigator.repository.FirestorageRepository
 import com.takhaki.schoolfoodnavigator.repository.StorageTypes
 import com.takhaki.schoolfoodnavigator.repository.UserRepository
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
-import io.reactivex.rxkotlin.subscribeBy
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class IconRegisterViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _userName = MutableLiveData<String>()
-    private val context = getApplication<Application>().applicationContext
 
     private val _iconImageUri = MutableLiveData<Uri>().apply { value = null }
     val iconImageUri: LiveData<Uri> get() = _iconImageUri
@@ -27,8 +26,6 @@ class IconRegisterViewModel(application: Application) : AndroidViewModel(applica
 
     private val finishButtonTitle = MediatorLiveData<String>().apply { value = "アイコン設定をスキップ" }
 
-    private val disposable = CompositeDisposable()
-
     init {
         val iconUriObserver = Observer<Uri> {
             val uri = _iconImageUri.value
@@ -37,11 +34,6 @@ class IconRegisterViewModel(application: Application) : AndroidViewModel(applica
             }
         }
         finishButtonTitle.addSource(_iconImageUri, iconUriObserver)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        disposable.dispose()
     }
 
     fun putUserName(userName: String) {
@@ -77,14 +69,15 @@ class IconRegisterViewModel(application: Application) : AndroidViewModel(applica
     }
 
     private fun registerUser(repository: UserRepository, name: String, url: String?) {
-        repository.createUser(name, url)
-            .subscribeBy(
-                onSuccess = {
-                    _isCompletedUserData.postValue(true)
-                },
-                onError = {
-                    _isCompletedUserData.postValue(false)
+        viewModelScope.launch(Dispatchers.Default) {
+            try {
+                withContext(Dispatchers.Default) {
+                    repository.createUser(name, url)
                 }
-            ).addTo(disposable)
+                _isCompletedUserData.postValue(true)
+            } catch (e: Throwable) {
+                _isCompletedUserData.postValue(false)
+            }
+        }
     }
 }

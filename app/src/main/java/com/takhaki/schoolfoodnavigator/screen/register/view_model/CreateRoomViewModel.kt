@@ -1,15 +1,12 @@
 package com.takhaki.schoolfoodnavigator.screen.register.view_model
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
+import androidx.lifecycle.*
 import com.takhaki.schoolfoodnavigator.repository.CompanyRepository
 import com.takhaki.schoolfoodnavigator.repository.UserRepository
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
-import io.reactivex.rxkotlin.subscribeBy
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class CreateRoomViewModel(application: Application) : AndroidViewModel(application) {
@@ -28,11 +25,6 @@ class CreateRoomViewModel(application: Application) : AndroidViewModel(applicati
         isShowFinishButton.addSource(contentEditText, inputTextObserver)
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        disposable.dispose()
-    }
-
     fun putJoin(isJoin: Boolean) {
         if (isJoin) {
             titleText.value = "チームIDを入力してください"
@@ -47,15 +39,15 @@ class CreateRoomViewModel(application: Application) : AndroidViewModel(applicati
     fun signInAuth() {
         val auth = UserRepository(getApplication())
         if (auth.currentUser != null) return
-        auth.signInUser()
-            .subscribeBy(
-                onSuccess = {
-                    Timber.d("登録完了！uid: $it")
-                },
-                onError = {
-                    Timber.e(it)
+        viewModelScope.launch(Dispatchers.Default) {
+            try {
+                withContext(Dispatchers.Default) {
+                    auth.signInUser()
                 }
-            ).addTo(disposable)
+            } catch (e: Throwable) {
+                Timber.e(e)
+            }
+        }
     }
 
     // チームを作成する
@@ -64,48 +56,49 @@ class CreateRoomViewModel(application: Application) : AndroidViewModel(applicati
         val auth = UserRepository(getApplication())
         val uid = auth.currentUser?.uid ?: return
 
-        contentEditText.value?.let { name ->
-            repository.createCompanyRoom(name)
-                .subscribeBy(
-                    onSuccess = { teamId ->
-                        repository.joinTeam(uid).subscribeBy(
-                            onSuccess = {
-                                handler(teamId)
-                            }, onError = {
-                                Timber.e(it)
-                            }).addTo(disposable)
-                    },
-                    onError = {
-                        Timber.d(it)
-                    }).addTo(disposable)
+        viewModelScope.launch(Dispatchers.Default) {
+            val teamId = withContext(Dispatchers.Default) {
+                contentEditText.value?.let { name ->
+                    repository.createCompanyRoom(name)
+                }
+            }
+
+            try {
+                withContext(Dispatchers.Default) {
+                    repository.joinTeam(uid)
+                }
+                handler(teamId ?: 0)
+            } catch (e: Throwable) {
+                Timber.e(e)
+            }
         }
     }
 
 
     // チームID検索
-    fun searchTeam(id: Int, handler: (Result<Boolean>) -> Unit) {
+    suspend fun searchTeam(id: Int, handler: (Result<Boolean>) -> Unit) {
         val auth = UserRepository(getApplication())
-        val uid = auth.currentUser?.uid?.let { it } ?: return
+        val uid = auth.currentUser?.uid ?: return
         val repository = CompanyRepository(getApplication())
-        repository.searchCompany(id)
-            .subscribeBy(onSuccess = { result ->
-                if (result) {
-                    repository.joinTeam(uid).subscribeBy(
-                        onSuccess = {
-                            handler(Result.success(true))
-                        },
-                        onError = { error ->
-                            Timber.e(error)
-                            handler(Result.failure(error))
-                        }
-                    )
-                }
-            },
-                onError = {
-                    handler(Result.failure(it))
-                }).addTo(disposable)
-    }
+        val isExist = withContext(Dispatchers.Default) {
+            repository.searchCompany(id)
+        }
 
-    private val disposable: CompositeDisposable = CompositeDisposable()
+        if (isExist) {
+            viewModelScope.launch(Dispatchers.Default) {
+                try {
+                    withContext(Dispatchers.Default) {
+                        repository.joinTeam(uid)
+                    }
+                    handler(Result.success(true))
+                } catch (e: Throwable) {
+                    Timber.e(e)
+                    handler(Result.failure(e))
+                }
+            }
+        } else {
+            handler(Result.success(false))
+        }
+    }
 
 }

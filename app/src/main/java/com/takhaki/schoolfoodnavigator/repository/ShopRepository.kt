@@ -6,18 +6,20 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.takhaki.schoolfoodnavigator.entity.ShopEntity
-import io.reactivex.Single
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import timber.log.Timber
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class ShopRepository(context: Context) : ShopRepositoryContract {
 
 
     @ExperimentalCoroutinesApi
-    override fun getShops(): Flow<List<ShopEntity>> = callbackFlow {
+    override suspend fun getShops(): Flow<List<ShopEntity>> = callbackFlow {
         val query = shopDB.orderBy("editedAt", Query.Direction.DESCENDING)
         val task = query.addSnapshotListener { snapshot, error ->
 
@@ -40,26 +42,23 @@ class ShopRepository(context: Context) : ShopRepositoryContract {
         awaitClose { task.remove() }
     }
 
-    override fun registerShop(
+    override suspend fun registerShop(
         shop: ShopEntity,
         imageUrl: String?
-    ): Single<Unit> {
-        return Single.create { emitter ->
-            val data = inverseMapping(shop, imageUrl)
-
-            shopDB.document(shop.id).set(data)
-                .addOnSuccessListener {
-                    emitter.onSuccess(Unit)
-                }
-                .addOnFailureListener { error ->
-                    emitter.onError(error)
-                }
-        }
+    ): Unit = suspendCoroutine { con ->
+        val data = inverseMapping(shop, imageUrl)
+        shopDB.document(shop.id).set(data)
+            .addOnSuccessListener {
+                con.resume(Unit)
+            }
+            .addOnFailureListener { error ->
+                con.resumeWithException(error)
+            }
 
     }
 
     @ExperimentalCoroutinesApi
-    override fun shop(id: String): Flow<ShopEntity> = callbackFlow {
+    override suspend fun shop(id: String): Flow<ShopEntity> = callbackFlow {
 
         val ref = shopDB.document(id)
         val reg = ref.addSnapshotListener { snapshot, error ->
@@ -73,7 +72,7 @@ class ShopRepository(context: Context) : ShopRepositoryContract {
                 return@addSnapshotListener
             }
 
-            val shop = snapshot.toObject(ShopEntity::class.java)?: return@addSnapshotListener
+            val shop = snapshot.toObject(ShopEntity::class.java) ?: return@addSnapshotListener
             offer(shop)
 
         }
